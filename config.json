@@ -4,6 +4,7 @@
     "avatarUrl":"https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png",
     "startSite":"07/10/2026",
     "onePageListNum":15,
+    "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
     "customCss": ".post-meta time, .post-meta .date{display: none !important;}",
       "GMEEK_VERSION":"last"
 }
