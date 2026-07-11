@@ -21,7 +21,7 @@
 
 <img src="https://cdn.nodeimage.com/i/KhSOTR0OjAAONw3tnxXpXTY4ovIynh4F.webp" alt="KhSOTR0OjAAONw3tnxXpXTY4ovIynh4F.webp">
 
-### 6、网页下拉到最底部选择`Pay as you go`，点击`Register`
+### 6、网页下拉到最底部选择`Pay as you go`，点击`Continue`；
 
 <img src="https://cdn.nodeimage.com/i/nugaz47ZKBEBSQdVnh1YsYBIUIw8WXIc.webp" alt="nugaz47ZKBEBSQdVnh1YsYBIUIw8WXIc.webp">
 
