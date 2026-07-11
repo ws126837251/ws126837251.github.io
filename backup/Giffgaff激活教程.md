@@ -48,3 +48,6 @@
 ### 12、回到主页，显示余额表示已激活，插卡等待有信号即可，如果未显示余额需耐心等待（一般1分钟到24小时不等）；
 
 <img src="https://cdn.nodeimage.com/i/xxtZgTL1OSL7vg4Ajq8sWX1FTgCwofjX.webp" alt="xxtZgTL1OSL7vg4Ajq8sWX1FTgCwofjX.webp">
+
+    > [!注意]
+    > 本sim卡只可用于出国旅行，只可在目的地激活使用.
