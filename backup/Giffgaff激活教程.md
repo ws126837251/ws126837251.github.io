@@ -50,4 +50,4 @@
 <img src="https://cdn.nodeimage.com/i/xxtZgTL1OSL7vg4Ajq8sWX1FTgCwofjX.webp" alt="xxtZgTL1OSL7vg4Ajq8sWX1FTgCwofjX.webp">
 
 > [!CAUTION]
-> 本sim卡只可用于出国旅行，只可在目的地激活使用
+> 本sim卡只可用于出国旅行，请勿在内地插卡激活使用
