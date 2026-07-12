@@ -1,11 +1,10 @@
 {
-    "title":"Giffgaff教程指南",
-    "subTitle":"本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负",
-    "avatarUrl":"https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png",
-    "startSite":"07/10/2026",
-    "onePageListNum":15,
-    "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
-    "customCss":".post-meta time,.date{display: none !important;}body{background-color:#f8f9fa !important;}",
-    "customStyles": ".SideNav-item {\n    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;\n    border-left: 3px solid transparent !important;\n    background-color: transparent !important;\n    border-radius: 6px !important;\n    margin-bottom: 4px !important;\n}\n\n.SideNav-item:hover {\n    background-color: rgba(2, 122, 255, 0.05) !important;\n    transform: translateX(5px);\n    border-left: 3px solid #027aff !important;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);\n}"
-      "GMEEK_VERSION":"last"
+  "title": "Giffgaff教程指南",
+  "subTitle": "本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负",
+  "avatarUrl": "https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png",
+  "startSite": "07/10/2026",
+  "onePageListNum": 15,
+  "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
+  "customCss": ".post-meta time,.date{display: none !important;}body{background-color:#f8f9fa !important;}\n.SideNav-item {\n    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;\n    border-left: 3px solid transparent !important;\n    background-color: transparent !important;\n    border-radius: 6px !important;\n    margin-bottom: 4px !important;\n}\n.SideNav-item:hover {\n    background-color: rgba(2, 122, 255, 0.05) !important;\n    transform: translateX(5px);\n    border-left: 3px solid #027aff !important;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);\n}",
+  "GMEEK_VERSION": "last"
 }
