@@ -5,7 +5,7 @@
   "startSite": "07/10/2026",
   "onePageListNum": 15,
   "urlMode": "hash",
-  "allHead": "<script async src="https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js"></script>",
+  "allHead":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekBSZ.js'></script>",
   "indexStyle":"<style>a.blogTitle {display: inline-block !important;}.d-flex {display: inline-block !important;}.Label, .label {line-height: 12px !important;}.LabelTime {display: inline-block !important;}</style>",
   "GMEEK_VERSION": "last"
 }
