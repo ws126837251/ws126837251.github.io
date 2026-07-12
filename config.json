@@ -5,6 +5,5 @@
   "startSite": "07/10/2026",
   "onePageListNum": 15,
   "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
-  "customCss": ".post-meta time,.date{display: none !important;}body{background-color:#f8f9fa !important;}.SideNav-item{transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;border-left: 3px solid transparent !important;background-color: transparent !important;border-radius: 6px !important;margin-bottom: 4px !important;}.SideNav-item:hover{background-color: rgba(2, 122, 255, 0.05) !important;transform: translateX(5px);border-left: 3px solid #027aff !important;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);}"
   "GMEEK_VERSION": "last"
 }
