@@ -4,9 +4,11 @@
   "avatarUrl": "https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png",
   "startSite": "07/10/2026",
   "onePageListNum": 15,
+  "email":"1359796352@qq.com",
   "commentLabelColor":"#006b75",
   "yearColorList":["#bc4c00", "#0969da", "#1f883d", "#A333D0"],
   "i18n":"CN",
+  "bottomText":"❤️ 有任何问题请联系QQ或TG客服，不要在闲鱼问，谢谢！❤️",
   "allHead":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
   "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
   "GMEEK_VERSION":"main"
