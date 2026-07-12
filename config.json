@@ -4,10 +4,7 @@
   "avatarUrl": "https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png",
   "startSite": "07/10/2026",
   "onePageListNum": 15,
-  "urlMode": "hash",
   "allHead":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
-  "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
-  "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/articletoc.js'></script>",
-  "indexStyle":"<style>a.blogTitle {display: inline-block !important;}.d-flex {display: inline-block !important;}.Label, .label {line-height: 12px !important;}.LabelTime {display: inline-block !important;}</style>",
+  "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>","<script src='https://blog.meekdai.com/Gmeek/plugins/articletoc.js'></script>",
   "GMEEK_VERSION": "last"
 }
