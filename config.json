@@ -7,5 +7,6 @@
   "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
   "urlMode":"issue",
   "indexStyle":"<style>a.blogTitle {display: inline-block !important;}.d-flex {display: inline-block !important;}.Label, .label {line-height: 12px !important;}.LabelTime {display: inline-block !important;}</style>",
+  <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人次</span>
   "GMEEK_VERSION": "last"
 }
