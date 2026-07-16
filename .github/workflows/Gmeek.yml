@@ -6,13 +6,21 @@ on:
     types: [opened, edited]
   schedule:
     - cron: "0 16 * * *"
-    
+
 jobs:
   build:
     name: Generate blog
     runs-on: ubuntu-24.04
-    if: ${{ github.event.repository.owner.id == github.event.sender.id || github.event_name == 'schedule' }}
+
+    if: >-
+      ${{
+        github.event.repository.owner.id == github.event.sender.id ||
+        github.event_name == 'schedule' ||
+        github.event_name == 'workflow_dispatch'
+      }}
+
     permissions: write-all
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,66 +31,223 @@ jobs:
 
       - name: Get config.json
         run: |
-          echo "====== check config.josn file ======"
+          echo "====== check config.json file ======"
           cat config.json
-          echo "====== check config.josn end  ======"
-          sudo apt-get install jq
+          echo "====== check config.json end ======"
+          sudo apt-get update
+          sudo apt-get install -y jq
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: "3.8"
 
       - name: Clone source code
         run: |
           GMEEK_VERSION=$(jq -r ".GMEEK_VERSION" config.json)
-          git clone https://github.com/Meekdai/Gmeek.git /opt/Gmeek;
+
+          git clone https://github.com/Meekdai/Gmeek.git /opt/Gmeek
           cd /opt/Gmeek/
-          lastTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          if [ $GMEEK_VERSION == 'last' ]; then git checkout $lastTag; else git checkout $GMEEK_VERSION; fi;
+
+          lastTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+
+          if [ "$GMEEK_VERSION" = "last" ]; then
+            git checkout "$lastTag"
+          else
+            git checkout "$GMEEK_VERSION"
+          fi
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r /opt/Gmeek/requirements.txt
+          pip install beautifulsoup4
 
       - name: Generate new html
         run: |
           cp -r ./* /opt/Gmeek/
           cd /opt/Gmeek/
-          python Gmeek.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} --issue_number '${{ github.event.issue.number }}'
-          cp -a /opt/Gmeek/docs ${{ github.workspace }} 
-          cp -a /opt/Gmeek/backup ${{ github.workspace }} 
-          cp /opt/Gmeek/blogBase.json ${{ github.workspace }} 
-          
-      - name: update html
+
+          python Gmeek.py \
+            "${{ secrets.GITHUB_TOKEN }}" \
+            "${{ github.repository }}" \
+            --issue_number '${{ github.event.issue.number }}'
+
+      - name: Customize homepage
+        run: |
+          python <<'PY'
+          import re
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+
+          DOCS_DIR = Path("/opt/Gmeek/docs")
+          HOME_URL = "https://giffgaff.wufeng.de/"
+
+          # Gmeek 日期格式，例如 2026-07-10
+          DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+          # 只处理首页和分页首页，避免修改文章正文中的日期
+          page_files = []
+
+          index_file = DOCS_DIR / "index.html"
+          if index_file.exists():
+              page_files.append(index_file)
+
+          # 兼容可能存在的分页目录或分页文件
+          page_files.extend(DOCS_DIR.glob("page*.html"))
+          page_files.extend(DOCS_DIR.glob("page/*/index.html"))
+
+          # 去重
+          page_files = list(dict.fromkeys(page_files))
+
+          for html_file in page_files:
+              html = html_file.read_text(encoding="utf-8")
+              soup = BeautifulSoup(html, "html.parser")
+
+              changed = False
+
+              # ----------------------------------------------------------
+              # 1. 把 RSS 图标链接改为网站首页
+              # ----------------------------------------------------------
+              for link in soup.find_all("a", href=True):
+                  href = link.get("href", "").strip()
+                  title = link.get("title", "").strip().lower()
+                  aria_label = link.get("aria-label", "").strip().lower()
+
+                  is_rss_link = (
+                      "rss.xml" in href.lower()
+                      or href.lower().endswith("/rss")
+                      or href.lower().endswith("/rss/")
+                      or title == "rss"
+                      or aria_label == "rss"
+                  )
+
+                  if is_rss_link:
+                      link["href"] = HOME_URL
+                      changed = True
+
+              # ----------------------------------------------------------
+              # 2. 查找首页文章行
+              # ----------------------------------------------------------
+              article_rows = []
+
+              for row in soup.select(".Box-row"):
+                  date_element = None
+                  date_text = None
+
+                  # 日期一般位于 span.Label 中
+                  for element in row.select(".Label, span, time"):
+                      text = element.get_text(" ", strip=True)
+
+                      if DATE_PATTERN.fullmatch(text):
+                          date_element = element
+                          date_text = text
+                          break
+
+                  if date_element is not None and date_text is not None:
+                      article_rows.append(
+                          {
+                              "date": date_text,
+                              "row": row,
+                              "date_element": date_element,
+                          }
+                      )
+
+              # ----------------------------------------------------------
+              # 3. 删除日期标签
+              # ----------------------------------------------------------
+              for item in article_rows:
+                  item["date_element"].decompose()
+                  changed = True
+
+              # ----------------------------------------------------------
+              # 4. 按日期从早到晚排序
+              #    例如：
+              #    2026-07-10
+              #    2026-07-11
+              #    2026-07-12
+              #    2026-07-14
+              # ----------------------------------------------------------
+              if article_rows:
+                  article_rows.sort(key=lambda item: item["date"])
+
+                  # 按父容器分别排序，避免错误移动其他区域
+                  rows_by_parent = {}
+
+                  for item in article_rows:
+                      parent = item["row"].parent
+                      rows_by_parent.setdefault(id(parent), {
+                          "parent": parent,
+                          "items": []
+                      })
+                      rows_by_parent[id(parent)]["items"].append(item)
+
+                  for group in rows_by_parent.values():
+                      parent = group["parent"]
+                      items = group["items"]
+
+                      # 从原位置移除
+                      for item in items:
+                          item["row"].extract()
+
+                      # 依次追加，最早日期排在前面
+                      for item in items:
+                          parent.append(item["row"])
+
+                  changed = True
+
+              if changed:
+                  html_file.write_text(
+                      str(soup),
+                      encoding="utf-8"
+                  )
+                  print(f"Customized: {html_file}")
+              else:
+                  print(f"No matching homepage elements found: {html_file}")
+
+          print("Homepage customization completed.")
+          PY
+
+      - name: Copy generated files
+        run: |
+          cp -a /opt/Gmeek/docs "${{ github.workspace }}"
+          cp -a /opt/Gmeek/backup "${{ github.workspace }}"
+          cp /opt/Gmeek/blogBase.json "${{ github.workspace }}"
+
+      - name: Update html
         run: |
           git config --local user.email "$(jq -r ".email" config.json)"
           git config --local user.name "${{ github.repository_owner }}"
+
           git add .
-          git commit -a -m '🎉auto update by Gmeek action' || echo "nothing to commit"
+          git commit -m "🎉 auto update by Gmeek action" || echo "nothing to commit"
           git push || echo "nothing to push"
+
           sleep 3
-          
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'docs/.'
-          
+          path: "docs/."
+
   deploy:
     name: Deploy blog
     runs-on: ubuntu-24.04
     needs: build
+
     permissions:
       contents: write
       pages: write
       id-token: write
+
     concurrency:
       group: "pages"
       cancel-in-progress: false
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
