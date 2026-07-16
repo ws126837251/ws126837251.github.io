@@ -1,3 +1,4 @@
+```json
 {
   "title": "Giffgaff使用指南",
   "subTitle": "本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负",
@@ -5,16 +6,17 @@
   "startSite": "07/10/2026",
   "onePageListNum": 30,
   "email": "1359796352@qq.com",
-  "commentLabelColor": "#ffd400",
-  "yearColorList":[
-  "#0969DA",
-  "#4C84FF",
-  "#6A9EFF",
-  "#8DB6FF"
-]
+  "commentLabelColor": "#0969DA",
+  "yearColorList": [
+    "#0969DA",
+    "#4C84FF",
+    "#6A9EFF",
+    "#8DB6FF"
+  ],
   "i18n": "CN",
   "bottomText": "❤️ 有任何问题请联系QQ或TG客服，不要在闲鱼问，谢谢！❤️",
-  "allHead":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><style>html,body{background:#EEF4F8!important;color:#222!important}.Header{background:#EEF4F8!important}.Box{background:#fff!important;border:1px solid #D8E2EB!important;border-radius:12px!important}.Box-header{background:#fff!important;border-bottom:1px solid #D8E2EB!important}.markdown-body{background:transparent!important;color:#333!important}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5{color:#111!important}.markdown-body a,a{color:#0969DA!important}.color-fg-muted{color:#666!important}.btn{background:#0969DA!important;color:#fff!important;border:none!important}.footer{color:#666!important}</style>",
+  "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><style>html,body{background-color:#EEF4F8!important;color:#111111!important}.Header{background-color:#EEF4F8!important}.AppHeader{background-color:#EEF4F8!important}.Box{background-color:#FFFFFF!important;border:1px solid #D8E2EB!important;border-radius:12px!important;box-shadow:0 4px 14px rgba(31,45,61,.06)!important}.Box-header{background-color:#FFFFFF!important;color:#111111!important;border-bottom:1px solid #D8E2EB!important}.Box-row{background-color:#FFFFFF!important;color:#111111!important;border-color:#D8E2EB!important}.markdown-body{background-color:transparent!important;color:#222222!important}.markdown-body p,.markdown-body li,.markdown-body table,.markdown-body blockquote{color:#222222!important}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{color:#111111!important;border-color:#D8E2EB!important}.markdown-body code{color:#111111!important;background-color:#E4EDF4!important}.markdown-body pre{background-color:#E4EDF4!important;border:1px solid #D0DCE6!important}.markdown-body pre code{background-color:transparent!important}.markdown-body blockquote{background-color:#F7FAFC!important;border-left-color:#8DB6FF!important}.markdown-body table tr{background-color:#FFFFFF!important;border-color:#D8E2EB!important}.markdown-body table tr:nth-child(2n){background-color:#F7FAFC!important}.markdown-body table th,.markdown-body table td{border-color:#D8E2EB!important}.markdown-body a,a{color:#0969DA!important}.markdown-body hr{background-color:#D8E2EB!important}.color-fg-default{color:#111111!important}.color-fg-muted{color:#5C6773!important}.color-fg-subtle{color:#6B7682!important}.btn{background-color:#0969DA!important;color:#FFFFFF!important;border-color:#0969DA!important;border-radius:8px!important}.btn:hover{background-color:#075CBD!important;border-color:#075CBD!important}.Label{color:#111111!important}.footer,.Footer{color:#5C6773!important;background-color:#EEF4F8!important}input,textarea,select{background-color:#FFFFFF!important;color:#111111!important;border-color:#C9D6E1!important}::placeholder{color:#7C8793!important}</style>",
   "script": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
   "GMEEK_VERSION": "main"
 }
+```
