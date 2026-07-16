@@ -1,6 +1,6 @@
-# Giffgaff使用指南 :link: https://ws126837251.github.io 
-### :page_facing_up: [18](https://ws126837251.github.io/tag.html) 
+# Giffgaff使用指南 :link: https://giffgaff.wufeng.de 
+### :page_facing_up: [18](https://giffgaff.wufeng.de/tag.html) 
 ### :speech_balloon: 0 
 ### :hibiscus: 12741 
-### :alarm_clock: 2026-07-16 15:24:00 
+### :alarm_clock: 2026-07-16 16:00:45 
 ### Powered by :heart: [Gmeek](https://github.com/Meekdai/Gmeek)
