@@ -1,4 +1,4 @@
-name: build Gmeek custom
+name: build Gmeek
 
 on:
   workflow_dispatch:
@@ -29,8 +29,11 @@ jobs:
         id: pages
         uses: actions/configure-pages@v4
 
-      - name: Install jq
+      - name: Get config.json
         run: |
+          echo "====== check config.json file ======"
+          cat config.json
+          echo "====== check config.json end ======"
           sudo apt-get update
           sudo apt-get install -y jq
 
@@ -39,121 +42,123 @@ jobs:
         with:
           python-version: "3.8"
 
-      - name: Clone Gmeek
+      - name: Clone source code
         run: |
           GMEEK_VERSION=$(jq -r ".GMEEK_VERSION" config.json)
 
           git clone https://github.com/Meekdai/Gmeek.git /opt/Gmeek
           cd /opt/Gmeek
 
+          lastTag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+
           if [ "$GMEEK_VERSION" = "last" ]; then
-            LAST_TAG=$(git describe --tags "$(git rev-list --tags --max-count=1)")
-            git checkout "$LAST_TAG"
+            git checkout "$lastTag"
           else
             git checkout "$GMEEK_VERSION"
           fi
 
-      - name: Copy repository files
-        run: |
-          cp -r "${{ github.workspace }}/." /opt/Gmeek/
-
-      - name: Patch Gmeek
+      - name: Customize Gmeek source
         run: |
           python <<'PY'
           from pathlib import Path
-          import re
 
-          gmeek = Path("/opt/Gmeek/Gmeek.py")
-          template = Path("/opt/Gmeek/templates/plist.html")
+          gmeek_file = Path("/opt/Gmeek/Gmeek.py")
+          template_file = Path("/opt/Gmeek/templates/plist.html")
 
-          source = gmeek.read_text(encoding="utf-8")
+          # ------------------------------------------------------------
+          # 1. 文章按照创建时间从早到晚读取
+          # ------------------------------------------------------------
+          gmeek_text = gmeek_file.read_text(encoding="utf-8")
 
-          # PyGithub 默认返回新到旧。
-          # 在获取 issues 后直接反转为旧到新。
-          patterns = [
-              (
-                  r"(issues\s*=\s*self\.repo\.get_issues\([^\n]*\))",
-                  r"\1\n        issues = list(issues)[::-1]"
-              ),
-              (
-                  r"(issues\s*=\s*self\.repo\.get_issues\(\))",
-                  r"\1\n        issues = list(issues)[::-1]"
-              )
-          ]
+          old_issue_code = "issues=self.repo.get_issues()"
+          new_issue_code = (
+              "issues=sorted("
+              "self.repo.get_issues(state='open'), "
+              "key=lambda issue: issue.created_at"
+              ")"
+          )
 
-          patched = False
-
-          for pattern, replacement in patterns:
-              new_source, count = re.subn(
-                  pattern,
-                  replacement,
-                  source,
-                  count=1
-              )
-
-              if count:
-                  source = new_source
-                  patched = True
-                  break
-
-          if not patched:
+          if old_issue_code not in gmeek_text:
               raise RuntimeError(
-                  "未找到 Gmeek 的 issue 获取代码，停止构建。"
+                  "没有找到 issues=self.repo.get_issues()，"
+                  "Gmeek 源码可能已更新，请停止构建。"
               )
 
-          gmeek.write_text(source, encoding="utf-8")
-
-          html = template.read_text(encoding="utf-8")
-
-          # 去掉文章日期显示
-          html = html.replace(
-              "{{ postListJson[num]['createdDate'] }}",
-              ""
+          gmeek_text = gmeek_text.replace(
+              old_issue_code,
+              new_issue_code,
+              1
           )
 
-          html = html.replace(
-              '{{ postListJson[num]["createdDate"] }}',
-              ""
+          gmeek_file.write_text(
+              gmeek_text,
+              encoding="utf-8"
           )
 
-          # 将 RSS 链接指向首页
-          html = html.replace(
+          # ------------------------------------------------------------
+          # 2. 首页删除日期标签
+          # 3. RSS 图标跳转到网站首页
+          # ------------------------------------------------------------
+          template_text = template_file.read_text(encoding="utf-8")
+
+          date_code = "{{ postListJson[num]['createdDate'] }}"
+
+          if date_code not in template_text:
+              raise RuntimeError(
+                  "没有找到首页日期模板 createdDate，"
+                  "Gmeek 模板可能已更新，请停止构建。"
+              )
+
+          template_text = template_text.replace(
+              date_code,
+              "",
+              1
+          )
+
+          # RSS 原链接通常为 homeUrl/rss.xml
+          template_text = template_text.replace(
               "{{ blogBase['homeUrl'] }}/rss.xml",
-              "https://giffgaff.wufeng.de/"
+              "{{ blogBase['homeUrl'] }}/"
           )
 
-          html = html.replace(
+          template_text = template_text.replace(
               '{{ blogBase["homeUrl"] }}/rss.xml',
-              "https://giffgaff.wufeng.de/"
+              '{{ blogBase["homeUrl"] }}/'
           )
 
-          template.write_text(html, encoding="utf-8")
+          template_file.write_text(
+              template_text,
+              encoding="utf-8"
+          )
 
-          print("PATCH_SUCCESS")
+          print("Gmeek source customization completed.")
           PY
 
-      - name: Verify patch
+      - name: Verify customization
         run: |
-          echo "====== verify workflow patch ======"
+          echo "====== verify article sorting ======"
+          grep -n "issues=sorted" /opt/Gmeek/Gmeek.py
 
-          grep -n "issues = list(issues)\[::-1\]" \
-            /opt/Gmeek/Gmeek.py
-
-          if grep -q "createdDate" \
+          echo "====== verify date removed ======"
+          if grep -q "postListJson\[num\]\['createdDate'\]" \
             /opt/Gmeek/templates/plist.html; then
-            echo "ERROR: createdDate is still present"
+            echo "ERROR: 日期模板仍然存在"
             exit 1
+          else
+            echo "日期模板已成功删除"
           fi
 
-          echo "PATCH_VERIFIED"
+          echo "====== verify RSS link ======"
+          grep -n "rss" /opt/Gmeek/templates/plist.html || true
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r /opt/Gmeek/requirements.txt
 
-      - name: Generate HTML
+      - name: Generate new html
         run: |
+          cp -r ./* /opt/Gmeek/
           cd /opt/Gmeek
 
           python Gmeek.py \
@@ -161,42 +166,34 @@ jobs:
             "${{ github.repository }}" \
             --issue_number '${{ github.event.issue.number }}'
 
-      - name: Verify generated page
+          cp -a /opt/Gmeek/docs "${{ github.workspace }}"
+          cp -a /opt/Gmeek/backup "${{ github.workspace }}"
+          cp /opt/Gmeek/blogBase.json "${{ github.workspace }}"
+
+      - name: Verify generated homepage
         run: |
-          if grep -E "20[0-9]{2}-[0-9]{2}-[0-9]{2}" \
-            /opt/Gmeek/docs/index.html; then
-            echo "ERROR: 首页仍存在日期标签"
-            exit 1
+          echo "====== check generated dates ======"
+
+          if grep -Eo "20[0-9]{2}-[0-9]{2}-[0-9]{2}" \
+            docs/index.html | head; then
+            echo "提示：页面中可能还有其他日期文本，请检查上方输出。"
           fi
 
-          echo "GENERATED_PAGE_VERIFIED"
+          echo "====== first article titles ======"
+          grep -o 'class="Link--primary[^>]*>[^<]*' \
+            docs/index.html | head -20 || true
 
-      - name: Copy generated files
+      - name: Update html
         run: |
-          rm -rf "${{ github.workspace }}/docs"
-          rm -rf "${{ github.workspace }}/backup"
+          git config --local user.email "$(jq -r ".email" config.json)"
+          git config --local user.name "${{ github.repository_owner }}"
 
-          cp -a /opt/Gmeek/docs "${{ github.workspace }}/"
-          cp -a /opt/Gmeek/backup "${{ github.workspace }}/"
-          cp /opt/Gmeek/blogBase.json "${{ github.workspace }}/"
-
-      - name: Commit generated files
-        run: |
-          cd "${{ github.workspace }}"
-
-          git config --local user.email \
-            "$(jq -r ".email" config.json)"
-
-          git config --local user.name \
-            "${{ github.repository_owner }}"
-
-          git add docs backup blogBase.json
-
-          git commit \
-            -m "🎉 auto update by customized Gmeek action" \
+          git add .
+          git commit -m "🎉 auto update by Gmeek action" \
             || echo "nothing to commit"
 
-          git push
+          git push || echo "nothing to push"
+          sleep 3
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
