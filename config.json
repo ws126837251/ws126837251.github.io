@@ -14,9 +14,8 @@
   ],
   "i18n": "CN",
   "bottomText": "❤️ 有任何问题请联系QQ或TG客服，不要在闲鱼问，谢谢！❤️",
-  "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
+  "homeUrl": "https://giffgaff.wufeng.de",
+  "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><style>@media (prefers-color-scheme:light){html[data-color-mode='auto'],html[data-color-mode='auto'] body{background-color:#EEF3F7!important}}html[data-color-mode='light'],html[data-color-mode='light'] body{background-color:#EEF3F7!important}</style>",
   "script": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
-  "indexStyle": "<style>html[data-color-mode='light'],html[data-color-mode='light'] body{background-color:#EEF3F7!important}@media (prefers-color-scheme:light){html[data-color-mode='auto'],html[data-color-mode='auto'] body{background-color:#EEF3F7!important}}</style>",
-  "indexScript": "<script>document.addEventListener('DOMContentLoaded',function(){var rows=Array.from(document.querySelectorAll('.Box-row'));var datedRows=[];rows.forEach(function(row){var labels=Array.from(row.querySelectorAll('.Label'));var dateLabel=labels.find(function(el){return /^\\d{4}-\\d{2}-\\d{2}$/.test(el.textContent.trim())});if(dateLabel){row.dataset.postDate=dateLabel.textContent.trim();datedRows.push(row);dateLabel.remove()}});if(datedRows.length){var parent=datedRows[0].parentElement;datedRows.sort(function(a,b){return a.dataset.postDate.localeCompare(b.dataset.postDate)});datedRows.forEach(function(row){parent.appendChild(row)})}});</script>",
   "GMEEK_VERSION": "main"
 }
