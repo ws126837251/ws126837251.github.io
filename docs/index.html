@@ -1,23 +1,23 @@
 <!DOCTYPE html>
+
 <html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
 <head>
-    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
-    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><style>@media (prefers-color-scheme:light){html[data-color-mode='auto'],html[data-color-mode='auto'] body{background-color:#EEF3F7!important}}html[data-color-mode='light'],html[data-color-mode='light'] body{background-color:#EEF3F7!important}</style>
-    <link rel="icon" href="https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png"><script>
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<link href="https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css" rel="stylesheet"/>
+<script src="https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js"></script><style>@media (prefers-color-scheme:light){html[data-color-mode='auto'],html[data-color-mode='auto'] body{background-color:#EEF3F7!important}}html[data-color-mode='light'],html[data-color-mode='light'] body{background-color:#EEF3F7!important}</style>
+<link href="https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png" rel="icon"/><script>
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负">
-<meta property="og:title" content="Giffgaff使用指南">
-<meta property="og:description" content="本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负">
-<meta property="og:type" content="blog">
-<meta property="og:url" content="https://giffgaff.wufeng.de">
-<meta property="og:image" content="https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png">
+<meta content="本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负" name="description"/>
+<meta content="Giffgaff使用指南" property="og:title"/>
+<meta content="本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负" property="og:description"/>
+<meta content="blog" property="og:type"/>
+<meta content="https://giffgaff.wufeng.de" property="og:url"/>
+<meta content="https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png" property="og:image"/>
 <title>Giffgaff使用指南</title>
-
 </head>
 <style>
 body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
@@ -25,7 +25,6 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
-
 <style>
 .avatar {transition: 0.8s;width:64px;height:64px;object-fit: cover;}
 .avatar:hover{transform: scale(1.15) rotate(360deg);}
@@ -50,242 +49,218 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     .LabelTime{display:none;}
 }
 </style>
-
-
-
 <body>
-    <div id="header">
+<div id="header">
 <div class="title-left">
-    <img src="https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png" class="avatar circle" id="avatarImg" alt="avatar"><a class="blogTitle">Giffgaff使用指南</a></div>
+<img alt="avatar" class="avatar circle" id="avatarImg" src="https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png"/><a class="blogTitle">Giffgaff使用指南</a></div>
 <div class="title-right">
-    <a href="https://giffgaff.wufeng.de/tag.html" id="buttonSearch" class="btn btn-invisible circle" title="搜索">
-        <svg class="octicon" width="16" height="16" >
-            <path id="pathSearch" fill-rule="evenodd"></path>
-        </svg>
-    </a>
-    
-    
-    <a href="https://giffgaff.wufeng.de/" target="_blank" id="buttonRSS" class="btn btn-invisible circle" title="RSS">
-        <svg class="octicon" width="16" height="16" >
-            <path id="pathRSS" fill-rule="evenodd"></path>
-        </svg>
-    </a>
-    <a class="btn btn-invisible circle" onclick="modeSwitch()" title="切换主题">
-        <svg class="octicon" width="16" height="16" >
-            <path id="themeSwitch" fill-rule="evenodd"></path>
-        </svg>
-    </a>
+<a class="btn btn-invisible circle" href="https://giffgaff.wufeng.de/tag.html" id="buttonSearch" title="搜索">
+<svg class="octicon" height="16" width="16">
+<path fill-rule="evenodd" id="pathSearch"></path>
+</svg>
+</a>
+<a class="btn btn-invisible circle" href="https://giffgaff.wufeng.de/" id="buttonRSS" target="_blank" title="RSS">
+<svg class="octicon" height="16" width="16">
+<path fill-rule="evenodd" id="pathRSS"></path>
+</svg>
+</a>
+<a class="btn btn-invisible circle" onclick="modeSwitch()" title="切换主题">
+<svg class="octicon" height="16" width="16">
+<path fill-rule="evenodd" id="themeSwitch"></path>
+</svg>
+</a>
 </div>
 </div>
-    <div id="content">
+<div id="content">
 <div style="margin-bottom: 16px;">本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负</div>
 <nav class="SideNav border">
 <a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Giffgaff-ji-huo-jiao-cheng.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop1" d=""></path>
-        </svg>
-        <span class="listTitle">Giffgaff激活教程</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop1" d=""></path>
+</svg>
+<span class="listTitle">Giffgaff激活教程</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
 </a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/lian-xi-wo-men-%EF%BC%81.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop1" d=""></path>
-        </svg>
-        <span class="listTitle">联系我们！</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#0075ca"><object><a style="color:#fff" href="tag.html#杂谈">杂谈</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/hao-ma-wen-ti-%EF%BC%88-bei-zhu-ce---neng-huan-ma---neng-xuan-ma-%EF%BC%89.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">号码问题（被注册/能换吗/能选吗）</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#e4e669"><object><a style="color:#fff" href="tag.html#百科全书">百科全书</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/hao-ma-de-ge-shi-wen-ti-da-yi.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">号码的格式问题答疑</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#e4e669"><object><a style="color:#fff" href="tag.html#百科全书">百科全书</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-she-zhi-yun-ying-shang.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">如何设置运营商</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#e4e669"><object><a style="color:#fff" href="tag.html#百科全书">百科全书</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/xin-hao-lan-de-R-shi-shen-me.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">信号栏的R是什么</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#e4e669"><object><a style="color:#fff" href="tag.html#百科全书">百科全书</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ping-guo---xiao-mi-yong-hu-bi-kan.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">苹果/小米用户必看</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#d73a4a"><object><a style="color:#fff" href="tag.html#注意事项">注意事项</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Giffgaff-zhu-ce-chang-jian-wen-ti-hui-zong.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">Giffgaff注册常见问题汇总</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#d73a4a"><object><a style="color:#fff" href="tag.html#注意事项">注意事项</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-bao-hao.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">如何保号</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-guan-bi-yu-yin-xin-xiang.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">如何关闭语音信箱</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/zhuan-Esim--shi-ti-qia.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">转Esim/实体卡</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-geng-huan-wo-de-hao-ma.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">如何更换我的号码</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Telegram-chang-jian-wen-ti-ji-jie-jue-fang-an.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">Telegram常见问题及解决方案</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#e4e669"><object><a style="color:#fff" href="tag.html#百科全书">百科全书</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/wei-shen-me-wu-fa-shou---fa-duan-xin.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">为什么无法收/发短信</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-cha-xun-zi-ji-de-shou-ji-hao.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">如何查询自己的手机号</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
-</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Giffgaff-de-zi-fei.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">Giffgaff的资费</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop1" d=""></path>
+</svg>
+<span class="listTitle">联系我们！</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#0075ca"><object><a href="tag.html#杂谈" style="color:#fff">杂谈</a></object></span>
+
+</div>
 </a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/wei-shen-me-xuan-ze-Giffgaff.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">为什么选择Giffgaff</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">为什么选择Giffgaff</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
 </a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/shen-me-shi-Giffgaff.html">
-    <div class="d-flex flex-items-center">
-        <svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
-        </svg>
-        <span class="listTitle">什么是Giffgaff</span>
-    </div>
-    <div class="listLabels">
-        
-        <span class="Label LabelName" style="background-color:#9fcbfa"><object><a style="color:#fff" href="tag.html#教程">教程</a></object></span>
-        <span class="Label LabelTime" style="background-color:#1f883d"></span>
-    </div>
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">什么是Giffgaff</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/zhuan-Esim--shi-ti-qia.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">转Esim/实体卡</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-geng-huan-wo-de-hao-ma.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">如何更换我的号码</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Telegram-chang-jian-wen-ti-ji-jie-jue-fang-an.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">Telegram常见问题及解决方案</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#e4e669"><object><a href="tag.html#百科全书" style="color:#fff">百科全书</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/wei-shen-me-wu-fa-shou---fa-duan-xin.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">为什么无法收/发短信</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-cha-xun-zi-ji-de-shou-ji-hao.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">如何查询自己的手机号</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Giffgaff-de-zi-fei.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">Giffgaff的资费</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-bao-hao.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">如何保号</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-guan-bi-yu-yin-xin-xiang.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">如何关闭语音信箱</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#9fcbfa"><object><a href="tag.html#教程" style="color:#fff">教程</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/hao-ma-wen-ti-%EF%BC%88-bei-zhu-ce---neng-huan-ma---neng-xuan-ma-%EF%BC%89.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">号码问题（被注册/能换吗/能选吗）</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#e4e669"><object><a href="tag.html#百科全书" style="color:#fff">百科全书</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/hao-ma-de-ge-shi-wen-ti-da-yi.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">号码的格式问题答疑</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#e4e669"><object><a href="tag.html#百科全书" style="color:#fff">百科全书</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ru-he-she-zhi-yun-ying-shang.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">如何设置运营商</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#e4e669"><object><a href="tag.html#百科全书" style="color:#fff">百科全书</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/xin-hao-lan-de-R-shi-shen-me.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">信号栏的R是什么</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#e4e669"><object><a href="tag.html#百科全书" style="color:#fff">百科全书</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/ping-guo---xiao-mi-yong-hu-bi-kan.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">苹果/小米用户必看</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#d73a4a"><object><a href="tag.html#注意事项" style="color:#fff">注意事项</a></object></span>
+
+</div>
+</a><a class="SideNav-item d-flex flex-items-center flex-justify-between" href="post/Giffgaff-zhu-ce-chang-jian-wen-ti-hui-zong.html">
+<div class="d-flex flex-items-center">
+<svg class="SideNav-icon octicon" style="width:16px;height:16px"><path class="svgTop0" d=""></path>
+</svg>
+<span class="listTitle">Giffgaff注册常见问题汇总</span>
+</div>
+<div class="listLabels">
+<span class="Label LabelName" style="background-color:#d73a4a"><object><a href="tag.html#注意事项" style="color:#fff">注意事项</a></object></span>
+
+</div>
 </a>
 </nav>
 </div>
-    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://giffgaff.wufeng.de">Giffgaff使用指南</a></div>
+<div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://giffgaff.wufeng.de">Giffgaff使用指南</a></div>
 <div id="footer2">
-    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+<span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
 </div>
-
 <script>
 var now=new Date();
 document.getElementById("copyrightYear").innerHTML=now.getFullYear();
@@ -329,7 +304,6 @@ function utterancesTheme(theme){
 if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
 console.log("\n %c Gmeek main https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
 </script>
-
 <script>
 document.getElementById("pathSearch").setAttribute("d",IconList["search"]);
 document.getElementById("pathRSS").setAttribute("d",IconList["rss"]);
@@ -347,6 +321,4 @@ for(var i=0;i<iconPost.length;i++){
 
 
 </script>
-
-
 </html>
