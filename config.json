@@ -4,12 +4,17 @@
   "avatarUrl": "https://cdn.phototourl.com/free/2026-07-10-e6adab60-f3b3-418b-a99f-d74b89f78baa.png",
   "startSite": "07/10/2026",
   "onePageListNum": 30,
-  "email":"1359796352@qq.com",
-  "commentLabelColor":"#006b75",
-  "yearColorList":["#bc4c00", "#0969da", "#1f883d", "#A333D0"],
-  "i18n":"CN",
-  "bottomText":"❤️ 有任何问题请联系QQ或TG客服，不要在闲鱼问，谢谢！❤️",
-  "allHead":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
-  "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
-  "GMEEK_VERSION":"main"
+  "email": "1359796352@qq.com",
+  "commentLabelColor": "#ffd400",
+  "yearColorList": [
+    "#ffd400",
+    "#ffffff",
+    "#f5b800",
+    "#d4a900"
+  ],
+  "i18n": "CN",
+  "bottomText": "❤️ 有任何问题请联系QQ或TG客服，不要在闲鱼问，谢谢！❤️",
+  "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><style>html,body{background-color:#0b0b0b!important;color:#ffffff!important}.Header{background-color:#0b0b0b!important}.Box{background-color:#171717!important;border-color:#333!important}.Box-header{background-color:#202020!important;border-color:#333!important}.Box-row{border-color:#333!important}.markdown-body{color:#eaeaea!important;background-color:transparent!important}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4{color:#ffffff!important;border-color:#444!important}.markdown-body a,a{color:#ffd400!important}.color-fg-muted{color:#aaaaaa!important}.btn{background-color:#ffd400!important;color:#111!important;border-color:#ffd400!important}.Label{color:#111!important}.footer{color:#aaa!important}</style>",
+  "script": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
+  "GMEEK_VERSION": "main"
 }
