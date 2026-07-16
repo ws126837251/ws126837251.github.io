@@ -1,4 +1,4 @@
-```json
+
 {
   "title": "Giffgaff使用指南",
   "subTitle": "本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负",
@@ -19,4 +19,3 @@
   "script": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
   "GMEEK_VERSION": "main"
 }
-```
