@@ -1,0 +1,21 @@
+{
+  "title": "Giffgaff使用指南",
+  "subTitle": "本教程为旅游专用，请遵守当地法律法规，禁止用于违法犯罪行为，否则后果自负",
+  "avatarUrl": "https://cdn.nodeimage.com/i/j3CEACe0uyNKI9YjgDBInZsllW5VDviU.webp",
+  "startSite": "07/10/2026",
+  "onePageListNum": 30,
+  "email": "1359796352@qq.com",
+  "commentLabelColor": "#006b75",
+  "yearColorList": [
+    "#bc4c00",
+    "#0969da",
+    "#1f883d",
+    "#A333D0"
+  ],
+  "i18n": "CN",
+  "bottomText": "❤️ 有任何问题请联系QQ或TG客服，不要在闲鱼问，谢谢！❤️",
+  "homeUrl": "https://giffgaff.wufeng.de",
+  "allHead": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script><style>@media (prefers-color-scheme:light){html[data-color-mode='auto'],html[data-color-mode='auto'] body{background-color:#EEF3F7!important}}html[data-color-mode='light'],html[data-color-mode='light'] body{background-color:#EEF3F7!important}.Header{display:flex!important;align-items:center!important}.Header h1{transform:translateY(-8px)!important}.Header img{margin-top:0!important}#weatherEffect{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999}</style><canvas id='weatherEffect'></canvas><script>(function(){const c=document.getElementById('weatherEffect');if(!c)return;const ctx=c.getContext('2d');let w,h;let p=[];const m=new Date().getMonth()+1;const winter=m===12||m<=2;const summer=m>=6&&m<=8;function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}resize();window.addEventListener('resize',resize);let mobile=window.innerWidth<600;let count=mobile?50:120;for(let i=0;i<count;i++){p.push({x:Math.random()*w,y:Math.random()*h,l:Math.random()*18+10,s:Math.random()*1.2+.5,r:Math.random()*2.5+1})}function draw(){ctx.clearRect(0,0,w,h);if(winter){ctx.fillStyle='rgba(255,255,255,.85)';ctx.beginPath();p.forEach(a=>{ctx.moveTo(a.x,a.y);ctx.arc(a.x,a.y,a.r,0,Math.PI*2);a.y+=a.s;a.x+=Math.sin(a.y/70)*.35;if(a.y>h){a.y=-10;a.x=Math.random()*w}});ctx.fill()}else{ctx.strokeStyle=summer?'rgba(120,170,210,.50)':'rgba(120,150,180,.50)';ctx.lineWidth=1.4;p.forEach(a=>{ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(a.x+2,a.y+a.l);ctx.stroke();a.y+=a.s*(mobile?(summer?7:5): (summer?4:2.5));a.x+=.25;if(a.y>h){a.y=-20;a.x=Math.random()*w}})}requestAnimationFrame(draw)}draw()})();</script>",
+  "script": "<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
+  "GMEEK_VERSION": "main"
+}
