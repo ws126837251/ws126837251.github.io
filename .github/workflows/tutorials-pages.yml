@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Render catalog fallback
+        run: node scripts/render-catalog.mjs
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

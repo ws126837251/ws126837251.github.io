@@ -1,9 +1,9 @@
 {
-  "name": "无风教程中心",
-  "short_name": "无风教程",
+  "name": "无风小卖部",
+  "short_name": "无风小卖部",
   "lang": "zh-CN",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#071426",
-  "theme_color": "#071426"
+  "background_color": "#071928",
+  "theme_color": "#071928"
 }

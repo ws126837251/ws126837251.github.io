@@ -1,4 +1,4 @@
-# 无风教程中心维护规则
+# 无风小卖部维护规则
 
 ## 项目概览
 
@@ -12,10 +12,13 @@
 
 ## 文件职责
 
-- `hub/index.html`：教程中心首页和产品入口。
+- `hub/index.html`：电话卡教程目录首页。
 - `hub/assets/style.css`：主站样式。
+- `hub/assets/products.js`：电话卡品牌与入口数据。
+- `hub/assets/app.js`：目录搜索、地区筛选和卡片渲染。
+- `scripts/render-catalog.mjs`：根据产品数据生成首页静态兜底卡片和统计。
 - `hub/404.html`：主站未找到页面。
-- `hub/og.png`：社交分享预览图。
+- `hub/og-directory.png`：当前社交分享预览图。
 - `hub/robots.txt`、`hub/sitemap.xml`：搜索引擎入口。
 - `.github/workflows/tutorials-pages.yml`：GitHub Pages 部署流程。
 
@@ -24,7 +27,8 @@
 - 主站只负责产品入口和公共说明，不在本仓库维护产品教程正文。
 - Giffgaff 文章在 `ws126837251/giffgaff` 的 GitHub Issues 中维护。
 - Lebara 文章在 `ws126837251/lebara` 的 GitHub Issues 中维护。
-- 新增产品时使用稳定的小写英文仓库名和路径，并在首页、站点地图和导航中同时增加入口。
+- 新增产品时使用稳定的小写英文仓库名和路径，在 `hub/assets/products.js` 增加配置，并同步更新站点地图。
+- 首页不得针对固定的两个品牌设计；目录、统计和筛选必须能适应品牌数量增长。
 - 保留中文内容和 UTF-8 编码。
 - 不直接修改各产品仓库由 Gmeek 自动生成的文章 HTML。
 
