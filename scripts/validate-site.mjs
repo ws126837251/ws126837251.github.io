@@ -111,6 +111,10 @@ for (const product of products) {
     throw new Error(`Product articleCount must be a non-negative integer: ${product.name}`);
   }
 
+  if (!/^[^/]+\/[^/]+$/.test(product.issuesRepo ?? "")) {
+    throw new Error(`Product issuesRepo must be owner/repository: ${product.name}`);
+  }
+
   if (slugs.has(product.slug) || paths.has(product.path)) {
     throw new Error(`Duplicate product slug or path: ${product.slug}`);
   }
@@ -159,6 +163,11 @@ for (const requiredBehavior of [
 const renderScript = path.join(rootDir, "scripts", "render-catalog.mjs");
 if (!fs.existsSync(renderScript)) {
   throw new Error("Catalog fallback renderer is missing.");
+}
+
+const syncScript = path.join(rootDir, "scripts", "sync-product-counts.mjs");
+if (!fs.existsSync(syncScript)) {
+  throw new Error("Product count sync script is missing.");
 }
 
 const socialImage = fs.statSync(path.join(hubDir, "og-directory.png"));

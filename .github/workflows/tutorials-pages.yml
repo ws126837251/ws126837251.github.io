@@ -2,11 +2,14 @@ name: Deploy tutorials hub
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
   push:
     branches:
       - main
     paths:
       - "hub/**"
+      - "scripts/**"
       - ".github/workflows/tutorials-pages.yml"
 
 permissions:
@@ -27,6 +30,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+      - name: Sync product issue counts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/sync-product-counts.mjs
       - name: Render catalog fallback
         run: node scripts/render-catalog.mjs
       - name: Configure Pages
