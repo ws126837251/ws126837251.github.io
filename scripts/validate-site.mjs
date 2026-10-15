@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.dirname(scriptDir);
@@ -10,6 +9,7 @@ const hubDir = path.join(rootDir, "hub");
 const requiredFiles = [
   "index.html",
   "404.html",
+  "site-content.json",
   "assets/style.css",
   "assets/app.js",
   "assets/products.js",
@@ -20,55 +20,90 @@ const requiredFiles = [
 ];
 
 for (const relativePath of requiredFiles) {
-  const filePath = path.join(hubDir, relativePath);
-  if (!fs.existsSync(filePath)) {
+  if (!fs.existsSync(path.join(hubDir, relativePath))) {
     throw new Error(`Missing required file: hub/${relativePath}`);
   }
 }
 
 const indexHtml = fs.readFileSync(path.join(hubDir, "index.html"), "utf8");
+const notFoundHtml = fs.readFileSync(path.join(hubDir, "404.html"), "utf8");
+const siteContent = JSON.parse(
+  fs.readFileSync(path.join(hubDir, "site-content.json"), "utf8"),
+);
+const { products } = siteContent;
+
+function getContentValue(key) {
+  return key.split(".").reduce((current, part) => current?.[part], siteContent);
+}
+
 for (const requiredValue of [
   "/assets/style.css",
   "/assets/app.js",
   "/og-directory.png",
   "https://tutorials.wufeng.de/",
-  "无风小卖部",
-  "全球 SIM 卡使用指南",
   'id="product-grid"',
   'id="product-search"',
   'id="region-filters"',
   'class="no-js"',
   "CATALOG_FALLBACK_START",
   "CATALOG_FALLBACK_END",
+  'data-content="hero.titleLine1"',
+  siteContent.meta.title,
+  siteContent.brand.name,
+  siteContent.hero.titleLine1,
+  siteContent.footer.editUrl,
 ]) {
   if (!indexHtml.includes(requiredValue)) {
     throw new Error(`Homepage is missing: ${requiredValue}`);
   }
 }
 
-if (indexHtml.includes("Giffgaff 与 Lebara")) {
-  throw new Error("Homepage metadata is still limited to two brands.");
+for (const html of [indexHtml, notFoundHtml]) {
+  const contentKeys = [
+    ...html.matchAll(/data-content="([^"]+)"/g),
+  ].map((match) => match[1]);
+  for (const contentKey of contentKeys) {
+    const value = getContentValue(contentKey);
+    if (typeof value !== "string" && typeof value !== "number") {
+      throw new Error(`HTML references an invalid content key: ${contentKey}`);
+    }
+  }
 }
 
-if (indexHtml.includes("无风电话卡教程")) {
-  throw new Error("Homepage still contains the retired site name.");
+for (const requiredKey of [
+  "catalog.allRegionsLabel",
+  "catalog.cardAction",
+  "catalog.cardAriaTemplate",
+  "catalog.topicsAriaTemplate",
+  "catalog.countTemplate",
+]) {
+  if (typeof getContentValue(requiredKey) !== "string") {
+    throw new Error(`Site content is missing: ${requiredKey}`);
+  }
 }
 
-if (indexHtml.includes("全球 SIM 卡中文使用指南")) {
-  throw new Error("Homepage still contains the retired subtitle.");
+for (const retiredValue of [
+  "Giffgaff 与 Lebara",
+  "无风电话卡教程",
+  "全球 SIM 卡中文使用指南",
+]) {
+  if (indexHtml.includes(retiredValue)) {
+    throw new Error(`Homepage still contains retired copy: ${retiredValue}`);
+  }
 }
 
-JSON.parse(
-  fs.readFileSync(path.join(hubDir, "site.webmanifest"), "utf8"),
-);
-
-const productsUrl = pathToFileURL(
-  path.join(hubDir, "assets/products.js"),
-).href;
-const { products } = await import(productsUrl);
+JSON.parse(fs.readFileSync(path.join(hubDir, "site.webmanifest"), "utf8"));
 
 if (!Array.isArray(products) || products.length < 2) {
   throw new Error("Product catalog must contain at least two entries.");
+}
+
+const compatibilityUrl = `${pathToFileURL(
+  path.join(hubDir, "assets", "products.js"),
+).href}?validate=${Date.now()}`;
+const compatibilityModule = await import(compatibilityUrl);
+if (JSON.stringify(compatibilityModule.products) !== JSON.stringify(products)) {
+  throw new Error("Generated products.js does not match site-content.json.");
 }
 
 const slugs = new Set();
@@ -92,53 +127,51 @@ for (const product of products) {
   if (!product.path.startsWith("/") || !product.path.endsWith("/")) {
     throw new Error(`Product path must start and end with /: ${product.path}`);
   }
-
   if (!Array.isArray(product.topics) || product.topics.length === 0) {
     throw new Error(`Product must include at least one topic: ${product.name}`);
   }
-
   if (!Array.isArray(product.regions) || product.regions.length === 0) {
     throw new Error(`Product must include at least one region: ${product.name}`);
   }
-
   for (const region of product.regions) {
     if (!region.code || !region.name) {
       throw new Error(`Product has an incomplete region: ${product.name}`);
     }
   }
-
   if (!Number.isInteger(product.articleCount) || product.articleCount < 0) {
-    throw new Error(`Product articleCount must be a non-negative integer: ${product.name}`);
+    throw new Error(`Product articleCount must be non-negative: ${product.name}`);
   }
-
   if (!/^[^/]+\/[^/]+$/.test(product.issuesRepo ?? "")) {
     throw new Error(`Product issuesRepo must be owner/repository: ${product.name}`);
   }
-
   if (slugs.has(product.slug) || paths.has(product.path)) {
     throw new Error(`Duplicate product slug or path: ${product.slug}`);
   }
 
   slugs.add(product.slug);
   paths.add(product.path);
-
   if (!indexHtml.includes(`href="${product.path}"`)) {
     throw new Error(`Static catalog fallback is missing: ${product.path}`);
   }
 }
 
-const css = fs.readFileSync(path.join(hubDir, "assets/style.css"), "utf8");
-const openingBraces = (css.match(/{/g) ?? []).length;
-const closingBraces = (css.match(/}/g) ?? []).length;
-if (openingBraces !== closingBraces) {
+const css = fs.readFileSync(path.join(hubDir, "assets", "style.css"), "utf8");
+if ((css.match(/{/g) ?? []).length !== (css.match(/}/g) ?? []).length) {
   throw new Error("CSS opening and closing braces do not match.");
+}
+for (const requiredAccessibilityRule of [
+  ":focus-visible",
+  "prefers-reduced-motion: reduce",
+]) {
+  if (!css.includes(requiredAccessibilityRule)) {
+    throw new Error(`CSS is missing accessibility rule: ${requiredAccessibilityRule}`);
+  }
 }
 
 const sitemap = fs.readFileSync(path.join(hubDir, "sitemap.xml"), "utf8");
 if (!sitemap.includes("<urlset") || !sitemap.includes("</urlset>")) {
   throw new Error("Sitemap does not contain a complete urlset.");
 }
-
 for (const product of products) {
   const productUrl = `https://tutorials.wufeng.de${product.path}`;
   if (!sitemap.includes(productUrl)) {
@@ -146,32 +179,29 @@ for (const product of products) {
   }
 }
 
-const appJs = fs.readFileSync(path.join(hubDir, "assets/app.js"), "utf8");
+const appJs = fs.readFileSync(path.join(hubDir, "assets", "app.js"), "utf8");
 for (const requiredBehavior of [
+  "loadSiteContent",
   "renderProducts",
   "renderFilters",
   "updateFilterState",
   "matchesSearch",
   "localeCompare",
   "aria-pressed",
+  "/site-content.json",
 ]) {
   if (!appJs.includes(requiredBehavior)) {
     throw new Error(`Catalog behavior is missing: ${requiredBehavior}`);
   }
 }
 
-const renderScript = path.join(rootDir, "scripts", "render-catalog.mjs");
-if (!fs.existsSync(renderScript)) {
-  throw new Error("Catalog fallback renderer is missing.");
+for (const scriptName of ["render-catalog.mjs", "sync-product-counts.mjs"]) {
+  if (!fs.existsSync(path.join(rootDir, "scripts", scriptName))) {
+    throw new Error(`Required script is missing: ${scriptName}`);
+  }
 }
 
-const syncScript = path.join(rootDir, "scripts", "sync-product-counts.mjs");
-if (!fs.existsSync(syncScript)) {
-  throw new Error("Product count sync script is missing.");
-}
-
-const socialImage = fs.statSync(path.join(hubDir, "og-directory.png"));
-if (socialImage.size < 100_000) {
+if (fs.statSync(path.join(hubDir, "og-directory.png")).size < 100_000) {
   throw new Error("Social preview image appears to be incomplete.");
 }
 

@@ -43,12 +43,13 @@ button, input { font: inherit; }
 h1, h2, h3, p { margin-top: 0; }
 h1, h2, h3 { font-family: var(--display); letter-spacing: -.055em; }
 h1 { max-width: 650px; margin-bottom: 22px; font-size: clamp(51px, 5.8vw, 84px); line-height: .98; }
-h1 span { color: #0d6171; }
+.hero-title-main { color: var(--ink); }
+.hero-title-accent { color: #0d6171; }
 .hero-intro { max-width: 530px; margin-bottom: 30px; color: var(--ink-soft); font-size: 17px; line-height: 1.85; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
 .primary-action { display: inline-flex; align-items: center; justify-content: center; gap: 22px; min-height: 48px; padding: 12px 19px 12px 22px; color: var(--navy); background: var(--mint); border: 1px solid var(--mint); border-radius: 2px; font-size: 14px; font-weight: 900; transition: transform .2s ease, background .2s ease; }
 .primary-action:hover { background: #cbfa69; transform: translateY(-2px); }
-.primary-action span { font-size: 20px; line-height: 1; }
+.primary-action > span[aria-hidden="true"] { font-size: 20px; line-height: 1; }
 .text-action { display: inline-flex; gap: 9px; align-items: center; color: var(--ink); border-bottom: 1px solid var(--ink); font-size: 14px; font-weight: 800; }
 .hero-numbers { display: flex; gap: 0; margin-top: 57px; }
 .hero-numbers div { display: grid; gap: 2px; min-width: 112px; padding-right: 20px; margin-right: 20px; border-right: 1px solid #cfd9d4; }
@@ -172,6 +173,9 @@ footer { color: #c1d0d2; background: #041522; }
 .footer-inner strong { color: var(--white); font-size: 15px; letter-spacing: .04em; }
 .footer-inner span, .footer-inner p { margin: 0; font-size: 11px; }
 .footer-inner span { color: var(--cyan); font-weight: 700; letter-spacing: .06em; }
+.footer-meta { justify-items: end; text-align: right; }
+.footer-meta a { color: var(--cyan); font-size: 11px; font-weight: 800; }
+.footer-meta a:hover { color: var(--white); }
 
 .error-body { min-height: 100vh; background: var(--navy); color: var(--white); }
 .error-body .site-header { background: transparent; border-bottom-color: rgba(255,255,255,.16); }
@@ -238,6 +242,7 @@ footer { color: #c1d0d2; background: #041522; }
   .closing-cta { padding: 87px 0 94px; }
   .footer-inner { display: block; padding: 25px 0; }
   .footer-inner p { margin-top: 15px; }
+  .footer-meta { justify-items: start; text-align: left; }
   .error-main { width: min(100% - 32px, 1220px); min-height: calc(100vh - 72px); }
 }
 

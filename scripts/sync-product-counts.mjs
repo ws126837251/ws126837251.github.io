@@ -1,15 +1,15 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const productsFileArg = process.argv.indexOf("--products-file");
-const productsFileOverride =
-  productsFileArg >= 0 ? process.argv[productsFileArg + 1] : undefined;
-const productsPath = path.resolve(
-  productsFileOverride ??
-    process.env.PRODUCTS_FILE ??
-    path.join(rootDir, "hub", "assets", "products.js"),
+const contentFileArg = process.argv.indexOf("--content-file");
+const contentFileOverride =
+  contentFileArg >= 0 ? process.argv[contentFileArg + 1] : undefined;
+const contentPath = path.resolve(
+  contentFileOverride ??
+    process.env.SITE_CONTENT_FILE ??
+    path.join(rootDir, "hub", "site-content.json"),
 );
 const dryRun = process.argv.includes("--dry-run");
 
@@ -20,10 +20,6 @@ const headers = {
 
 if (process.env.GITHUB_TOKEN) {
   headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
-}
-
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 async function fetchIssueCount(repository) {
@@ -52,38 +48,22 @@ async function fetchIssueCount(repository) {
   }
 }
 
-function updateProductBlock(source, product, count) {
-  const blockPattern = new RegExp(
-    `(\\{\\s*slug:\\s*"${escapeRegExp(product.slug)}"[\\s\\S]*?\\n  \\},)`,
-  );
-  const match = source.match(blockPattern);
-  if (!match) {
-    throw new Error(`Product block not found: ${product.slug}`);
-  }
-
-  const status = count > 0 ? `${count} 篇指南` : "内容建设中";
-  const state = count > 0 ? "available" : "building";
-  const updatedBlock = match[1]
-    .replace(/state:\s*"[^"]+"/, `state: "${state}"`)
-    .replace(/status:\s*"[^"]+"/, `status: "${status}"`)
-    .replace(/articleCount:\s*\d+/, `articleCount: ${count}`);
-
-  return source.replace(match[1], updatedBlock);
+const siteContent = JSON.parse(await fs.readFile(contentPath, "utf8"));
+if (!Array.isArray(siteContent.products)) {
+  throw new Error("site-content.json must contain a products array.");
 }
 
-const moduleUrl = `${pathToFileURL(productsPath).href}?cacheBust=${Date.now()}`;
-const { products } = await import(moduleUrl);
-let source = await fs.readFile(productsPath, "utf8");
 const updates = [];
-
-for (const product of products) {
+for (const product of siteContent.products) {
   if (!product.issuesRepo) {
     continue;
   }
 
   const count = await fetchIssueCount(product.issuesRepo);
-  source = updateProductBlock(source, product, count);
   updates.push(`${product.name}: ${product.articleCount} -> ${count}`);
+  product.articleCount = count;
+  product.status = count > 0 ? `${count} 篇指南` : "内容建设中";
+  product.state = count > 0 ? "available" : "building";
 }
 
 for (const update of updates) {
@@ -91,8 +71,12 @@ for (const update of updates) {
 }
 
 if (!dryRun) {
-  await fs.writeFile(productsPath, source, "utf8");
-  console.log(`Updated ${productsPath}`);
+  await fs.writeFile(
+    contentPath,
+    `${JSON.stringify(siteContent, null, 2)}\n`,
+    "utf8",
+  );
+  console.log(`Updated ${contentPath}`);
 } else {
   console.log("Dry run: no files changed.");
 }
