@@ -97,119 +97,91 @@ const orbitLayerConfig = [
   {
     name: "micro",
     direction: -1,
-    period: 10,
-    opacity: 0.52,
+    period: 9,
+    opacity: 0.5,
     strokeWidth: 1.35,
-    rings: [
-      { x: 0.28, y: 0.18, rotation: 8 },
-      { x: 0.2, y: 0.3, rotation: 55 },
-    ],
+    ring: { rx: 100, ry: 140, rotation: 18 },
   },
   {
     name: "inner",
-    direction: -1,
-    period: 16,
-    opacity: 0.42,
-    strokeWidth: 1.2,
-    rings: [
-      { x: 0.48, y: 0.26, rotation: -12 },
-      { x: 0.32, y: 0.5, rotation: 42 },
-    ],
+    direction: 1,
+    period: 13,
+    opacity: 0.44,
+    strokeWidth: 1.25,
+    ring: { rx: 170, ry: 105, rotation: -33 },
   },
   {
     name: "middle",
+    direction: -1,
+    period: 18,
+    opacity: 0.37,
+    strokeWidth: 1.15,
+    ring: { rx: 245, ry: 190, rotation: 52 },
+  },
+  {
+    name: "wide",
     direction: 1,
-    period: 24,
-    opacity: 0.3,
-    strokeWidth: 1.1,
-    rings: [
-      { x: 0.7, y: 0.34, rotation: 17 },
-      { x: 0.52, y: 0.64, rotation: -38 },
-    ],
+    period: 25,
+    opacity: 0.31,
+    strokeWidth: 1.08,
+    ring: { rx: 330, ry: 245, rotation: -19 },
   },
   {
     name: "outer",
+    direction: -1,
+    period: 33,
+    opacity: 0.26,
+    strokeWidth: 1.02,
+    ring: { rx: 405, ry: 330, rotation: 31 },
+  },
+  {
+    name: "horizon",
     direction: 1,
-    period: 32,
-    opacity: 0.24,
-    strokeWidth: 1,
-    rings: [
-      { x: 0.92, y: 0.4, rotation: -9 },
-      { x: 0.68, y: 0.88, rotation: 34 },
-    ],
+    period: 42,
+    opacity: 0.21,
+    strokeWidth: 0.96,
+    ring: { rx: 465, ry: 395, rotation: -47 },
   },
 ];
 
 function initializeOrbitField() {
   const svgNamespace = "http://www.w3.org/2000/svg";
+  const orbitCenter = { cx: 500, cy: 500 };
   const svg = document.createElementNS(svgNamespace, "svg");
   svg.classList.add("orbit-field");
+  svg.setAttribute("viewBox", "0 0 1000 1000");
   svg.setAttribute("preserveAspectRatio", "none");
   svg.setAttribute("aria-hidden", "true");
 
-  const createOrbitGroup = (layer) => {
+  const orbitGroups = new Map();
+
+  for (const layer of orbitLayerConfig) {
     const group = document.createElementNS(svgNamespace, "g");
     group.classList.add("orbit-track", `orbit-${layer.name}`);
     group.setAttribute("fill", "none");
     group.setAttribute("stroke", "#6e8f84");
     group.setAttribute("stroke-linecap", "round");
     group.setAttribute("opacity", String(layer.opacity));
-    svg.append(group);
-    return group;
-  };
 
-  const orbitGroups = new Map(
-    orbitLayerConfig.map((layer) => [layer.name, createOrbitGroup(layer)]),
-  );
+    const ellipse = document.createElementNS(svgNamespace, "ellipse");
+    ellipse.setAttribute("cx", "0");
+    ellipse.setAttribute("cy", "0");
+    ellipse.setAttribute("rx", String(layer.ring.rx));
+    ellipse.setAttribute("ry", String(layer.ring.ry));
+    ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
+    ellipse.setAttribute("vector-effect", "non-scaling-stroke");
+    ellipse.setAttribute("transform", `rotate(${layer.ring.rotation})`);
+
+    group.append(ellipse);
+    svg.append(group);
+    orbitGroups.set(layer.name, group);
+  }
 
   document.body.prepend(svg);
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let animationFrame = null;
   let startedAt = 0;
-  let layoutFrame = null;
-  let orbitCenter = { cx: 0, cy: 0 };
-
-  const layoutOrbits = () => {
-    const viewportWidth = Math.max(window.innerWidth, 1);
-    const viewportHeight = Math.max(window.innerHeight, 1);
-    const sceneHeight = 1000;
-    const sceneWidth = (viewportWidth / viewportHeight) * sceneHeight;
-    const avatar = document.querySelector(".avatar-wrap");
-    const avatarBounds = avatar?.getBoundingClientRect();
-    const avatarX = avatarBounds
-      ? avatarBounds.left + avatarBounds.width / 2
-      : viewportWidth / 2;
-    const avatarY = avatarBounds
-      ? avatarBounds.top + avatarBounds.height / 2
-      : viewportHeight * 0.43;
-
-    orbitCenter = {
-      cx: (avatarX / viewportWidth) * sceneWidth,
-      cy: (avatarY / viewportHeight) * sceneHeight,
-    };
-    svg.setAttribute("viewBox", `0 0 ${sceneWidth.toFixed(2)} ${sceneHeight}`);
-
-    const safeX = Math.max(1, Math.min(orbitCenter.cx, sceneWidth - orbitCenter.cx) - 24);
-    const safeY = Math.max(1, Math.min(orbitCenter.cy, sceneHeight - orbitCenter.cy) - 24);
-    const orbitRadius = Math.min(safeX, safeY) * 0.92;
-
-    for (const layer of orbitLayerConfig) {
-      const group = orbitGroups.get(layer.name);
-      const rings = layer.rings.map((ring) => {
-        const ellipse = document.createElementNS(svgNamespace, "ellipse");
-        ellipse.setAttribute("cx", "0");
-        ellipse.setAttribute("cy", "0");
-        ellipse.setAttribute("rx", (orbitRadius * ring.x).toFixed(2));
-        ellipse.setAttribute("ry", (orbitRadius * ring.y).toFixed(2));
-        ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
-        ellipse.setAttribute("vector-effect", "non-scaling-stroke");
-        ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
-        return ellipse;
-      });
-      group.replaceChildren(...rings);
-    }
-  };
 
   const updateOrbits = (elapsedSeconds) => {
     for (const layer of orbitLayerConfig) {
@@ -218,7 +190,7 @@ function initializeOrbitField() {
         .get(layer.name)
         .setAttribute(
           "transform",
-          `translate(${orbitCenter.cx.toFixed(2)} ${orbitCenter.cy.toFixed(2)}) rotate(${angle.toFixed(2)})`,
+          `translate(${orbitCenter.cx} ${orbitCenter.cy}) rotate(${angle.toFixed(2)})`,
         );
     }
   };
@@ -250,21 +222,7 @@ function initializeOrbitField() {
     }
   };
 
-  const syncLayout = () => {
-    if (layoutFrame !== null) {
-      return;
-    }
-    layoutFrame = window.requestAnimationFrame(() => {
-      layoutFrame = null;
-      layoutOrbits();
-      updateOrbits(reduceMotion.matches ? 0 : (performance.now() - startedAt) / 1000);
-    });
-  };
-
-  layoutOrbits();
   syncMotion();
-  window.addEventListener("resize", syncLayout, { passive: true });
-  window.addEventListener("load", syncLayout, { once: true });
   if (typeof reduceMotion.addEventListener === "function") {
     reduceMotion.addEventListener("change", syncMotion);
   } else if (typeof reduceMotion.addListener === "function") {

@@ -4,8 +4,6 @@
   --GridColor: rgba(39, 76, 65, 0.16);
   --AvatarFrame: #f0ebe2;
   --AvatarFrameBorder: rgba(39, 76, 65, 0.14);
-  --orbit-mouse-x: 0px;
-  --orbit-mouse-y: 0px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -23,49 +21,13 @@ body {
   overflow-x: hidden;
   background-color: var(--Bcolor);
   background-image:
-    url("/assets/orbit-corners.svg"),
     linear-gradient(to right, var(--GridColor) 1px, transparent 1px),
     linear-gradient(to bottom, var(--GridColor) 1px, transparent 1px);
-  background-repeat: no-repeat, repeat, repeat;
-  background-position: center, 0 0, 0 0;
-  background-size: 100% 100%, 48px 48px, 48px 48px;
-  background-attachment: fixed, scroll, scroll;
+  background-repeat: repeat, repeat;
+  background-position: 0 0, 0 0;
+  background-size: 48px 48px, 48px 48px;
+  background-attachment: scroll, scroll;
   color: var(--Fcolor);
-}
-
-body::before,
-body::after {
-  position: fixed;
-  z-index: 0;
-  display: block;
-  width: 100vw;
-  height: 100vh;
-  background-image: url("/assets/orbit-lines.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
-  content: "";
-  pointer-events: none;
-  transform-origin: center;
-  will-change: transform;
-}
-
-body::before {
-  top: 0;
-  left: 0;
-  opacity: 0.72;
-  transform: translate3d(var(--orbit-mouse-x), var(--orbit-mouse-y), 0) scale(1, 1);
-  animation: ambient-orbit-a 16s ease-in-out -4s infinite alternate;
-}
-
-body::after {
-  top: 0;
-  left: 0;
-  opacity: 0.2;
-  background-position: center;
-  background-size: 100% 100%;
-  transform: translate3d(var(--orbit-mouse-x), var(--orbit-mouse-y), 0) scale(1, 1);
-  animation: ambient-orbit-b 20s ease-in-out -7s infinite alternate;
 }
 
 .title {
@@ -74,50 +36,6 @@ body::after {
   margin-top: 20%;
   font-size: 56px;
   font-family: Monaco;
-}
-
-@keyframes ambient-orbit-a {
-  0% {
-    transform: translate3d(calc(-1.2vw + var(--orbit-mouse-x)), calc(-0.8vh + var(--orbit-mouse-y)), 0) scale(1, 1);
-  }
-
-  23% {
-    transform: translate3d(calc(1.6vw + var(--orbit-mouse-x)), calc(1.3vh + var(--orbit-mouse-y)), 0) scale(1.012, 0.992);
-  }
-
-  51% {
-    transform: translate3d(calc(-1.4vw + var(--orbit-mouse-x)), calc(1.1vh + var(--orbit-mouse-y)), 0) scale(0.99, 1.01);
-  }
-
-  78% {
-    transform: translate3d(calc(1.2vw + var(--orbit-mouse-x)), calc(-1.2vh + var(--orbit-mouse-y)), 0) scale(1.01, 0.994);
-  }
-
-  100% {
-    transform: translate3d(calc(-0.8vw + var(--orbit-mouse-x)), calc(1vh + var(--orbit-mouse-y)), 0) scale(1, 1.008);
-  }
-}
-
-@keyframes ambient-orbit-b {
-  0% {
-    transform: translate3d(calc(0.9vw + var(--orbit-mouse-x)), calc(0.8vh + var(--orbit-mouse-y)), 0) scale(1, 1);
-  }
-
-  29% {
-    transform: translate3d(calc(-1.5vw + var(--orbit-mouse-x)), calc(-0.9vh + var(--orbit-mouse-y)), 0) scale(0.992, 1.01);
-  }
-
-  54% {
-    transform: translate3d(calc(1.5vw + var(--orbit-mouse-x)), calc(1.5vh + var(--orbit-mouse-y)), 0) scale(1.014, 0.99);
-  }
-
-  81% {
-    transform: translate3d(calc(-0.8vw + var(--orbit-mouse-x)), calc(0.2vh + var(--orbit-mouse-y)), 0) scale(0.996, 1.008);
-  }
-
-  100% {
-    transform: translate3d(calc(1.2vw + var(--orbit-mouse-x)), calc(-1.2vh + var(--orbit-mouse-y)), 0) scale(1.008, 0.994);
-  }
 }
 
 .title a {
@@ -138,16 +56,7 @@ body::after {
   height: 100vh;
   overflow: visible;
   pointer-events: none;
-}
-
-.orbit-star {
-  fill: #b8aa86;
-  opacity: 0.72;
-}
-
-.orbit-star.cool {
-  fill: #91aa9d;
-  opacity: 0.62;
+  will-change: transform;
 }
 
 .avatar-wrap {
@@ -264,22 +173,61 @@ body::after {
 }
 
 @media (max-width: 560px) {
-  .title {
-    margin-top: 28vh;
-    font-size: 42px;
+  body {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 3.5rem 1.25rem 4rem;
+  }
+
+  body > .flex:first-of-type {
+    display: none;
   }
 
   .avatar-wrap {
-    top: calc(28vh + 1.75rem);
-    width: 6.75rem;
+    position: relative;
+    top: auto;
+    left: auto;
+    width: clamp(4.5rem, 19vw, 5.25rem);
+    flex: 0 0 auto;
+    margin: 0 0 1rem;
+    transform: none;
   }
 
   #buttonList {
+    flex: 0 0 auto;
     flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: min(68vw, 12rem);
+    margin: 0;
   }
 
   #buttonList a {
-    margin: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .button {
+    padding: 0.42rem 0.65rem;
+    border-width: 1.5px;
+    border-radius: 0.35rem;
+    font-size: 0.95rem;
+  }
+
+  .button:hover {
+    border-bottom-width: 2px;
+  }
+
+  .footer {
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    margin: 0;
+    font-size: 0.7rem;
   }
 }
 
