@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="none">
+  <g fill="none" stroke="#6e8f84" stroke-linecap="round">
+    <!-- closed loops close to the avatar -->
+    <g stroke-width="1.5" opacity="0.34">
+      <ellipse cx="800" cy="500" rx="500" ry="160" transform="rotate(-13 800 500)" />
+      <ellipse cx="810" cy="500" rx="420" ry="130" transform="rotate(18 810 500)" />
+      <ellipse cx="795" cy="500" rx="300" ry="100" transform="rotate(-29 795 500)" />
+    </g>
+
+    <!-- wide closed loops keep all four directions populated -->
+    <g stroke-width="1.2" opacity="0.22">
+      <ellipse cx="800" cy="500" rx="650" ry="300" transform="rotate(-14 800 500)" />
+      <ellipse cx="800" cy="500" rx="600" ry="360" transform="rotate(18 800 500)" />
+      <ellipse cx="800" cy="500" rx="630" ry="260" transform="rotate(-31 800 500)" />
+      <rect x="120" y="100" width="1360" height="800" rx="300" ry="300" />
+    </g>
+  </g>
+</svg>
