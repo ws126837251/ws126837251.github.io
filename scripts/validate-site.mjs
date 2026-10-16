@@ -9,6 +9,7 @@ const hubDir = path.join(rootDir, "hub");
 const requiredFiles = [
   "index.html",
   "404.html",
+  "CNAME",
   "site-content.json",
   "assets/style.css",
   "assets/app.js",
@@ -27,6 +28,9 @@ for (const relativePath of requiredFiles) {
 
 const indexHtml = fs.readFileSync(path.join(hubDir, "index.html"), "utf8");
 const notFoundHtml = fs.readFileSync(path.join(hubDir, "404.html"), "utf8");
+if (fs.readFileSync(path.join(hubDir, "CNAME"), "utf8").trim() !== "blog.wufeng.de") {
+  throw new Error("hub/CNAME must point to blog.wufeng.de.");
+}
 const siteContent = JSON.parse(
   fs.readFileSync(path.join(hubDir, "site-content.json"), "utf8"),
 );
@@ -40,7 +44,7 @@ for (const requiredValue of [
   "/assets/style.css",
   "/assets/app.js",
   "/og-directory.png",
-  "https://tutorials.wufeng.de/",
+  "https://blog.wufeng.de/",
   'id="product-grid"',
   'id="product-search"',
   'id="region-filters"',
@@ -173,7 +177,7 @@ if (!sitemap.includes("<urlset") || !sitemap.includes("</urlset>")) {
   throw new Error("Sitemap does not contain a complete urlset.");
 }
 for (const product of products) {
-  const productUrl = `https://tutorials.wufeng.de${product.path}`;
+  const productUrl = `https://blog.wufeng.de${product.path}`;
   if (!sitemap.includes(productUrl)) {
     throw new Error(`Sitemap is missing product URL: ${productUrl}`);
   }

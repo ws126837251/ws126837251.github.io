@@ -3,7 +3,7 @@
 ## 项目概览
 
 - 本仓库是 `ws126837251` 的 GitHub Pages 用户站点。
-- 生产站点：`https://tutorials.wufeng.de/`
+- 生产站点：`https://blog.wufeng.de/`
 - 主站源码：`hub/`
 - 部署工作流：`.github/workflows/tutorials-pages.yml`
 - 产品教程使用独立项目仓库：
