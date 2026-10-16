@@ -179,6 +179,8 @@ for (const requiredRule of [
   "--Bcolor: #f6f2ea",
   ".title",
   ".button",
+  ".avatar-disc:hover",
+  "scale(1.15) rotate(360deg)",
   "#buttonList",
   ":focus-visible",
   "prefers-reduced-motion: reduce",

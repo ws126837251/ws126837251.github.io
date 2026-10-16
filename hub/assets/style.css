@@ -131,7 +131,12 @@ body::after {
     #d1b77c
   );
   box-shadow: 0 8px 24px rgba(23, 72, 59, 0.18), 0 0 0 5px rgba(246, 242, 234, 0.72);
-  animation: avatar-spin 16s linear infinite;
+  transition: transform 0.8s ease;
+  will-change: transform;
+}
+
+.avatar-disc:hover {
+  transform: scale(1.15) rotate(360deg);
 }
 
 .avatar-disc::before {
@@ -168,16 +173,6 @@ body::after {
   object-fit: cover;
   transform: scale(1.38);
   transform-origin: center 30%;
-}
-
-@keyframes avatar-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .flex {
@@ -281,7 +276,8 @@ body::after {
     transition-duration: 0.01ms !important;
   }
 
-  .avatar-disc {
-    animation: none;
+  .avatar-disc:hover {
+    transform: none;
   }
+
 }
