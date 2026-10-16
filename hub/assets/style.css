@@ -21,10 +21,13 @@ body {
   overflow-x: hidden;
   background-color: var(--Bcolor);
   background-image:
+    url("/assets/orbit-corners.svg"),
     linear-gradient(to right, var(--GridColor) 1px, transparent 1px),
     linear-gradient(to bottom, var(--GridColor) 1px, transparent 1px);
-  background-position: 0 0, 0 0;
-  background-size: 48px 48px, 48px 48px;
+  background-repeat: no-repeat, repeat, repeat;
+  background-position: center, 0 0, 0 0;
+  background-size: 100% 100%, 48px 48px, 48px 48px;
+  background-attachment: fixed, scroll, scroll;
   color: var(--Fcolor);
 }
 
