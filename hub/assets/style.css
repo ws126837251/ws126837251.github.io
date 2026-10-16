@@ -3,8 +3,8 @@
   --Bcolor: #f6f2ea;
   --GridColor: rgba(39, 76, 65, 0.16);
   --LineColor: rgba(39, 76, 65, 0.24);
-  --AvatarFrame: #e8e2d7;
-  --AvatarFrameBorder: rgba(39, 76, 65, 0.2);
+  --AvatarFrame: #f0ebe2;
+  --AvatarFrameBorder: rgba(39, 76, 65, 0.14);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -218,13 +218,13 @@ body::after {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 0.34rem;
+  padding: 0.1rem;
   box-sizing: border-box;
   overflow: hidden;
   border: 1px solid var(--AvatarFrameBorder);
   border-radius: 50%;
   background: var(--AvatarFrame);
-  box-shadow: 0 4px 14px rgba(23, 72, 59, 0.1);
+  box-shadow: 0 2px 7px rgba(23, 72, 59, 0.06);
   pointer-events: auto;
   cursor: pointer;
   transition: transform 0.8s ease;
