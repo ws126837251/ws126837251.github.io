@@ -48,7 +48,7 @@ for (const requiredValue of [
   "/og-directory.png",
   "https://blog.wufeng.de/",
   'id="buttonList"',
-  'class="title"',
+  'class="title title-hidden"',
   'class="button"',
   'class="avatar-disc"',
   'wufeng-avatar.png',
