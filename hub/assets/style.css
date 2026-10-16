@@ -221,6 +221,8 @@ body::after {
   border-radius: 50%;
   background: transparent;
   box-shadow: none;
+  pointer-events: auto;
+  cursor: pointer;
   transition: transform 0.8s ease;
   will-change: transform;
 }
