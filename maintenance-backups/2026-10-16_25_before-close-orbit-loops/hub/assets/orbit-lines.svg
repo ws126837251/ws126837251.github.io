@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="none">
+  <g fill="none" stroke="#6e8f84" stroke-linecap="round">
+    <g stroke-width="1.5" opacity="0.34">
+      <path d="M-140 250C210 70 600 70 930 260s480 390 820 120" />
+      <path d="M-180 730C160 300 570 180 1010 370s430 420 770 130" />
+      <path d="M250-100C560 120 470 390 190 560s60 420 590 510" />
+      <path d="M930-90C710 150 980 320 1270 440s220 390-70 620" />
+      <path d="M1560-80C1210 120 1130 340 1320 540s90 340 500 410" />
+    </g>
+
+    <g stroke-width="1.2" opacity="0.27">
+      <ellipse cx="815" cy="450" rx="560" ry="190" transform="rotate(-13 815 450)" />
+      <ellipse cx="810" cy="485" rx="430" ry="145" transform="rotate(18 810 485)" />
+      <ellipse cx="795" cy="485" rx="260" ry="92" transform="rotate(-29 795 485)" />
+    </g>
+  </g>
+</svg>
