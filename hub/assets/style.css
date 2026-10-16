@@ -96,6 +96,86 @@ body::after {
   text-decoration: none;
 }
 
+.avatar-wrap {
+  position: absolute;
+  top: clamp(11rem, calc(20vw + 2.5rem), 28rem);
+  left: 50%;
+  z-index: 3;
+  width: clamp(8rem, 10vw, 12rem);
+  aspect-ratio: 1;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.avatar-disc {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 7px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px solid rgba(23, 72, 59, 0.24);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #d1b77c,
+    var(--Bcolor) 16%,
+    var(--Fcolor) 33%,
+    var(--Bcolor) 51%,
+    #d1b77c 68%,
+    var(--Bcolor) 84%,
+    #d1b77c
+  );
+  box-shadow: 0 8px 24px rgba(23, 72, 59, 0.18), 0 0 0 5px rgba(246, 242, 234, 0.72);
+  animation: avatar-spin 16s linear infinite;
+}
+
+.avatar-disc::before {
+  position: absolute;
+  inset: 11%;
+  z-index: 2;
+  border: 1px solid rgba(246, 242, 234, 0.75);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.avatar-disc::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  width: 18%;
+  aspect-ratio: 1;
+  border: 3px solid var(--Bcolor);
+  border-radius: 50%;
+  background: var(--Fcolor);
+  box-shadow: 0 0 0 1px rgba(23, 72, 59, 0.4);
+  content: "";
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.avatar-disc img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  transform: scale(1.38);
+  transform-origin: center 30%;
+}
+
+@keyframes avatar-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .flex {
   position: relative;
   z-index: 1;
@@ -175,6 +255,11 @@ body::after {
     font-size: 42px;
   }
 
+  .avatar-wrap {
+    top: calc(28vh + 1.75rem);
+    width: 7.5rem;
+  }
+
   #buttonList {
     flex-direction: column;
   }
@@ -190,5 +275,9 @@ body::after {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .avatar-disc {
+    animation: none;
   }
 }
