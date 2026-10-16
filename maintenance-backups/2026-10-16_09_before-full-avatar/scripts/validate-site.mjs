@@ -14,6 +14,7 @@ const requiredFiles = [
   "assets/style.css",
   "assets/app.js",
   "assets/products.js",
+  "assets/wufeng-avatar.png",
   "og-directory.png",
   "robots.txt",
   "sitemap.xml",
@@ -47,8 +48,10 @@ for (const requiredValue of [
   "/og-directory.png",
   "https://blog.wufeng.de/",
   'id="buttonList"',
-  'class="title"',
+  'class="title title-hidden"',
   'class="button"',
+  'class="avatar-disc"',
+  'wufeng-avatar.png',
   "BUTTONS_FALLBACK_START",
   "BUTTONS_FALLBACK_END",
   'class="no-js"',
@@ -82,6 +85,7 @@ for (const requiredKey of [
   "footer.linkLabel",
   "footer.linkUrl",
   "notFound.action",
+  "brand.avatarAlt",
 ]) {
   if (typeof getContentValue(requiredKey) !== "string") {
     throw new Error(`Site content is missing: ${requiredKey}`);
@@ -93,7 +97,6 @@ for (const retiredValue of [
   "无风电话卡教程",
   "全球 SIM 卡中文使用指南",
   "line-field",
-  "avatar-disc",
   "product-grid",
   "product-search",
 ]) {
@@ -176,6 +179,8 @@ for (const requiredRule of [
   "--Bcolor: #f6f2ea",
   ".title",
   ".button",
+  ".avatar-disc:hover",
+  "scale(1.15) rotate(360deg)",
   "#buttonList",
   ":focus-visible",
   "prefers-reduced-motion: reduce",
