@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "title": "无风小卖部",
+    "description": "无风小卖部：全球 SIM 卡使用指南。",
+    "socialDescription": "全球 SIM 卡使用指南。"
+  },
+  "brand": {
+    "name": "无风小卖部",
+    "homeLabel": "无风小卖部首页",
+    "avatarAlt": "无风小卖部头像"
+  },
+  "navigation": {
+    "editLabel": "GitHub",
+    "editUrl": "https://github.com/ws126837251/ws126837251.github.io/edit/main/hub/site-content.json",
+    "aboutLabel": "Wufeng",
+    "aboutUrl": "https://wufeng.de/"
+  },
+  "footer": {
+    "copyright": "Copyright ©",
+    "linkLabel": "Wufeng",
+    "linkUrl": "https://wufeng.de/"
+  },
+  "notFound": {
+    "metaTitle": "页面未找到｜无风小卖部",
+    "title": "页面未找到",
+    "description": "这个页面不存在，返回首页继续选择品牌教程。",
+    "action": "返回首页"
+  },
+  "products": [
+    {
+      "slug": "giffgaff",
+      "name": "Giffgaff",
+      "mark": "G",
+      "path": "/giffgaff/",
+      "issuesRepo": "ws126837251/giffgaff",
+      "regions": [
+        {
+          "code": "UK",
+          "name": "英国"
+        }
+      ],
+      "state": "available",
+      "status": "19 篇指南",
+      "articleCount": 19,
+      "summary": "激活、资费、号码、短信、保号及常见问题。",
+      "topics": [
+        "激活",
+        "套餐",
+        "号码",
+        "保号"
+      ],
+      "accent": "#b9ef4a",
+      "accentSoft": "#eef8d5"
+    },
+    {
+      "slug": "lebara",
+      "name": "Lebara",
+      "mark": "L",
+      "path": "/lebara/",
+      "issuesRepo": "ws126837251/lebara",
+      "regions": [
+        {
+          "code": "UK",
+          "name": "英国"
+        }
+      ],
+      "state": "available",
+      "status": "16 篇指南",
+      "articleCount": 16,
+      "summary": "激活、套餐、充值、网络设置及常见问题。",
+      "topics": [
+        "激活",
+        "充值",
+        "套餐",
+        "网络"
+      ],
+      "accent": "#ff4b8c",
+      "accentSoft": "#ffe3ed"
+    }
+  ]
+}

@@ -26,6 +26,41 @@
     "description": "这个页面不存在，返回首页继续选择品牌教程。",
     "action": "返回首页"
   },
+  "animation": {
+    "orbit": {
+      "layerCount": 11,
+      "coreCount": 3,
+      "startGap": 0.03,
+      "spacingRatio": 1.32,
+      "periodStart": 4.6,
+      "periodStep": 3.1,
+      "minimumRadiusFactor": 0.78,
+      "strokeColor": "#6e8f84",
+      "strokeWidthStart": 1.18,
+      "strokeWidthStep": 0.03,
+      "strokeWidthMinimum": 0.84,
+      "coreOpacityStart": 0.5,
+      "coreOpacityStep": 0.04,
+      "outerOpacityStart": 0.34,
+      "outerOpacityStep": 0.026,
+      "minimumOpacity": 0.16,
+      "directions": [-1, 1],
+      "aspects": [0.62, 0.7, 0.78, 0.58, 0.68, 0.76, 0.6, 0.72, 0.8, 0.64, 0.74],
+      "rotations": [15, -34, 49, -64, 27, -18, 62, -45, 14, -28, 41]
+    },
+    "pointer": {
+      "enabled": true,
+      "maxX": 36,
+      "maxY": 28,
+      "followStrength": 0.16,
+      "shift": 0.45
+    },
+    "avatar": {
+      "hoverScale": 1.15,
+      "hoverRotation": 360,
+      "hoverDuration": 0.8
+    }
+  },
   "products": [
     {
       "slug": "giffgaff",

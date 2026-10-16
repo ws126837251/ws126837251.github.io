@@ -93,36 +93,37 @@ function renderButtons(siteContent) {
   buttonList.replaceChildren(fragment);
 }
 
-const orbitLayerCount = 14;
-const orbitGrowth = 1.28;
+const orbitLayerCount = 11;
+const orbitStartGap = 0.03;
+const orbitSpacingRatio = 1.32;
+const orbitCoreCount = 3;
+const orbitAspects = [0.62, 0.7, 0.78, 0.58, 0.68, 0.76, 0.6, 0.72, 0.8, 0.64, 0.74];
+const orbitRotations = [15, -34, 49, -64, 27, -18, 62, -45, 14, -28, 41];
 
 const orbitLayerConfig = Array.from({ length: orbitLayerCount }, (_, index) => ({
   name: "layer-" + String(index + 1).padStart(2, "0"),
-  index,
   direction: index % 2 === 0 ? -1 : 1,
-  period: 4.5 + index * 2.15,
-  opacity: Number((0.5 * Math.pow(0.84, index)).toFixed(3)),
-  strokeWidth: Number(Math.max(0.68, 1.24 - index * 0.035).toFixed(2)),
-  rings: [
-    {
-      scale: 0.78,
-      aspect: 0.72 + (index % 3) * 0.06,
-      rotation: 15 + index * 17,
-      opacity: 0.78,
-    },
-    {
-      scale: 1,
-      aspect: 0.58 + (index % 4) * 0.07,
-      rotation: -38 - index * 19,
-      opacity: 0.58,
-    },
-    {
-      scale: 1.18,
-      aspect: 0.86 - (index % 3) * 0.08,
-      rotation: 62 + index * 29,
-      opacity: 0.42,
-    },
-  ],
+  period: 4.6 + index * 3.1,
+  opacity: Number(
+    Math.max(
+      0.16,
+      index < orbitCoreCount
+        ? 0.5 - index * 0.04
+        : 0.34 - (index - orbitCoreCount) * 0.026,
+    ).toFixed(3),
+  ),
+  strokeWidth: Number(Math.max(0.84, 1.18 - index * 0.03).toFixed(2)),
+  distance:
+    index === 0
+      ? 0
+      : Number(
+          (
+            (orbitStartGap *
+              (Math.pow(orbitSpacingRatio, index) - 1)) /
+            (orbitSpacingRatio - 1)
+          ).toFixed(4),
+        ),
+  rings: [{ aspect: orbitAspects[index], rotation: orbitRotations[index] }],
 }));
 
 function initializeOrbitField() {
@@ -187,21 +188,30 @@ function initializeOrbitField() {
       `0 0 ${viewportWidth.toFixed(2)} ${viewportHeight.toFixed(2)}`,
     );
 
-    const baseRadius = Math.max(
-      avatarDiameter * 0.7,
-      Math.min(viewportWidth, viewportHeight) * 0.06,
+    const furthestHorizontal = Math.max(
+      orbitCenter.cx,
+      viewportWidth - orbitCenter.cx,
     );
+    const furthestVertical = Math.max(
+      orbitCenter.cy,
+      viewportHeight - orbitCenter.cy,
+    );
+    const coverageRadius = Math.hypot(furthestHorizontal, furthestVertical);
+    const minimumRadius = avatarDiameter * 0.78;
 
     for (const layer of orbitLayerConfig) {
       const group = orbitGroups.get(layer.name);
-      const layerRadius = baseRadius * Math.pow(orbitGrowth, layer.index);
+      const layerRadius =
+        minimumRadius + coverageRadius * layer.distance;
       const ellipses = group.querySelectorAll("ellipse");
 
       layer.rings.forEach((ring, ringIndex) => {
         const ellipse = ellipses[ringIndex];
-        const radius = layerRadius * ring.scale;
-        ellipse.setAttribute("rx", radius.toFixed(2));
-        ellipse.setAttribute("ry", (radius * ring.aspect).toFixed(2));
+        ellipse.setAttribute("rx", layerRadius.toFixed(2));
+        ellipse.setAttribute(
+          "ry",
+          (layerRadius * ring.aspect).toFixed(2),
+        );
         ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
       });
     }

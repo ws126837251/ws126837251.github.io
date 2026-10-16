@@ -83,12 +83,13 @@ body {
   box-shadow: 0 2px 7px rgba(23, 72, 59, 0.06);
   pointer-events: auto;
   cursor: pointer;
-  transition: transform 0.8s ease;
+  transition: transform var(--avatar-hover-duration, 0.8s) ease;
   will-change: transform;
 }
 
 .avatar-disc:hover {
-  transform: scale(1.15) rotate(360deg);
+  transform: scale(var(--avatar-hover-scale, 1.15))
+    rotate(var(--avatar-hover-rotation, 360deg));
 }
 
 .avatar-disc img {
