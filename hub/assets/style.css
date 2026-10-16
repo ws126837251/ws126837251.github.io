@@ -264,22 +264,46 @@ body::after {
 }
 
 @media (max-width: 560px) {
+  body {
+    min-height: 100svh;
+  }
+
   .title {
-    margin-top: 28vh;
-    font-size: 42px;
+    margin-top: 24vh;
+    font-size: 32px;
   }
 
   .avatar-wrap {
-    top: calc(28vh + 1.75rem);
-    width: 6.75rem;
+    top: calc(24vh + 1rem);
+    width: clamp(4.75rem, 20vw, 5.5rem);
   }
 
   #buttonList {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    width: min(calc(100% - 1.5rem), 22rem);
+    margin: 2rem auto 0;
   }
 
   #buttonList a {
-    margin: 8px;
+    margin: 0;
+  }
+
+  .button {
+    padding: 0.3rem 0.55rem;
+    border-width: 1.5px;
+    border-radius: 0.35rem;
+    font-size: clamp(0.875rem, 3.8vw, 1rem);
+  }
+
+  .button:hover {
+    border-bottom-width: 2px;
+  }
+
+  .footer {
+    margin: 12px auto;
+    font-size: 0.7rem;
   }
 }
 
