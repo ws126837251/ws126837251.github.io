@@ -54,13 +54,7 @@ body::before {
 }
 
 body::after {
-  top: 0;
-  left: 0;
-  opacity: 0.2;
-  background-position: 3% -2%;
-  background-size: 110% 110%;
-  transform: translate3d(0, 0, 0) rotate(5deg) scale(1.04);
-  animation: ambient-orbit-b 37s ease-in-out -17s infinite alternate;
+  display: none;
 }
 
 .title {
@@ -90,28 +84,6 @@ body::after {
 
   100% {
     transform: translate3d(-1vw, 1.5vh, 0) rotate(-16deg) scale(1, 1.02);
-  }
-}
-
-@keyframes ambient-orbit-b {
-  0% {
-    transform: translate3d(1vw, 1vh, 0) rotate(23deg) scale(1, 1);
-  }
-
-  29% {
-    transform: translate3d(-2vw, -1vh, 0) rotate(19deg) scale(0.98, 1.03);
-  }
-
-  54% {
-    transform: translate3d(2vw, 2vh, 0) rotate(26deg) scale(1.025, 0.97);
-  }
-
-  81% {
-    transform: translate3d(-1vw, 0, 0) rotate(21deg) scale(0.99, 1.02);
-  }
-
-  100% {
-    transform: translate3d(1.5vw, -1.5vh, 0) rotate(24deg) scale(1.01, 0.98);
   }
 }
 
