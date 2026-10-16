@@ -172,6 +172,8 @@ if ((css.match(/{/g) ?? []).length !== (css.match(/}/g) ?? []).length) {
 }
 for (const requiredRule of [
   ":root",
+  "--Fcolor: #923995",
+  "--Bcolor: #67c564",
   ".title",
   ".button",
   "#buttonList",
