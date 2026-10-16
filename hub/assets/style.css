@@ -48,12 +48,19 @@ body::after {
 body::before {
   top: 0;
   left: 0;
-  opacity: 0.12;
-  transform: none;
+  opacity: 0.72;
+  transform: translate3d(0, 0, 0) rotate(-1deg) scale(1.02);
+  animation: ambient-orbit-a 31s ease-in-out -8s infinite alternate;
 }
 
 body::after {
-  display: none;
+  top: 0;
+  left: 0;
+  opacity: 0.2;
+  background-position: 3% -2%;
+  background-size: 110% 110%;
+  transform: translate3d(0, 0, 0) rotate(5deg) scale(1.04);
+  animation: ambient-orbit-b 37s ease-in-out -17s infinite alternate;
 }
 
 .title {
@@ -62,6 +69,50 @@ body::after {
   margin-top: 20%;
   font-size: 56px;
   font-family: Monaco;
+}
+
+@keyframes ambient-orbit-a {
+  0% {
+    transform: translate3d(-1.5vw, -1vh, 0) rotate(-15deg) scale(1, 1);
+  }
+
+  23% {
+    transform: translate3d(2vw, 2vh, 0) rotate(-11deg) scale(1.015, 0.97);
+  }
+
+  51% {
+    transform: translate3d(-2vw, 1vh, 0) rotate(-18deg) scale(0.98, 1.03);
+  }
+
+  78% {
+    transform: translate3d(1vw, -2vh, 0) rotate(-13deg) scale(1.02, 0.98);
+  }
+
+  100% {
+    transform: translate3d(-1vw, 1.5vh, 0) rotate(-16deg) scale(1, 1.02);
+  }
+}
+
+@keyframes ambient-orbit-b {
+  0% {
+    transform: translate3d(1vw, 1vh, 0) rotate(23deg) scale(1, 1);
+  }
+
+  29% {
+    transform: translate3d(-2vw, -1vh, 0) rotate(19deg) scale(0.98, 1.03);
+  }
+
+  54% {
+    transform: translate3d(2vw, 2vh, 0) rotate(26deg) scale(1.025, 0.97);
+  }
+
+  81% {
+    transform: translate3d(-1vw, 0, 0) rotate(21deg) scale(0.99, 1.02);
+  }
+
+  100% {
+    transform: translate3d(1.5vw, -1.5vh, 0) rotate(24deg) scale(1.01, 0.98);
+  }
 }
 
 .title a {

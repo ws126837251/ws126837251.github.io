@@ -93,27 +93,6 @@ function renderButtons(siteContent) {
   buttonList.replaceChildren(fragment);
 }
 
-const orbitGroupConfig = {
-  inner: {
-    orbits: [
-      { cx: 720, cy: 430, r: 320 },
-      { cx: 880, cy: 430, r: 320 },
-      { cx: 800, cy: 430, r: 270 },
-    ],
-    strokeWidth: 1.4,
-    opacity: 0.34,
-  },
-  outer: {
-    orbits: [
-      { cx: 570, cy: 430, r: 560 },
-      { cx: 1030, cy: 430, r: 560 },
-      { cx: 800, cy: 430, r: 680 },
-    ],
-    strokeWidth: 1.2,
-    opacity: 0.2,
-  },
-};
-
 const orbitCenter = { cx: 800, cy: 430 };
 
 const orbitStarConfig = [
@@ -136,23 +115,8 @@ function initializeOrbitField() {
   svg.setAttribute("aria-hidden", "true");
 
   const createOrbitGroup = (groupName) => {
-    const config = orbitGroupConfig[groupName];
     const group = document.createElementNS(svgNamespace, "g");
-    group.setAttribute("fill", "none");
-    group.setAttribute("stroke", "#6e8f84");
-    group.setAttribute("stroke-linecap", "round");
-    group.setAttribute("stroke-width", String(config.strokeWidth));
-    group.setAttribute("opacity", String(config.opacity));
-
-    for (const orbit of config.orbits) {
-      const circle = document.createElementNS(svgNamespace, "circle");
-      circle.setAttribute("cx", String(orbit.cx));
-      circle.setAttribute("cy", String(orbit.cy));
-      circle.setAttribute("r", String(orbit.r));
-      circle.setAttribute("vector-effect", "non-scaling-stroke");
-      group.append(circle);
-    }
-
+    group.classList.add("orbit-track", groupName);
     svg.append(group);
     return group;
   };

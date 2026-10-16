@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <g fill="none" stroke="#6e8f84" stroke-linecap="round">
+    <!-- continuous crossed circular lines close to the avatar -->
+    <g stroke-width="1.4" opacity="0.34">
+      <circle cx="720" cy="430" r="320" />
+      <circle cx="880" cy="430" r="320" />
+      <circle cx="800" cy="430" r="270" />
+    </g>
+
+    <!-- crossed circular outer group with no directional gaps -->
+    <g stroke-width="1.2" opacity="0.2">
+      <circle cx="570" cy="430" r="560" />
+      <circle cx="1030" cy="430" r="560" />
+      <circle cx="800" cy="430" r="680" />
+    </g>
+  </g>
+</svg>
