@@ -93,37 +93,98 @@ function renderButtons(siteContent) {
   buttonList.replaceChildren(fragment);
 }
 
-const orbitLayerCount = 14;
-const orbitGrowth = 1.28;
-
-const orbitLayerConfig = Array.from({ length: orbitLayerCount }, (_, index) => ({
-  name: "layer-" + String(index + 1).padStart(2, "0"),
-  index,
-  direction: index % 2 === 0 ? -1 : 1,
-  period: 4.5 + index * 2.15,
-  opacity: Number((0.5 * Math.pow(0.84, index)).toFixed(3)),
-  strokeWidth: Number(Math.max(0.68, 1.24 - index * 0.035).toFixed(2)),
-  rings: [
-    {
-      scale: 0.78,
-      aspect: 0.72 + (index % 3) * 0.06,
-      rotation: 15 + index * 17,
-      opacity: 0.78,
-    },
-    {
-      scale: 1,
-      aspect: 0.58 + (index % 4) * 0.07,
-      rotation: -38 - index * 19,
-      opacity: 0.58,
-    },
-    {
-      scale: 1.18,
-      aspect: 0.86 - (index % 3) * 0.08,
-      rotation: 62 + index * 29,
-      opacity: 0.42,
-    },
-  ],
-}));
+const orbitLayerConfig = [
+  {
+    name: "near",
+    direction: -1,
+    period: 4.6,
+    opacity: 0.44,
+    strokeWidth: 1.2,
+    distance: 0.09,
+    rings: [{ aspect: 0.8, rotation: 15 }],
+  },
+  {
+    name: "inner",
+    direction: 1,
+    period: 6.7,
+    opacity: 0.4,
+    strokeWidth: 1.15,
+    distance: 0.14,
+    rings: [{ aspect: 0.75, rotation: -34 }],
+  },
+  {
+    name: "middle-one",
+    direction: -1,
+    period: 9.1,
+    opacity: 0.36,
+    strokeWidth: 1.1,
+    distance: 0.2,
+    rings: [{ aspect: 0.86, rotation: 49 }],
+  },
+  {
+    name: "middle-two",
+    direction: 1,
+    period: 12.1,
+    opacity: 0.33,
+    strokeWidth: 1.05,
+    distance: 0.29,
+    rings: [{ aspect: 0.72, rotation: -64 }],
+  },
+  {
+    name: "broad-one",
+    direction: -1,
+    period: 15.4,
+    opacity: 0.3,
+    strokeWidth: 1.02,
+    distance: 0.4,
+    rings: [{ aspect: 0.9, rotation: 27 }],
+  },
+  {
+    name: "broad-two",
+    direction: 1,
+    period: 19.1,
+    opacity: 0.27,
+    strokeWidth: 0.98,
+    distance: 0.54,
+    rings: [{ aspect: 0.77, rotation: -18 }],
+  },
+  {
+    name: "edge-one",
+    direction: -1,
+    period: 23.2,
+    opacity: 0.25,
+    strokeWidth: 0.95,
+    distance: 0.7,
+    rings: [{ aspect: 0.93, rotation: 62 }],
+  },
+  {
+    name: "edge-two",
+    direction: 1,
+    period: 27.8,
+    opacity: 0.23,
+    strokeWidth: 0.92,
+    distance: 0.87,
+    rings: [{ aspect: 0.84, rotation: -45 }],
+  },
+  {
+    name: "edge-three",
+    direction: -1,
+    period: 32.7,
+    opacity: 0.22,
+    strokeWidth: 0.9,
+    distance: 0.99,
+    rings: [{ aspect: 0.96, rotation: 14 }],
+  },
+  {
+    name: "horizon",
+    direction: 1,
+    period: 38,
+    opacity: 0.2,
+    strokeWidth: 0.88,
+    distance: 1.08,
+    rings: [{ aspect: 0.88, rotation: -28 }],
+  },
+];
 
 function initializeOrbitField() {
   const svgNamespace = "http://www.w3.org/2000/svg";
@@ -187,21 +248,32 @@ function initializeOrbitField() {
       `0 0 ${viewportWidth.toFixed(2)} ${viewportHeight.toFixed(2)}`,
     );
 
-    const baseRadius = Math.max(
-      avatarDiameter * 0.7,
-      Math.min(viewportWidth, viewportHeight) * 0.06,
+    const furthestHorizontal = Math.max(
+      orbitCenter.cx,
+      viewportWidth - orbitCenter.cx,
     );
+    const furthestVertical = Math.max(
+      orbitCenter.cy,
+      viewportHeight - orbitCenter.cy,
+    );
+    const coverageRadius = Math.hypot(furthestHorizontal, furthestVertical);
+    const minimumRadius = avatarDiameter * 0.78;
 
     for (const layer of orbitLayerConfig) {
       const group = orbitGroups.get(layer.name);
-      const layerRadius = baseRadius * Math.pow(orbitGrowth, layer.index);
+      const layerRadius = Math.max(
+        minimumRadius,
+        coverageRadius * layer.distance,
+      );
       const ellipses = group.querySelectorAll("ellipse");
 
       layer.rings.forEach((ring, ringIndex) => {
         const ellipse = ellipses[ringIndex];
-        const radius = layerRadius * ring.scale;
-        ellipse.setAttribute("rx", radius.toFixed(2));
-        ellipse.setAttribute("ry", (radius * ring.aspect).toFixed(2));
+        ellipse.setAttribute("rx", layerRadius.toFixed(2));
+        ellipse.setAttribute(
+          "ry",
+          (layerRadius * ring.aspect).toFixed(2),
+        );
         ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
       });
     }
