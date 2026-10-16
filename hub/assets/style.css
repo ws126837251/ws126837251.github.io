@@ -96,6 +96,27 @@ body::after {
   visibility: hidden;
 }
 
+.orbit-stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.orbit-star {
+  fill: #b8aa86;
+  opacity: 0.72;
+}
+
+.orbit-star:nth-child(3n) {
+  fill: #91aa9d;
+  opacity: 0.62;
+}
+
 .avatar-wrap {
   position: absolute;
   top: clamp(11rem, calc(20vw + 2.5rem), 28rem);
