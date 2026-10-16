@@ -7,7 +7,7 @@
       <circle cx="800" cy="430" r="410" />
     </g>
 
-    <!-- complete circular outer group -->
+    <!-- complete circular outer group with no directional gaps -->
     <g stroke-width="1.2" opacity="0.2">
       <circle cx="800" cy="430" r="560" />
       <circle cx="800" cy="430" r="700" />
