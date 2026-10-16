@@ -96,14 +96,14 @@ function renderButtons(siteContent) {
 const orbitCenter = { cx: 800, cy: 430 };
 
 const orbitStarConfig = [
-  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 18, phase: 0.2, spinPeriod: 4.5, radius: 2.2 },
-  { group: "inner", cx: 880, cy: 430, orbitRadius: 320, period: 24, phase: 2.3, spinPeriod: 6.5, radius: 1.8 },
-  { group: "inner", cx: 800, cy: 430, orbitRadius: 270, period: 29, phase: 4.7, spinPeriod: 5.5, radius: 2.5, tone: "cool" },
-  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 21, phase: 3.4, spinPeriod: 7.5, radius: 1.5, tone: "cool" },
-  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 38, phase: 1.2, spinPeriod: 8, radius: 2.4 },
-  { group: "outer", cx: 1030, cy: 430, orbitRadius: 560, period: 47, phase: 3.1, spinPeriod: 11, radius: 1.7, tone: "cool" },
-  { group: "outer", cx: 800, cy: 430, orbitRadius: 680, period: 55, phase: 5.4, spinPeriod: 9, radius: 2.1 },
-  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 43, phase: 4.2, spinPeriod: 13, radius: 1.4, tone: "cool" },
+  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 10, phase: 0.2, spinPeriod: 3, radius: 2.2 },
+  { group: "inner", cx: 880, cy: 430, orbitRadius: 320, period: 14, phase: 2.3, spinPeriod: 4.5, radius: 1.8 },
+  { group: "inner", cx: 800, cy: 430, orbitRadius: 270, period: 17, phase: 4.7, spinPeriod: 3.8, radius: 2.5, tone: "cool" },
+  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 12, phase: 3.4, spinPeriod: 5.5, radius: 1.5, tone: "cool" },
+  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 24, phase: 1.2, spinPeriod: 6, radius: 2.4 },
+  { group: "outer", cx: 1030, cy: 430, orbitRadius: 560, period: 30, phase: 3.1, spinPeriod: 8, radius: 1.7, tone: "cool" },
+  { group: "outer", cx: 800, cy: 430, orbitRadius: 680, period: 36, phase: 5.4, spinPeriod: 7, radius: 2.1 },
+  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 28, phase: 4.2, spinPeriod: 9, radius: 1.4, tone: "cool" },
 ];
 
 function initializeOrbitField() {
@@ -153,8 +153,8 @@ function initializeOrbitField() {
   let startedAt = 0;
 
   const updateStars = (elapsedSeconds) => {
-    const innerAngle = (elapsedSeconds * 360) / 24;
-    const outerAngle = -(elapsedSeconds * 360) / 42;
+    const innerAngle = (elapsedSeconds * 360) / 14;
+    const outerAngle = -(elapsedSeconds * 360) / 26;
     orbitGroups.inner.setAttribute("transform", `rotate(${innerAngle} 800 430)`);
     orbitGroups.outer.setAttribute("transform", `rotate(${outerAngle} 800 430)`);
 
@@ -218,6 +218,93 @@ function initializeOrbitField() {
   }
 }
 
+function initializePointerFeedback() {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (reduceMotion.matches) {
+    return;
+  }
+
+  const root = document.documentElement;
+  const orbitField = document.querySelector(".orbit-field");
+  let targetX = 0;
+  let targetY = 0;
+  let currentX = 0;
+  let currentY = 0;
+  let animationFrame = null;
+  let motionEnabled = true;
+
+  const animate = () => {
+    if (!motionEnabled) {
+      animationFrame = null;
+      return;
+    }
+
+    currentX += (targetX - currentX) * 0.16;
+    currentY += (targetY - currentY) * 0.16;
+    root.style.setProperty("--orbit-mouse-x", `${currentX.toFixed(2)}px`);
+    root.style.setProperty("--orbit-mouse-y", `${currentY.toFixed(2)}px`);
+    if (orbitField) {
+      orbitField.style.transform = `translate3d(${(currentX * 0.45).toFixed(2)}px, ${(currentY * 0.45).toFixed(2)}px, 0)`;
+    }
+
+    if (Math.abs(targetX - currentX) > 0.05 || Math.abs(targetY - currentY) > 0.05) {
+      animationFrame = window.requestAnimationFrame(animate);
+    } else {
+      animationFrame = null;
+    }
+  };
+
+  const start = () => {
+    if (animationFrame === null && motionEnabled) {
+      animationFrame = window.requestAnimationFrame(animate);
+    }
+  };
+
+  const move = (event) => {
+    const width = Math.max(window.innerWidth, 1);
+    const height = Math.max(window.innerHeight, 1);
+    targetX = ((event.clientX / width) - 0.5) * 36;
+    targetY = ((event.clientY / height) - 0.5) * 28;
+    start();
+  };
+
+  const reset = () => {
+    targetX = 0;
+    targetY = 0;
+    start();
+  };
+
+  window.addEventListener("pointermove", move, { passive: true });
+  window.addEventListener("pointerleave", reset);
+  const syncMotion = (event) => {
+    motionEnabled = !event.matches;
+    if (motionEnabled) {
+      start();
+      return;
+    }
+
+    targetX = 0;
+    targetY = 0;
+    if (animationFrame !== null) {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+    currentX = 0;
+    currentY = 0;
+    root.style.setProperty("--orbit-mouse-x", "0px");
+    root.style.setProperty("--orbit-mouse-y", "0px");
+    if (orbitField) {
+      orbitField.style.transform = "none";
+    }
+  };
+
+  if (typeof reduceMotion.addEventListener === "function") {
+    reduceMotion.addEventListener("change", syncMotion);
+  } else if (typeof reduceMotion.addListener === "function") {
+    reduceMotion.addListener(syncMotion);
+  }
+}
+
 async function initializePage() {
   let siteContent;
   try {
@@ -233,6 +320,7 @@ async function initializePage() {
 }
 
 initializeOrbitField();
+initializePointerFeedback();
 initializePage().catch((error) => {
   console.error(error);
   document.documentElement.classList.remove("no-js");

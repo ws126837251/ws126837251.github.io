@@ -4,6 +4,8 @@
   --GridColor: rgba(39, 76, 65, 0.16);
   --AvatarFrame: #f0ebe2;
   --AvatarFrameBorder: rgba(39, 76, 65, 0.14);
+  --orbit-mouse-x: 0px;
+  --orbit-mouse-y: 0px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -41,7 +43,7 @@ body::after {
   background-image: url("/assets/orbit-lines.svg");
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100% 100%;
   content: "";
   pointer-events: none;
   transform-origin: center;
@@ -52,18 +54,18 @@ body::before {
   top: 0;
   left: 0;
   opacity: 0.72;
-  transform: translate3d(0, 0, 0) rotate(-1deg) scale(1.02);
-  animation: ambient-orbit-a 31s ease-in-out -8s infinite alternate;
+  transform: translate3d(var(--orbit-mouse-x), var(--orbit-mouse-y), 0) scale(1, 1);
+  animation: ambient-orbit-a 16s ease-in-out -4s infinite alternate;
 }
 
 body::after {
   top: 0;
   left: 0;
   opacity: 0.2;
-  background-position: 3% -2%;
-  background-size: 110% 110%;
-  transform: translate3d(0, 0, 0) rotate(5deg) scale(1.04);
-  animation: ambient-orbit-b 37s ease-in-out -17s infinite alternate;
+  background-position: center;
+  background-size: 100% 100%;
+  transform: translate3d(var(--orbit-mouse-x), var(--orbit-mouse-y), 0) scale(1, 1);
+  animation: ambient-orbit-b 20s ease-in-out -7s infinite alternate;
 }
 
 .title {
@@ -76,45 +78,45 @@ body::after {
 
 @keyframes ambient-orbit-a {
   0% {
-    transform: translate3d(-1.5vw, -1vh, 0) rotate(-15deg) scale(1, 1);
+    transform: translate3d(calc(-1.2vw + var(--orbit-mouse-x)), calc(-0.8vh + var(--orbit-mouse-y)), 0) scale(1, 1);
   }
 
   23% {
-    transform: translate3d(2vw, 2vh, 0) rotate(-11deg) scale(1.015, 0.97);
+    transform: translate3d(calc(1.6vw + var(--orbit-mouse-x)), calc(1.3vh + var(--orbit-mouse-y)), 0) scale(1.012, 0.992);
   }
 
   51% {
-    transform: translate3d(-2vw, 1vh, 0) rotate(-18deg) scale(0.98, 1.03);
+    transform: translate3d(calc(-1.4vw + var(--orbit-mouse-x)), calc(1.1vh + var(--orbit-mouse-y)), 0) scale(0.99, 1.01);
   }
 
   78% {
-    transform: translate3d(1vw, -2vh, 0) rotate(-13deg) scale(1.02, 0.98);
+    transform: translate3d(calc(1.2vw + var(--orbit-mouse-x)), calc(-1.2vh + var(--orbit-mouse-y)), 0) scale(1.01, 0.994);
   }
 
   100% {
-    transform: translate3d(-1vw, 1.5vh, 0) rotate(-16deg) scale(1, 1.02);
+    transform: translate3d(calc(-0.8vw + var(--orbit-mouse-x)), calc(1vh + var(--orbit-mouse-y)), 0) scale(1, 1.008);
   }
 }
 
 @keyframes ambient-orbit-b {
   0% {
-    transform: translate3d(1vw, 1vh, 0) rotate(23deg) scale(1, 1);
+    transform: translate3d(calc(0.9vw + var(--orbit-mouse-x)), calc(0.8vh + var(--orbit-mouse-y)), 0) scale(1, 1);
   }
 
   29% {
-    transform: translate3d(-2vw, -1vh, 0) rotate(19deg) scale(0.98, 1.03);
+    transform: translate3d(calc(-1.5vw + var(--orbit-mouse-x)), calc(-0.9vh + var(--orbit-mouse-y)), 0) scale(0.992, 1.01);
   }
 
   54% {
-    transform: translate3d(2vw, 2vh, 0) rotate(26deg) scale(1.025, 0.97);
+    transform: translate3d(calc(1.5vw + var(--orbit-mouse-x)), calc(1.5vh + var(--orbit-mouse-y)), 0) scale(1.014, 0.99);
   }
 
   81% {
-    transform: translate3d(-1vw, 0, 0) rotate(21deg) scale(0.99, 1.02);
+    transform: translate3d(calc(-0.8vw + var(--orbit-mouse-x)), calc(0.2vh + var(--orbit-mouse-y)), 0) scale(0.996, 1.008);
   }
 
   100% {
-    transform: translate3d(1.5vw, -1.5vh, 0) rotate(24deg) scale(1.01, 0.98);
+    transform: translate3d(calc(1.2vw + var(--orbit-mouse-x)), calc(-1.2vh + var(--orbit-mouse-y)), 0) scale(1.008, 0.994);
   }
 }
 
