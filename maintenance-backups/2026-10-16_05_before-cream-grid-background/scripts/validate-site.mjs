@@ -31,6 +31,7 @@ const notFoundHtml = fs.readFileSync(path.join(hubDir, "404.html"), "utf8");
 if (fs.readFileSync(path.join(hubDir, "CNAME"), "utf8").trim() !== "blog.wufeng.de") {
   throw new Error("hub/CNAME must point to blog.wufeng.de.");
 }
+
 const siteContent = JSON.parse(
   fs.readFileSync(path.join(hubDir, "site-content.json"), "utf8"),
 );
@@ -45,17 +46,15 @@ for (const requiredValue of [
   "/assets/app.js",
   "/og-directory.png",
   "https://blog.wufeng.de/",
-  'id="product-grid"',
-  'id="product-search"',
-  'id="region-filters"',
+  'id="buttonList"',
+  'class="title"',
+  'class="button"',
+  "BUTTONS_FALLBACK_START",
+  "BUTTONS_FALLBACK_END",
   'class="no-js"',
-  "CATALOG_FALLBACK_START",
-  "CATALOG_FALLBACK_END",
-  'data-content="hero.titleLine1"',
   siteContent.meta.title,
   siteContent.brand.name,
-  siteContent.hero.titleLine1,
-  siteContent.footer.editUrl,
+  siteContent.navigation.editUrl,
 ]) {
   if (!indexHtml.includes(requiredValue)) {
     throw new Error(`Homepage is missing: ${requiredValue}`);
@@ -63,9 +62,9 @@ for (const requiredValue of [
 }
 
 for (const html of [indexHtml, notFoundHtml]) {
-  const contentKeys = [
-    ...html.matchAll(/data-content="([^"]+)"/g),
-  ].map((match) => match[1]);
+  const contentKeys = [...html.matchAll(/data-content="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
   for (const contentKey of contentKeys) {
     const value = getContentValue(contentKey);
     if (typeof value !== "string" && typeof value !== "number") {
@@ -75,11 +74,14 @@ for (const html of [indexHtml, notFoundHtml]) {
 }
 
 for (const requiredKey of [
-  "catalog.allRegionsLabel",
-  "catalog.cardAction",
-  "catalog.cardAriaTemplate",
-  "catalog.topicsAriaTemplate",
-  "catalog.countTemplate",
+  "navigation.editLabel",
+  "navigation.editUrl",
+  "navigation.aboutLabel",
+  "navigation.aboutUrl",
+  "footer.copyright",
+  "footer.linkLabel",
+  "footer.linkUrl",
+  "notFound.action",
 ]) {
   if (typeof getContentValue(requiredKey) !== "string") {
     throw new Error(`Site content is missing: ${requiredKey}`);
@@ -90,9 +92,13 @@ for (const retiredValue of [
   "Giffgaff 与 Lebara",
   "无风电话卡教程",
   "全球 SIM 卡中文使用指南",
+  "line-field",
+  "avatar-disc",
+  "product-grid",
+  "product-search",
 ]) {
   if (indexHtml.includes(retiredValue)) {
-    throw new Error(`Homepage still contains retired copy: ${retiredValue}`);
+    throw new Error(`Homepage still contains retired content: ${retiredValue}`);
   }
 }
 
@@ -102,9 +108,10 @@ if (!Array.isArray(products) || products.length < 2) {
   throw new Error("Product catalog must contain at least two entries.");
 }
 
-const compatibilityUrl = `${pathToFileURL(
-  path.join(hubDir, "assets", "products.js"),
-).href}?validate=${Date.now()}`;
+const compatibilityUrl =
+  pathToFileURL(path.join(hubDir, "assets", "products.js")).href +
+  "?validate=" +
+  Date.now();
 const compatibilityModule = await import(compatibilityUrl);
 if (JSON.stringify(compatibilityModule.products) !== JSON.stringify(products)) {
   throw new Error("Generated products.js does not match site-content.json.");
@@ -155,7 +162,7 @@ for (const product of products) {
   slugs.add(product.slug);
   paths.add(product.path);
   if (!indexHtml.includes(`href="${product.path}"`)) {
-    throw new Error(`Static catalog fallback is missing: ${product.path}`);
+    throw new Error(`Static homepage button is missing: ${product.path}`);
   }
 }
 
@@ -163,12 +170,18 @@ const css = fs.readFileSync(path.join(hubDir, "assets", "style.css"), "utf8");
 if ((css.match(/{/g) ?? []).length !== (css.match(/}/g) ?? []).length) {
   throw new Error("CSS opening and closing braces do not match.");
 }
-for (const requiredAccessibilityRule of [
+for (const requiredRule of [
+  ":root",
+  "--Fcolor: #923995",
+  "--Bcolor: #67c564",
+  ".title",
+  ".button",
+  "#buttonList",
   ":focus-visible",
   "prefers-reduced-motion: reduce",
 ]) {
-  if (!css.includes(requiredAccessibilityRule)) {
-    throw new Error(`CSS is missing accessibility rule: ${requiredAccessibilityRule}`);
+  if (!css.includes(requiredRule)) {
+    throw new Error(`CSS is missing required rule: ${requiredRule}`);
   }
 }
 
@@ -186,16 +199,14 @@ for (const product of products) {
 const appJs = fs.readFileSync(path.join(hubDir, "assets", "app.js"), "utf8");
 for (const requiredBehavior of [
   "loadSiteContent",
-  "renderProducts",
-  "renderFilters",
-  "updateFilterState",
-  "matchesSearch",
+  "applyContent",
+  "createButton",
+  "renderButtons",
   "localeCompare",
-  "aria-pressed",
   "/site-content.json",
 ]) {
   if (!appJs.includes(requiredBehavior)) {
-    throw new Error(`Catalog behavior is missing: ${requiredBehavior}`);
+    throw new Error(`Homepage behavior is missing: ${requiredBehavior}`);
   }
 }
 
