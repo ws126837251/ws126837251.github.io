@@ -96,14 +96,22 @@ function renderButtons(siteContent) {
 const orbitLayerCount = 11;
 const orbitStartGap = 0.03;
 const orbitSpacingRatio = 1.32;
-const orbitAspects = [0.8, 0.75, 0.86, 0.72, 0.9, 0.77, 0.93, 0.84, 0.96, 0.88, 0.92];
+const orbitCoreCount = 3;
+const orbitAspects = [0.62, 0.7, 0.78, 0.58, 0.68, 0.76, 0.6, 0.72, 0.8, 0.64, 0.74];
 const orbitRotations = [15, -34, 49, -64, 27, -18, 62, -45, 14, -28, 41];
 
 const orbitLayerConfig = Array.from({ length: orbitLayerCount }, (_, index) => ({
   name: "layer-" + String(index + 1).padStart(2, "0"),
   direction: index % 2 === 0 ? -1 : 1,
   period: 4.6 + index * 3.1,
-  opacity: Number(Math.max(0.16, 0.44 - index * 0.028).toFixed(3)),
+  opacity: Number(
+    Math.max(
+      0.16,
+      index < orbitCoreCount
+        ? 0.5 - index * 0.04
+        : 0.34 - (index - orbitCoreCount) * 0.026,
+    ).toFixed(3),
+  ),
   strokeWidth: Number(Math.max(0.84, 1.18 - index * 0.03).toFixed(2)),
   distance:
     index === 0
