@@ -48,9 +48,8 @@ body::after {
 body::before {
   top: 0;
   left: 0;
-  opacity: 0.72;
-  transform: translate3d(0, 0, 0) rotate(-1deg) scale(1.02);
-  animation: ambient-orbit-a 31s ease-in-out -8s infinite alternate;
+  opacity: 0.12;
+  transform: none;
 }
 
 body::after {
@@ -65,28 +64,6 @@ body::after {
   font-family: Monaco;
 }
 
-@keyframes ambient-orbit-a {
-  0% {
-    transform: translate3d(-1.5vw, -1vh, 0) rotate(-15deg) scale(1, 1);
-  }
-
-  23% {
-    transform: translate3d(2vw, 2vh, 0) rotate(-11deg) scale(1.015, 0.97);
-  }
-
-  51% {
-    transform: translate3d(-2vw, 1vh, 0) rotate(-18deg) scale(0.98, 1.03);
-  }
-
-  78% {
-    transform: translate3d(1vw, -2vh, 0) rotate(-13deg) scale(1.02, 0.98);
-  }
-
-  100% {
-    transform: translate3d(-1vw, 1.5vh, 0) rotate(-16deg) scale(1, 1.02);
-  }
-}
-
 .title a {
   color: var(--Fcolor);
   text-decoration: none;
@@ -96,7 +73,7 @@ body::after {
   visibility: hidden;
 }
 
-.orbit-stars {
+.orbit-field {
   position: fixed;
   inset: 0;
   z-index: 0;
@@ -112,7 +89,7 @@ body::after {
   opacity: 0.72;
 }
 
-.orbit-star:nth-child(3n) {
+.orbit-star.cool {
   fill: #91aa9d;
   opacity: 0.62;
 }
