@@ -93,93 +93,133 @@ function renderButtons(siteContent) {
   buttonList.replaceChildren(fragment);
 }
 
-const orbitCenter = { cx: 800, cy: 430 };
-
-const orbitStarConfig = [
-  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 10, phase: 0.2, spinPeriod: 3, radius: 2.2 },
-  { group: "inner", cx: 880, cy: 430, orbitRadius: 320, period: 14, phase: 2.3, spinPeriod: 4.5, radius: 1.8 },
-  { group: "inner", cx: 800, cy: 430, orbitRadius: 270, period: 17, phase: 4.7, spinPeriod: 3.8, radius: 2.5, tone: "cool" },
-  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 12, phase: 3.4, spinPeriod: 5.5, radius: 1.5, tone: "cool" },
-  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 24, phase: 1.2, spinPeriod: 6, radius: 2.4 },
-  { group: "outer", cx: 1030, cy: 430, orbitRadius: 560, period: 30, phase: 3.1, spinPeriod: 8, radius: 1.7, tone: "cool" },
-  { group: "outer", cx: 800, cy: 430, orbitRadius: 680, period: 36, phase: 5.4, spinPeriod: 7, radius: 2.1 },
-  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 28, phase: 4.2, spinPeriod: 9, radius: 1.4, tone: "cool" },
+const orbitLayerConfig = [
+  {
+    name: "micro",
+    direction: -1,
+    period: 10,
+    opacity: 0.52,
+    strokeWidth: 1.35,
+    rings: [
+      { x: 0.28, y: 0.18, rotation: 8 },
+      { x: 0.2, y: 0.3, rotation: 55 },
+    ],
+  },
+  {
+    name: "inner",
+    direction: -1,
+    period: 16,
+    opacity: 0.42,
+    strokeWidth: 1.2,
+    rings: [
+      { x: 0.48, y: 0.26, rotation: -12 },
+      { x: 0.32, y: 0.5, rotation: 42 },
+    ],
+  },
+  {
+    name: "middle",
+    direction: 1,
+    period: 24,
+    opacity: 0.3,
+    strokeWidth: 1.1,
+    rings: [
+      { x: 0.7, y: 0.34, rotation: 17 },
+      { x: 0.52, y: 0.64, rotation: -38 },
+    ],
+  },
+  {
+    name: "outer",
+    direction: 1,
+    period: 32,
+    opacity: 0.24,
+    strokeWidth: 1,
+    rings: [
+      { x: 0.92, y: 0.4, rotation: -9 },
+      { x: 0.68, y: 0.88, rotation: 34 },
+    ],
+  },
 ];
 
 function initializeOrbitField() {
   const svgNamespace = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNamespace, "svg");
   svg.classList.add("orbit-field");
-  svg.setAttribute("viewBox", "0 0 1600 1000");
-  svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  svg.setAttribute("preserveAspectRatio", "none");
   svg.setAttribute("aria-hidden", "true");
 
-  const createOrbitGroup = (groupName) => {
+  const createOrbitGroup = (layer) => {
     const group = document.createElementNS(svgNamespace, "g");
-    group.classList.add("orbit-track", groupName);
+    group.classList.add("orbit-track", `orbit-${layer.name}`);
+    group.setAttribute("fill", "none");
+    group.setAttribute("stroke", "#6e8f84");
+    group.setAttribute("stroke-linecap", "round");
+    group.setAttribute("opacity", String(layer.opacity));
     svg.append(group);
     return group;
   };
 
-  const orbitGroups = {
-    inner: createOrbitGroup("inner"),
-    outer: createOrbitGroup("outer"),
-  };
-
-  const stars = orbitStarConfig.map((config) => {
-    const star = document.createElementNS(svgNamespace, "g");
-    star.classList.add("orbit-star");
-    if (config.tone === "cool") {
-      star.classList.add("cool");
-    }
-
-    const point = config.radius * 0.3;
-    const shape = document.createElementNS(svgNamespace, "path");
-    shape.setAttribute(
-      "d",
-      `M 0 ${-config.radius} L ${point} ${-point} L ${config.radius} 0 L ${point} ${point} L 0 ${config.radius} L ${-point} ${point} L ${-config.radius} 0 L ${-point} ${-point} Z`,
-    );
-    const core = document.createElementNS(svgNamespace, "circle");
-    core.setAttribute("r", String(config.radius * 0.28));
-    star.append(shape, core);
-    svg.append(star);
-    return { config, element: star };
-  });
+  const orbitGroups = new Map(
+    orbitLayerConfig.map((layer) => [layer.name, createOrbitGroup(layer)]),
+  );
 
   document.body.prepend(svg);
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let animationFrame = null;
   let startedAt = 0;
+  let layoutFrame = null;
+  let orbitCenter = { cx: 0, cy: 0 };
 
-  const updateStars = (elapsedSeconds) => {
-    const innerAngle = (elapsedSeconds * 360) / 14;
-    const outerAngle = -(elapsedSeconds * 360) / 26;
-    orbitGroups.inner.setAttribute("transform", `rotate(${innerAngle} 800 430)`);
-    orbitGroups.outer.setAttribute("transform", `rotate(${outerAngle} 800 430)`);
+  const layoutOrbits = () => {
+    const viewportWidth = Math.max(window.innerWidth, 1);
+    const viewportHeight = Math.max(window.innerHeight, 1);
+    const sceneHeight = 1000;
+    const sceneWidth = (viewportWidth / viewportHeight) * sceneHeight;
+    const avatar = document.querySelector(".avatar-wrap");
+    const avatarBounds = avatar?.getBoundingClientRect();
+    const avatarX = avatarBounds
+      ? avatarBounds.left + avatarBounds.width / 2
+      : viewportWidth / 2;
+    const avatarY = avatarBounds
+      ? avatarBounds.top + avatarBounds.height / 2
+      : viewportHeight * 0.43;
 
-    for (const { config, element } of stars) {
-      const angle = config.phase + (elapsedSeconds * Math.PI * 2) / config.period;
-      const groupAngle = config.group === "inner" ? innerAngle : outerAngle;
-      const groupRotation = (groupAngle * Math.PI) / 180;
-      const offsetX = config.cx - orbitCenter.cx;
-      const offsetY = config.cy - orbitCenter.cy;
-      const orbitCenterX =
-        orbitCenter.cx +
-        offsetX * Math.cos(groupRotation) -
-        offsetY * Math.sin(groupRotation);
-      const orbitCenterY =
-        orbitCenter.cy +
-        offsetX * Math.sin(groupRotation) +
-        offsetY * Math.cos(groupRotation);
-      const orbitAngle = angle + groupRotation;
-      const x = orbitCenterX + config.orbitRadius * Math.cos(orbitAngle);
-      const y = orbitCenterY + config.orbitRadius * Math.sin(orbitAngle);
-      const spin = (elapsedSeconds * 360) / config.spinPeriod + (config.phase * 180) / Math.PI;
-      element.setAttribute(
-        "transform",
-        `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${spin.toFixed(2)})`,
-      );
+    orbitCenter = {
+      cx: (avatarX / viewportWidth) * sceneWidth,
+      cy: (avatarY / viewportHeight) * sceneHeight,
+    };
+    svg.setAttribute("viewBox", `0 0 ${sceneWidth.toFixed(2)} ${sceneHeight}`);
+
+    const safeX = Math.max(1, Math.min(orbitCenter.cx, sceneWidth - orbitCenter.cx) - 24);
+    const safeY = Math.max(1, Math.min(orbitCenter.cy, sceneHeight - orbitCenter.cy) - 24);
+    const orbitRadius = Math.min(safeX, safeY) * 0.92;
+
+    for (const layer of orbitLayerConfig) {
+      const group = orbitGroups.get(layer.name);
+      const rings = layer.rings.map((ring) => {
+        const ellipse = document.createElementNS(svgNamespace, "ellipse");
+        ellipse.setAttribute("cx", "0");
+        ellipse.setAttribute("cy", "0");
+        ellipse.setAttribute("rx", (orbitRadius * ring.x).toFixed(2));
+        ellipse.setAttribute("ry", (orbitRadius * ring.y).toFixed(2));
+        ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
+        ellipse.setAttribute("vector-effect", "non-scaling-stroke");
+        ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
+        return ellipse;
+      });
+      group.replaceChildren(...rings);
+    }
+  };
+
+  const updateOrbits = (elapsedSeconds) => {
+    for (const layer of orbitLayerConfig) {
+      const angle = (elapsedSeconds * 360 * layer.direction) / layer.period;
+      orbitGroups
+        .get(layer.name)
+        .setAttribute(
+          "transform",
+          `translate(${orbitCenter.cx.toFixed(2)} ${orbitCenter.cy.toFixed(2)}) rotate(${angle.toFixed(2)})`,
+        );
     }
   };
 
@@ -188,11 +228,11 @@ function initializeOrbitField() {
       window.cancelAnimationFrame(animationFrame);
       animationFrame = null;
     }
-    updateStars(0);
+    updateOrbits(0);
   };
 
   const tick = (now) => {
-    updateStars((now - startedAt) / 1000);
+    updateOrbits((now - startedAt) / 1000);
     animationFrame = window.requestAnimationFrame(tick);
   };
 
@@ -210,7 +250,21 @@ function initializeOrbitField() {
     }
   };
 
+  const syncLayout = () => {
+    if (layoutFrame !== null) {
+      return;
+    }
+    layoutFrame = window.requestAnimationFrame(() => {
+      layoutFrame = null;
+      layoutOrbits();
+      updateOrbits(reduceMotion.matches ? 0 : (performance.now() - startedAt) / 1000);
+    });
+  };
+
+  layoutOrbits();
   syncMotion();
+  window.addEventListener("resize", syncLayout, { passive: true });
+  window.addEventListener("load", syncLayout, { once: true });
   if (typeof reduceMotion.addEventListener === "function") {
     reduceMotion.addEventListener("change", syncMotion);
   } else if (typeof reduceMotion.addListener === "function") {
@@ -224,7 +278,6 @@ function initializePointerFeedback() {
     return;
   }
 
-  const root = document.documentElement;
   const orbitField = document.querySelector(".orbit-field");
   let targetX = 0;
   let targetY = 0;
@@ -241,8 +294,6 @@ function initializePointerFeedback() {
 
     currentX += (targetX - currentX) * 0.16;
     currentY += (targetY - currentY) * 0.16;
-    root.style.setProperty("--orbit-mouse-x", `${currentX.toFixed(2)}px`);
-    root.style.setProperty("--orbit-mouse-y", `${currentY.toFixed(2)}px`);
     if (orbitField) {
       orbitField.style.transform = `translate3d(${(currentX * 0.45).toFixed(2)}px, ${(currentY * 0.45).toFixed(2)}px, 0)`;
     }
@@ -291,8 +342,6 @@ function initializePointerFeedback() {
     }
     currentX = 0;
     currentY = 0;
-    root.style.setProperty("--orbit-mouse-x", "0px");
-    root.style.setProperty("--orbit-mouse-y", "0px");
     if (orbitField) {
       orbitField.style.transform = "none";
     }
