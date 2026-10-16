@@ -77,51 +77,27 @@ function renderConfiguredCopy(html, fileName) {
   return html;
 }
 
-function assertColor(value, productName) {
-  if (!/^#[0-9a-f]{6}$/i.test(value)) {
-    throw new Error(`Invalid catalog color for ${productName}: ${value}`);
-  }
-  return value;
-}
-
 function renderCard(product, index) {
-  const stateClass =
-    product.state === "building" ? " product-state-building" : "";
   const regionLabel = product.regions
     .map((region) => `${region.code} · ${region.name}`)
     .join(" / ");
-  const topics = product.topics
-    .map((topic) => `          <li>${escapeHtml(topic)}</li>`)
-    .join("\n");
   const cardAria = formatTemplate(siteContent.catalog.cardAriaTemplate, {
-    name: product.name,
-  });
-  const topicsAria = formatTemplate(siteContent.catalog.topicsAriaTemplate, {
     name: product.name,
   });
 
   return `      <a
         class="product-card product-card-static"
         href="${escapeHtml(product.path)}"
-        style="--product-accent: ${assertColor(product.accent, product.name)}; --product-accent-soft: ${assertColor(product.accentSoft, product.name)}"
         aria-label="${escapeHtml(cardAria)}"
       >
-        <div class="product-card-head">
-          <span class="product-mark" aria-hidden="true">${escapeHtml(product.mark)}</span>
-          <span class="product-state${stateClass}">${escapeHtml(product.status)}</span>
-        </div>
-        <div class="product-card-body">
-          <p>${escapeHtml(regionLabel)}</p>
-          <h3>${escapeHtml(product.name)}</h3>
-          <span>${escapeHtml(product.summary)}</span>
-        </div>
-        <ul class="topic-list" aria-label="${escapeHtml(topicsAria)}">
-${topics}
-        </ul>
-        <div class="product-card-foot">
-          <span>${String(index + 1).padStart(2, "0")}</span>
-          <strong>${escapeHtml(siteContent.catalog.cardAction)} <i aria-hidden="true">↗</i></strong>
-        </div>
+        <span class="product-card-number">${String(index + 1).padStart(2, "0")}</span>
+        <span class="product-mark" aria-hidden="true">${escapeHtml(product.mark)}</span>
+        <span class="product-card-main">
+          <span class="product-card-region">${escapeHtml(regionLabel)}</span>
+          <strong class="product-card-name">${escapeHtml(product.name)}</strong>
+          <span class="product-card-status">${escapeHtml(product.status)}</span>
+        </span>
+        <span class="product-card-arrow" aria-hidden="true">↗</span>
       </a>`;
 }
 
@@ -155,26 +131,11 @@ let indexHtml = renderConfiguredCopy(
   "hub/index.html",
 );
 indexHtml = renderCatalog(indexHtml);
-
-const guideTotal = products.reduce(
-  (total, product) => total + product.articleCount,
-  0,
+indexHtml = replaceElementText(
+  indexHtml,
+  "catalog-count",
+  formatTemplate(siteContent.catalog.countTemplate, { count: products.length }),
 );
-const regionTotal = new Set(
-  products.flatMap((product) => product.regions.map((region) => region.code)),
-).size;
-const catalogCount = formatTemplate(siteContent.catalog.countTemplate, {
-  count: products.length,
-});
-
-for (const [id, value] of [
-  ["brand-count", products.length],
-  ["guide-count", `${guideTotal}+`],
-  ["region-count", regionTotal],
-  ["catalog-count", catalogCount],
-]) {
-  indexHtml = replaceElementText(indexHtml, id, value);
-}
 
 const notFoundHtml = renderConfiguredCopy(
   fs.readFileSync(notFoundPath, "utf8"),

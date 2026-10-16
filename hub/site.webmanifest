@@ -4,6 +4,6 @@
   "lang": "zh-CN",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#071928",
-  "theme_color": "#071928"
+  "background_color": "#f7f2e9",
+  "theme_color": "#25483a"
 }

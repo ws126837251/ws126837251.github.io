@@ -14,6 +14,7 @@ const requiredFiles = [
   "assets/style.css",
   "assets/app.js",
   "assets/products.js",
+  "assets/wufeng-avatar.png",
   "og-directory.png",
   "robots.txt",
   "sitemap.xml",
@@ -46,15 +47,14 @@ for (const requiredValue of [
   "/og-directory.png",
   "https://blog.wufeng.de/",
   'id="product-grid"',
-  'id="product-search"',
-  'id="region-filters"',
+  'id="catalog-count"',
   'class="no-js"',
   "CATALOG_FALLBACK_START",
   "CATALOG_FALLBACK_END",
-  'data-content="hero.titleLine1"',
+  'data-content="brand.tagline"',
   siteContent.meta.title,
   siteContent.brand.name,
-  siteContent.hero.titleLine1,
+  siteContent.catalog.title,
   siteContent.footer.editUrl,
 ]) {
   if (!indexHtml.includes(requiredValue)) {
@@ -75,10 +75,8 @@ for (const html of [indexHtml, notFoundHtml]) {
 }
 
 for (const requiredKey of [
-  "catalog.allRegionsLabel",
   "catalog.cardAction",
   "catalog.cardAriaTemplate",
-  "catalog.topicsAriaTemplate",
   "catalog.countTemplate",
 ]) {
   if (typeof getContentValue(requiredKey) !== "string") {
@@ -166,6 +164,9 @@ if ((css.match(/{/g) ?? []).length !== (css.match(/}/g) ?? []).length) {
 for (const requiredAccessibilityRule of [
   ":focus-visible",
   "prefers-reduced-motion: reduce",
+  ".avatar-disc",
+  "@keyframes avatar-spin",
+  ".line-field",
 ]) {
   if (!css.includes(requiredAccessibilityRule)) {
     throw new Error(`CSS is missing accessibility rule: ${requiredAccessibilityRule}`);
@@ -186,13 +187,11 @@ for (const product of products) {
 const appJs = fs.readFileSync(path.join(hubDir, "assets", "app.js"), "utf8");
 for (const requiredBehavior of [
   "loadSiteContent",
+  "applyContent",
   "renderProducts",
-  "renderFilters",
-  "updateFilterState",
-  "matchesSearch",
   "localeCompare",
-  "aria-pressed",
   "/site-content.json",
+  "product-card",
 ]) {
   if (!appJs.includes(requiredBehavior)) {
     throw new Error(`Catalog behavior is missing: ${requiredBehavior}`);
@@ -207,6 +206,10 @@ for (const scriptName of ["render-catalog.mjs", "sync-product-counts.mjs"]) {
 
 if (fs.statSync(path.join(hubDir, "og-directory.png")).size < 100_000) {
   throw new Error("Social preview image appears to be incomplete.");
+}
+
+if (fs.statSync(path.join(hubDir, "assets", "wufeng-avatar.png")).size < 100_000) {
+  throw new Error("Avatar image appears to be incomplete.");
 }
 
 console.log("Tutorials hub validation passed.");

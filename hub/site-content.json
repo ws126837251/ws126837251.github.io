@@ -1,12 +1,12 @@
 {
   "meta": {
     "title": "无风小卖部｜全球 SIM 卡使用指南",
-    "description": "无风小卖部的全球 SIM 卡使用指南，按品牌和使用场景快速查找激活、套餐、网络与保号教程。",
-    "socialDescription": "全球 SIM 卡使用指南，按品牌和地区快速查找。"
+    "description": "无风小卖部的全球 SIM 卡使用指南。",
+    "socialDescription": "全球 SIM 卡使用指南。"
   },
   "brand": {
     "name": "无风小卖部",
-    "tagline": "GLOBAL CONNECTIVITY",
+    "tagline": "GLOBAL SIM GUIDES",
     "homeLabel": "无风小卖部首页"
   },
   "navigation": {
@@ -38,17 +38,17 @@
     "step3": "按步骤完成"
   },
   "catalog": {
-    "eyebrow": "Directory · 02",
-    "title": "从品牌开始",
-    "description": "每张卡都有独立入口。目录会随着新品牌加入而扩展，已有教程和链接不会被打乱。",
+    "eyebrow": "DIRECTORY",
+    "title": "选择你的电话卡",
+    "description": "",
     "searchLabel": "搜索电话卡",
     "searchPlaceholder": "搜索品牌、地区或使用场景",
     "statusText": "持续整理中",
-    "emptyTitle": "没有找到对应的电话卡",
-    "emptyDescription": "换一个品牌名称、地区或使用场景试试。",
+    "emptyTitle": "没有可用的电话卡",
+    "emptyDescription": "新的品牌指南正在整理中。",
     "resetLabel": "查看全部品牌",
     "allRegionsLabel": "全部",
-    "cardAction": "查看教程",
+    "cardAction": "打开指南",
     "cardAriaTemplate": "进入 {name} 使用指南",
     "topicsAriaTemplate": "{name} 教程主题",
     "countTemplate": "共 {count} 个品牌"
@@ -111,8 +111,8 @@
   },
   "footer": {
     "subtitle": "全球 SIM 卡使用指南",
-    "copyright": "© 2026 Wufeng · 请遵守当地法律法规，合理使用通信服务。",
-    "editLabel": "在 GitHub 编辑本站文字",
+    "copyright": "© 2026 Wufeng",
+    "editLabel": "GitHub",
     "editUrl": "https://github.com/ws126837251/ws126837251.github.io/edit/main/hub/site-content.json"
   },
   "notFound": {
