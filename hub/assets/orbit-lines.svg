@@ -1,19 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="none">
   <g fill="none" stroke="#6e8f84" stroke-linecap="round">
-    <!-- closed loops around the avatar: horizontal, vertical, and diagonal -->
-    <g stroke-width="1.5" opacity="0.34">
-      <ellipse cx="800" cy="500" rx="380" ry="250" transform="rotate(-18 800 500)" />
-      <ellipse cx="800" cy="500" rx="250" ry="400" transform="rotate(16 800 500)" />
-      <ellipse cx="800" cy="500" rx="350" ry="250" transform="rotate(55 800 500)" />
+    <!-- one coherent orbital system, all rings share the same center -->
+    <g stroke-width="1.5" opacity="0.38">
+      <ellipse cx="800" cy="430" rx="330" ry="205" transform="rotate(7 800 430)" />
+      <ellipse cx="800" cy="430" rx="220" ry="270" transform="rotate(-43 800 430)" />
+      <ellipse cx="800" cy="430" rx="285" ry="170" transform="rotate(58 800 430)" />
     </g>
 
-    <!-- wide closed loops keep the full page filled without clipping -->
-    <g stroke-width="1.2" opacity="0.22">
-      <ellipse cx="800" cy="500" rx="440" ry="230" transform="rotate(-48 800 500)" />
-      <ellipse cx="800" cy="500" rx="620" ry="360" transform="rotate(-14 800 500)" />
-      <ellipse cx="800" cy="500" rx="440" ry="460" transform="rotate(20 800 500)" />
-      <ellipse cx="800" cy="500" rx="610" ry="280" transform="rotate(42 800 500)" />
-      <ellipse cx="800" cy="500" rx="600" ry="300" transform="rotate(-42 800 500)" />
+    <!-- larger rings connect every direction back to the same center -->
+    <g stroke-width="1.25" opacity="0.24">
+      <ellipse cx="800" cy="430" rx="670" ry="240" transform="rotate(-14 800 430)" />
+      <ellipse cx="800" cy="430" rx="560" ry="260" transform="rotate(36 800 430)" />
+      <ellipse cx="800" cy="430" rx="500" ry="220" transform="rotate(-45 800 430)" />
+      <ellipse cx="800" cy="430" rx="300" ry="370" transform="rotate(18 800 430)" />
     </g>
   </g>
 </svg>
