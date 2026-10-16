@@ -93,111 +93,42 @@ function renderButtons(siteContent) {
   buttonList.replaceChildren(fragment);
 }
 
-const orbitLayerConfig = [
-  {
-    name: "micro",
-    direction: -1,
-    period: 5.5,
-    opacity: 0.45,
-    strokeWidth: 1.28,
-    rings: [
-      { rx: 72, ry: 112, rotation: 18, opacity: 0.82 },
-      { rx: 108, ry: 70, rotation: -46, opacity: 0.66 },
-      { rx: 126, ry: 94, rotation: 61, opacity: 0.52 },
-    ],
-  },
-  {
-    name: "inner",
-    direction: 1,
-    period: 7.5,
-    opacity: 0.39,
-    strokeWidth: 1.2,
-    rings: [
-      { rx: 145, ry: 92, rotation: -30, opacity: 0.78 },
-      { rx: 177, ry: 128, rotation: 18, opacity: 0.62 },
-      { rx: 194, ry: 75, rotation: 62, opacity: 0.48 },
-    ],
-  },
-  {
-    name: "middle",
-    direction: -1,
-    period: 10.5,
-    opacity: 0.34,
-    strokeWidth: 1.14,
-    rings: [
-      { rx: 208, ry: 152, rotation: 51, opacity: 0.75 },
-      { rx: 242, ry: 112, rotation: -17, opacity: 0.58 },
-      { rx: 274, ry: 182, rotation: 29, opacity: 0.46 },
-    ],
-  },
-  {
-    name: "wide",
-    direction: 1,
-    period: 14,
-    opacity: 0.29,
-    strokeWidth: 1.08,
-    rings: [
-      { rx: 290, ry: 205, rotation: -23, opacity: 0.7 },
-      { rx: 324, ry: 250, rotation: 35, opacity: 0.55 },
-      { rx: 349, ry: 150, rotation: 70, opacity: 0.42 },
-    ],
-  },
-  {
-    name: "outer",
-    direction: -1,
-    period: 18,
-    opacity: 0.25,
-    strokeWidth: 1.02,
-    rings: [
-      { rx: 355, ry: 272, rotation: 31, opacity: 0.67 },
-      { rx: 390, ry: 205, rotation: -38, opacity: 0.51 },
-      { rx: 414, ry: 325, rotation: 11, opacity: 0.39 },
-    ],
-  },
-  {
-    name: "horizon",
-    direction: 1,
-    period: 23,
-    opacity: 0.21,
-    strokeWidth: 0.98,
-    rings: [
-      { rx: 412, ry: 350, rotation: -48, opacity: 0.63 },
-      { rx: 440, ry: 255, rotation: 18, opacity: 0.47 },
-      { rx: 452, ry: 380, rotation: 52, opacity: 0.35 },
-    ],
-  },
-  {
-    name: "perimeter",
-    direction: -1,
-    period: 29,
-    opacity: 0.18,
-    strokeWidth: 0.94,
-    rings: [
-      { rx: 438, ry: 410, rotation: 9, opacity: 0.6 },
-      { rx: 465, ry: 315, rotation: -29, opacity: 0.45 },
-      { rx: 475, ry: 355, rotation: 57, opacity: 0.32 },
-    ],
-  },
-  {
-    name: "boundary",
-    direction: 1,
-    period: 36,
-    opacity: 0.16,
-    strokeWidth: 0.9,
-    rings: [
-      { rx: 456, ry: 438, rotation: -23, opacity: 0.55 },
-      { rx: 480, ry: 285, rotation: 41, opacity: 0.4 },
-      { rx: 420, ry: 472, rotation: 68, opacity: 0.29 },
-    ],
-  },
-];
+const orbitLayerCount = 14;
+const orbitGrowth = 1.28;
+
+const orbitLayerConfig = Array.from({ length: orbitLayerCount }, (_, index) => ({
+  name: "layer-" + String(index + 1).padStart(2, "0"),
+  index,
+  direction: index % 2 === 0 ? -1 : 1,
+  period: 4.5 + index * 2.15,
+  opacity: Number((0.5 * Math.pow(0.84, index)).toFixed(3)),
+  strokeWidth: Number(Math.max(0.68, 1.24 - index * 0.035).toFixed(2)),
+  rings: [
+    {
+      scale: 0.78,
+      aspect: 0.72 + (index % 3) * 0.06,
+      rotation: 15 + index * 17,
+      opacity: 0.78,
+    },
+    {
+      scale: 1,
+      aspect: 0.58 + (index % 4) * 0.07,
+      rotation: -38 - index * 19,
+      opacity: 0.58,
+    },
+    {
+      scale: 1.18,
+      aspect: 0.86 - (index % 3) * 0.08,
+      rotation: 62 + index * 29,
+      opacity: 0.42,
+    },
+  ],
+}));
 
 function initializeOrbitField() {
   const svgNamespace = "http://www.w3.org/2000/svg";
-  const orbitCenter = { cx: 500, cy: 500 };
   const svg = document.createElementNS(svgNamespace, "svg");
   svg.classList.add("orbit-field");
-  svg.setAttribute("viewBox", "0 0 1000 1000");
   svg.setAttribute("preserveAspectRatio", "none");
   svg.setAttribute("aria-hidden", "true");
 
@@ -215,12 +146,9 @@ function initializeOrbitField() {
       const ellipse = document.createElementNS(svgNamespace, "ellipse");
       ellipse.setAttribute("cx", "0");
       ellipse.setAttribute("cy", "0");
-      ellipse.setAttribute("rx", String(ring.rx));
-      ellipse.setAttribute("ry", String(ring.ry));
       ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
       ellipse.setAttribute("vector-effect", "non-scaling-stroke");
       ellipse.setAttribute("opacity", String(ring.opacity));
-      ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
       group.append(ellipse);
     }
 
@@ -232,7 +160,52 @@ function initializeOrbitField() {
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let animationFrame = null;
+  let layoutFrame = null;
   let startedAt = 0;
+  let orbitCenter = { cx: window.innerWidth / 2, cy: window.innerHeight / 2 };
+
+  const layoutOrbits = () => {
+    const viewportWidth = Math.max(window.innerWidth, 1);
+    const viewportHeight = Math.max(window.innerHeight, 1);
+    const avatar = document.querySelector(".avatar-wrap");
+    const avatarBounds = avatar?.getBoundingClientRect();
+    const avatarDiameter = avatarBounds
+      ? Math.max(avatarBounds.width, avatarBounds.height)
+      : Math.min(viewportWidth, viewportHeight) * 0.12;
+
+    orbitCenter = {
+      cx: avatarBounds
+        ? avatarBounds.left + avatarBounds.width / 2
+        : viewportWidth / 2,
+      cy: avatarBounds
+        ? avatarBounds.top + avatarBounds.height / 2
+        : viewportHeight / 2,
+    };
+
+    svg.setAttribute(
+      "viewBox",
+      `0 0 ${viewportWidth.toFixed(2)} ${viewportHeight.toFixed(2)}`,
+    );
+
+    const baseRadius = Math.max(
+      avatarDiameter * 0.7,
+      Math.min(viewportWidth, viewportHeight) * 0.06,
+    );
+
+    for (const layer of orbitLayerConfig) {
+      const group = orbitGroups.get(layer.name);
+      const layerRadius = baseRadius * Math.pow(orbitGrowth, layer.index);
+      const ellipses = group.querySelectorAll("ellipse");
+
+      layer.rings.forEach((ring, ringIndex) => {
+        const ellipse = ellipses[ringIndex];
+        const radius = layerRadius * ring.scale;
+        ellipse.setAttribute("rx", radius.toFixed(2));
+        ellipse.setAttribute("ry", (radius * ring.aspect).toFixed(2));
+        ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
+      });
+    }
+  };
 
   const updateOrbits = (elapsedSeconds) => {
     for (const layer of orbitLayerConfig) {
@@ -241,7 +214,7 @@ function initializeOrbitField() {
         .get(layer.name)
         .setAttribute(
           "transform",
-          `translate(${orbitCenter.cx} ${orbitCenter.cy}) rotate(${angle.toFixed(2)})`,
+          `translate(${orbitCenter.cx.toFixed(2)} ${orbitCenter.cy.toFixed(2)}) rotate(${angle.toFixed(2)})`,
         );
     }
   };
@@ -273,7 +246,25 @@ function initializeOrbitField() {
     }
   };
 
+  const syncLayout = () => {
+    if (layoutFrame !== null) {
+      return;
+    }
+
+    layoutFrame = window.requestAnimationFrame(() => {
+      layoutFrame = null;
+      layoutOrbits();
+      updateOrbits(
+        reduceMotion.matches ? 0 : (performance.now() - startedAt) / 1000,
+      );
+    });
+  };
+
+  layoutOrbits();
   syncMotion();
+  window.addEventListener("resize", syncLayout, { passive: true });
+  window.addEventListener("load", syncLayout, { once: true });
+  window.addEventListener("orbit-layout", syncLayout);
   if (typeof reduceMotion.addEventListener === "function") {
     reduceMotion.addEventListener("change", syncMotion);
   } else if (typeof reduceMotion.addListener === "function") {
@@ -374,6 +365,7 @@ async function initializePage() {
 
   applyContent(siteContent);
   renderButtons(siteContent);
+  window.dispatchEvent(new Event("orbit-layout"));
   document.documentElement.classList.remove("no-js");
 }
 
