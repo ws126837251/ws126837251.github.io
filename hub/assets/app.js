@@ -96,20 +96,18 @@ function renderButtons(siteContent) {
 const orbitGroupConfig = {
   inner: {
     radii: [
-      { rx: 310, ry: 105, rotation: -12 },
-      { rx: 350, ry: 120, rotation: 14 },
-      { rx: 390, ry: 140, rotation: -27 },
+      { rx: 290, ry: 290, rotation: 0 },
+      { rx: 350, ry: 350, rotation: 0 },
+      { rx: 410, ry: 410, rotation: 0 },
     ],
     strokeWidth: 1.4,
     opacity: 0.34,
   },
   outer: {
     radii: [
-      { rx: 650, ry: 235, rotation: -8 },
-      { rx: 590, ry: 285, rotation: 18 },
-      { rx: 700, ry: 165, rotation: -24 },
-      { rx: 930, ry: 480, rotation: -18 },
-      { rx: 980, ry: 390, rotation: 22 },
+      { rx: 560, ry: 560, rotation: 0 },
+      { rx: 700, ry: 700, rotation: 0 },
+      { rx: 840, ry: 840, rotation: 0 },
     ],
     strokeWidth: 1.2,
     opacity: 0.2,
@@ -119,14 +117,14 @@ const orbitGroupConfig = {
 const orbitCenter = { cx: 800, cy: 430 };
 
 const orbitStarConfig = [
-  { group: "inner", rx: 310, ry: 105, rotation: -12, period: 18, phase: 0.2, spinPeriod: 4.5, radius: 2.2 },
-  { group: "inner", rx: 350, ry: 120, rotation: 14, period: 24, phase: 2.3, spinPeriod: 6.5, radius: 1.8 },
-  { group: "inner", rx: 390, ry: 140, rotation: -27, period: 29, phase: 4.7, spinPeriod: 5.5, radius: 2.5, tone: "cool" },
-  { group: "inner", rx: 310, ry: 105, rotation: -12, period: 21, phase: 3.4, spinPeriod: 7.5, radius: 1.5, tone: "cool" },
-  { group: "outer", rx: 650, ry: 235, rotation: -8, period: 38, phase: 1.2, spinPeriod: 8, radius: 2.4 },
-  { group: "outer", rx: 590, ry: 285, rotation: 18, period: 47, phase: 3.1, spinPeriod: 11, radius: 1.7, tone: "cool" },
-  { group: "outer", rx: 700, ry: 165, rotation: -24, period: 55, phase: 5.4, spinPeriod: 9, radius: 2.1 },
-  { group: "outer", rx: 650, ry: 235, rotation: -8, period: 43, phase: 4.2, spinPeriod: 13, radius: 1.4, tone: "cool" },
+  { group: "inner", rx: 290, ry: 290, rotation: 0, period: 18, phase: 0.2, spinPeriod: 4.5, radius: 2.2 },
+  { group: "inner", rx: 350, ry: 350, rotation: 0, period: 24, phase: 2.3, spinPeriod: 6.5, radius: 1.8 },
+  { group: "inner", rx: 410, ry: 410, rotation: 0, period: 29, phase: 4.7, spinPeriod: 5.5, radius: 2.5, tone: "cool" },
+  { group: "inner", rx: 290, ry: 290, rotation: 0, period: 21, phase: 3.4, spinPeriod: 7.5, radius: 1.5, tone: "cool" },
+  { group: "outer", rx: 560, ry: 560, rotation: 0, period: 38, phase: 1.2, spinPeriod: 8, radius: 2.4 },
+  { group: "outer", rx: 700, ry: 700, rotation: 0, period: 47, phase: 3.1, spinPeriod: 11, radius: 1.7, tone: "cool" },
+  { group: "outer", rx: 840, ry: 840, rotation: 0, period: 55, phase: 5.4, spinPeriod: 9, radius: 2.1 },
+  { group: "outer", rx: 560, ry: 560, rotation: 0, period: 43, phase: 4.2, spinPeriod: 13, radius: 1.4, tone: "cool" },
 ];
 
 function initializeOrbitField() {
@@ -134,7 +132,7 @@ function initializeOrbitField() {
   const svg = document.createElementNS(svgNamespace, "svg");
   svg.classList.add("orbit-field");
   svg.setAttribute("viewBox", "0 0 1600 1000");
-  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
   svg.setAttribute("aria-hidden", "true");
 
   const createOrbitGroup = (groupName) => {

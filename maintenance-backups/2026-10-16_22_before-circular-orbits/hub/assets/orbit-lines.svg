@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="none">
+  <g fill="none" stroke="#6e8f84" stroke-linecap="round">
+    <!-- continuous lines close to the avatar -->
+    <g stroke-width="1.4" opacity="0.34">
+      <ellipse cx="800" cy="430" rx="310" ry="105" transform="rotate(-12 800 430)" />
+      <ellipse cx="800" cy="430" rx="350" ry="120" transform="rotate(14 800 430)" />
+      <ellipse cx="800" cy="430" rx="390" ry="140" transform="rotate(-27 800 430)" />
+    </g>
+
+    <!-- a wider, orderly outer group -->
+    <g stroke-width="1.2" opacity="0.2">
+      <ellipse cx="800" cy="430" rx="650" ry="235" transform="rotate(-8 800 430)" />
+      <ellipse cx="800" cy="430" rx="590" ry="285" transform="rotate(18 800 430)" />
+      <ellipse cx="800" cy="430" rx="700" ry="165" transform="rotate(-24 800 430)" />
+      <ellipse cx="800" cy="430" rx="930" ry="480" transform="rotate(-18 800 430)" />
+      <ellipse cx="800" cy="430" rx="980" ry="390" transform="rotate(22 800 430)" />
+    </g>
+  </g>
+</svg>
