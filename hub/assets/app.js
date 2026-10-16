@@ -95,19 +95,19 @@ function renderButtons(siteContent) {
 
 const orbitGroupConfig = {
   inner: {
-    radii: [
-      { rx: 290, ry: 290, rotation: 0 },
-      { rx: 350, ry: 350, rotation: 0 },
-      { rx: 410, ry: 410, rotation: 0 },
+    orbits: [
+      { cx: 720, cy: 430, r: 320 },
+      { cx: 880, cy: 430, r: 320 },
+      { cx: 800, cy: 430, r: 270 },
     ],
     strokeWidth: 1.4,
     opacity: 0.34,
   },
   outer: {
-    radii: [
-      { rx: 560, ry: 560, rotation: 0 },
-      { rx: 700, ry: 700, rotation: 0 },
-      { rx: 840, ry: 840, rotation: 0 },
+    orbits: [
+      { cx: 570, cy: 430, r: 560 },
+      { cx: 1030, cy: 430, r: 560 },
+      { cx: 800, cy: 430, r: 680 },
     ],
     strokeWidth: 1.2,
     opacity: 0.2,
@@ -117,14 +117,14 @@ const orbitGroupConfig = {
 const orbitCenter = { cx: 800, cy: 430 };
 
 const orbitStarConfig = [
-  { group: "inner", rx: 290, ry: 290, rotation: 0, period: 18, phase: 0.2, spinPeriod: 4.5, radius: 2.2 },
-  { group: "inner", rx: 350, ry: 350, rotation: 0, period: 24, phase: 2.3, spinPeriod: 6.5, radius: 1.8 },
-  { group: "inner", rx: 410, ry: 410, rotation: 0, period: 29, phase: 4.7, spinPeriod: 5.5, radius: 2.5, tone: "cool" },
-  { group: "inner", rx: 290, ry: 290, rotation: 0, period: 21, phase: 3.4, spinPeriod: 7.5, radius: 1.5, tone: "cool" },
-  { group: "outer", rx: 560, ry: 560, rotation: 0, period: 38, phase: 1.2, spinPeriod: 8, radius: 2.4 },
-  { group: "outer", rx: 700, ry: 700, rotation: 0, period: 47, phase: 3.1, spinPeriod: 11, radius: 1.7, tone: "cool" },
-  { group: "outer", rx: 840, ry: 840, rotation: 0, period: 55, phase: 5.4, spinPeriod: 9, radius: 2.1 },
-  { group: "outer", rx: 560, ry: 560, rotation: 0, period: 43, phase: 4.2, spinPeriod: 13, radius: 1.4, tone: "cool" },
+  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 18, phase: 0.2, spinPeriod: 4.5, radius: 2.2 },
+  { group: "inner", cx: 880, cy: 430, orbitRadius: 320, period: 24, phase: 2.3, spinPeriod: 6.5, radius: 1.8 },
+  { group: "inner", cx: 800, cy: 430, orbitRadius: 270, period: 29, phase: 4.7, spinPeriod: 5.5, radius: 2.5, tone: "cool" },
+  { group: "inner", cx: 720, cy: 430, orbitRadius: 320, period: 21, phase: 3.4, spinPeriod: 7.5, radius: 1.5, tone: "cool" },
+  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 38, phase: 1.2, spinPeriod: 8, radius: 2.4 },
+  { group: "outer", cx: 1030, cy: 430, orbitRadius: 560, period: 47, phase: 3.1, spinPeriod: 11, radius: 1.7, tone: "cool" },
+  { group: "outer", cx: 800, cy: 430, orbitRadius: 680, period: 55, phase: 5.4, spinPeriod: 9, radius: 2.1 },
+  { group: "outer", cx: 570, cy: 430, orbitRadius: 560, period: 43, phase: 4.2, spinPeriod: 13, radius: 1.4, tone: "cool" },
 ];
 
 function initializeOrbitField() {
@@ -144,18 +144,13 @@ function initializeOrbitField() {
     group.setAttribute("stroke-width", String(config.strokeWidth));
     group.setAttribute("opacity", String(config.opacity));
 
-    for (const radius of config.radii) {
-      const ellipse = document.createElementNS(svgNamespace, "ellipse");
-      ellipse.setAttribute("cx", "800");
-      ellipse.setAttribute("cy", "430");
-      ellipse.setAttribute("rx", String(radius.rx));
-      ellipse.setAttribute("ry", String(radius.ry));
-      ellipse.setAttribute(
-        "transform",
-        `rotate(${radius.rotation} 800 430)`,
-      );
-      ellipse.setAttribute("vector-effect", "non-scaling-stroke");
-      group.append(ellipse);
+    for (const orbit of config.orbits) {
+      const circle = document.createElementNS(svgNamespace, "circle");
+      circle.setAttribute("cx", String(orbit.cx));
+      circle.setAttribute("cy", String(orbit.cy));
+      circle.setAttribute("r", String(orbit.r));
+      circle.setAttribute("vector-effect", "non-scaling-stroke");
+      group.append(circle);
     }
 
     svg.append(group);
@@ -202,17 +197,20 @@ function initializeOrbitField() {
     for (const { config, element } of stars) {
       const angle = config.phase + (elapsedSeconds * Math.PI * 2) / config.period;
       const groupAngle = config.group === "inner" ? innerAngle : outerAngle;
-      const rotation = ((config.rotation + groupAngle) * Math.PI) / 180;
-      const cosAngle = Math.cos(angle);
-      const sinAngle = Math.sin(angle);
-      const x =
+      const groupRotation = (groupAngle * Math.PI) / 180;
+      const offsetX = config.cx - orbitCenter.cx;
+      const offsetY = config.cy - orbitCenter.cy;
+      const orbitCenterX =
         orbitCenter.cx +
-        config.rx * cosAngle * Math.cos(rotation) -
-        config.ry * sinAngle * Math.sin(rotation);
-      const y =
+        offsetX * Math.cos(groupRotation) -
+        offsetY * Math.sin(groupRotation);
+      const orbitCenterY =
         orbitCenter.cy +
-        config.rx * cosAngle * Math.sin(rotation) +
-        config.ry * sinAngle * Math.cos(rotation);
+        offsetX * Math.sin(groupRotation) +
+        offsetY * Math.cos(groupRotation);
+      const orbitAngle = angle + groupRotation;
+      const x = orbitCenterX + config.orbitRadius * Math.cos(orbitAngle);
+      const y = orbitCenterY + config.orbitRadius * Math.sin(orbitAngle);
       const spin = (elapsedSeconds * 360) / config.spinPeriod + (config.phase * 180) / Math.PI;
       element.setAttribute(
         "transform",
