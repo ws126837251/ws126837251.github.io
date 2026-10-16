@@ -97,50 +97,98 @@ const orbitLayerConfig = [
   {
     name: "micro",
     direction: -1,
-    period: 9,
-    opacity: 0.5,
-    strokeWidth: 1.35,
-    ring: { rx: 100, ry: 140, rotation: 18 },
+    period: 5.5,
+    opacity: 0.45,
+    strokeWidth: 1.28,
+    rings: [
+      { rx: 72, ry: 112, rotation: 18, opacity: 0.82 },
+      { rx: 108, ry: 70, rotation: -46, opacity: 0.66 },
+      { rx: 126, ry: 94, rotation: 61, opacity: 0.52 },
+    ],
   },
   {
     name: "inner",
     direction: 1,
-    period: 13,
-    opacity: 0.44,
-    strokeWidth: 1.25,
-    ring: { rx: 170, ry: 105, rotation: -33 },
+    period: 7.5,
+    opacity: 0.39,
+    strokeWidth: 1.2,
+    rings: [
+      { rx: 145, ry: 92, rotation: -30, opacity: 0.78 },
+      { rx: 177, ry: 128, rotation: 18, opacity: 0.62 },
+      { rx: 194, ry: 75, rotation: 62, opacity: 0.48 },
+    ],
   },
   {
     name: "middle",
     direction: -1,
-    period: 18,
-    opacity: 0.37,
-    strokeWidth: 1.15,
-    ring: { rx: 245, ry: 190, rotation: 52 },
+    period: 10.5,
+    opacity: 0.34,
+    strokeWidth: 1.14,
+    rings: [
+      { rx: 208, ry: 152, rotation: 51, opacity: 0.75 },
+      { rx: 242, ry: 112, rotation: -17, opacity: 0.58 },
+      { rx: 274, ry: 182, rotation: 29, opacity: 0.46 },
+    ],
   },
   {
     name: "wide",
     direction: 1,
-    period: 25,
-    opacity: 0.31,
+    period: 14,
+    opacity: 0.29,
     strokeWidth: 1.08,
-    ring: { rx: 330, ry: 245, rotation: -19 },
+    rings: [
+      { rx: 290, ry: 205, rotation: -23, opacity: 0.7 },
+      { rx: 324, ry: 250, rotation: 35, opacity: 0.55 },
+      { rx: 349, ry: 150, rotation: 70, opacity: 0.42 },
+    ],
   },
   {
     name: "outer",
     direction: -1,
-    period: 33,
-    opacity: 0.26,
+    period: 18,
+    opacity: 0.25,
     strokeWidth: 1.02,
-    ring: { rx: 405, ry: 330, rotation: 31 },
+    rings: [
+      { rx: 355, ry: 272, rotation: 31, opacity: 0.67 },
+      { rx: 390, ry: 205, rotation: -38, opacity: 0.51 },
+      { rx: 414, ry: 325, rotation: 11, opacity: 0.39 },
+    ],
   },
   {
     name: "horizon",
     direction: 1,
-    period: 42,
+    period: 23,
     opacity: 0.21,
-    strokeWidth: 0.96,
-    ring: { rx: 465, ry: 395, rotation: -47 },
+    strokeWidth: 0.98,
+    rings: [
+      { rx: 412, ry: 350, rotation: -48, opacity: 0.63 },
+      { rx: 440, ry: 255, rotation: 18, opacity: 0.47 },
+      { rx: 452, ry: 380, rotation: 52, opacity: 0.35 },
+    ],
+  },
+  {
+    name: "perimeter",
+    direction: -1,
+    period: 29,
+    opacity: 0.18,
+    strokeWidth: 0.94,
+    rings: [
+      { rx: 438, ry: 410, rotation: 9, opacity: 0.6 },
+      { rx: 465, ry: 315, rotation: -29, opacity: 0.45 },
+      { rx: 475, ry: 355, rotation: 57, opacity: 0.32 },
+    ],
+  },
+  {
+    name: "boundary",
+    direction: 1,
+    period: 36,
+    opacity: 0.16,
+    strokeWidth: 0.9,
+    rings: [
+      { rx: 456, ry: 438, rotation: -23, opacity: 0.55 },
+      { rx: 480, ry: 285, rotation: 41, opacity: 0.4 },
+      { rx: 420, ry: 472, rotation: 68, opacity: 0.29 },
+    ],
   },
 ];
 
@@ -163,16 +211,19 @@ function initializeOrbitField() {
     group.setAttribute("stroke-linecap", "round");
     group.setAttribute("opacity", String(layer.opacity));
 
-    const ellipse = document.createElementNS(svgNamespace, "ellipse");
-    ellipse.setAttribute("cx", "0");
-    ellipse.setAttribute("cy", "0");
-    ellipse.setAttribute("rx", String(layer.ring.rx));
-    ellipse.setAttribute("ry", String(layer.ring.ry));
-    ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
-    ellipse.setAttribute("vector-effect", "non-scaling-stroke");
-    ellipse.setAttribute("transform", `rotate(${layer.ring.rotation})`);
+    for (const ring of layer.rings) {
+      const ellipse = document.createElementNS(svgNamespace, "ellipse");
+      ellipse.setAttribute("cx", "0");
+      ellipse.setAttribute("cy", "0");
+      ellipse.setAttribute("rx", String(ring.rx));
+      ellipse.setAttribute("ry", String(ring.ry));
+      ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
+      ellipse.setAttribute("vector-effect", "non-scaling-stroke");
+      ellipse.setAttribute("opacity", String(ring.opacity));
+      ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
+      group.append(ellipse);
+    }
 
-    group.append(ellipse);
     svg.append(group);
     orbitGroups.set(layer.name, group);
   }
