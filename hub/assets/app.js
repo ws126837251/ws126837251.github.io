@@ -93,98 +93,30 @@ function renderButtons(siteContent) {
   buttonList.replaceChildren(fragment);
 }
 
-const orbitLayerConfig = [
-  {
-    name: "near",
-    direction: -1,
-    period: 4.6,
-    opacity: 0.44,
-    strokeWidth: 1.2,
-    distance: 0.09,
-    rings: [{ aspect: 0.8, rotation: 15 }],
-  },
-  {
-    name: "inner",
-    direction: 1,
-    period: 6.7,
-    opacity: 0.4,
-    strokeWidth: 1.15,
-    distance: 0.14,
-    rings: [{ aspect: 0.75, rotation: -34 }],
-  },
-  {
-    name: "middle-one",
-    direction: -1,
-    period: 9.1,
-    opacity: 0.36,
-    strokeWidth: 1.1,
-    distance: 0.2,
-    rings: [{ aspect: 0.86, rotation: 49 }],
-  },
-  {
-    name: "middle-two",
-    direction: 1,
-    period: 12.1,
-    opacity: 0.33,
-    strokeWidth: 1.05,
-    distance: 0.29,
-    rings: [{ aspect: 0.72, rotation: -64 }],
-  },
-  {
-    name: "broad-one",
-    direction: -1,
-    period: 15.4,
-    opacity: 0.3,
-    strokeWidth: 1.02,
-    distance: 0.4,
-    rings: [{ aspect: 0.9, rotation: 27 }],
-  },
-  {
-    name: "broad-two",
-    direction: 1,
-    period: 19.1,
-    opacity: 0.27,
-    strokeWidth: 0.98,
-    distance: 0.54,
-    rings: [{ aspect: 0.77, rotation: -18 }],
-  },
-  {
-    name: "edge-one",
-    direction: -1,
-    period: 23.2,
-    opacity: 0.25,
-    strokeWidth: 0.95,
-    distance: 0.7,
-    rings: [{ aspect: 0.93, rotation: 62 }],
-  },
-  {
-    name: "edge-two",
-    direction: 1,
-    period: 27.8,
-    opacity: 0.23,
-    strokeWidth: 0.92,
-    distance: 0.87,
-    rings: [{ aspect: 0.84, rotation: -45 }],
-  },
-  {
-    name: "edge-three",
-    direction: -1,
-    period: 32.7,
-    opacity: 0.22,
-    strokeWidth: 0.9,
-    distance: 0.99,
-    rings: [{ aspect: 0.96, rotation: 14 }],
-  },
-  {
-    name: "horizon",
-    direction: 1,
-    period: 38,
-    opacity: 0.2,
-    strokeWidth: 0.88,
-    distance: 1.08,
-    rings: [{ aspect: 0.88, rotation: -28 }],
-  },
-];
+const orbitLayerCount = 11;
+const orbitStartGap = 0.03;
+const orbitSpacingRatio = 1.32;
+const orbitAspects = [0.8, 0.75, 0.86, 0.72, 0.9, 0.77, 0.93, 0.84, 0.96, 0.88, 0.92];
+const orbitRotations = [15, -34, 49, -64, 27, -18, 62, -45, 14, -28, 41];
+
+const orbitLayerConfig = Array.from({ length: orbitLayerCount }, (_, index) => ({
+  name: "layer-" + String(index + 1).padStart(2, "0"),
+  direction: index % 2 === 0 ? -1 : 1,
+  period: 4.6 + index * 3.1,
+  opacity: Number(Math.max(0.16, 0.44 - index * 0.028).toFixed(3)),
+  strokeWidth: Number(Math.max(0.84, 1.18 - index * 0.03).toFixed(2)),
+  distance:
+    index === 0
+      ? 0
+      : Number(
+          (
+            (orbitStartGap *
+              (Math.pow(orbitSpacingRatio, index) - 1)) /
+            (orbitSpacingRatio - 1)
+          ).toFixed(4),
+        ),
+  rings: [{ aspect: orbitAspects[index], rotation: orbitRotations[index] }],
+}));
 
 function initializeOrbitField() {
   const svgNamespace = "http://www.w3.org/2000/svg";
@@ -261,10 +193,8 @@ function initializeOrbitField() {
 
     for (const layer of orbitLayerConfig) {
       const group = orbitGroups.get(layer.name);
-      const layerRadius = Math.max(
-        minimumRadius,
-        coverageRadius * layer.distance,
-      );
+      const layerRadius =
+        minimumRadius + coverageRadius * layer.distance;
       const ellipses = group.querySelectorAll("ellipse");
 
       layer.rings.forEach((ring, ringIndex) => {

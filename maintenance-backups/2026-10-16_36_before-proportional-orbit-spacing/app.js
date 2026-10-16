@@ -95,61 +95,101 @@ function renderButtons(siteContent) {
 
 const orbitLayerConfig = [
   {
-    name: "micro",
+    name: "near",
     direction: -1,
-    period: 9,
-    opacity: 0.5,
-    strokeWidth: 1.35,
-    ring: { rx: 100, ry: 140, rotation: 18 },
+    period: 4.6,
+    opacity: 0.44,
+    strokeWidth: 1.2,
+    distance: 0.09,
+    rings: [{ aspect: 0.8, rotation: 15 }],
   },
   {
     name: "inner",
     direction: 1,
-    period: 13,
-    opacity: 0.44,
-    strokeWidth: 1.25,
-    ring: { rx: 170, ry: 105, rotation: -33 },
-  },
-  {
-    name: "middle",
-    direction: -1,
-    period: 18,
-    opacity: 0.37,
+    period: 6.7,
+    opacity: 0.4,
     strokeWidth: 1.15,
-    ring: { rx: 245, ry: 190, rotation: 52 },
+    distance: 0.14,
+    rings: [{ aspect: 0.75, rotation: -34 }],
   },
   {
-    name: "wide",
-    direction: 1,
-    period: 25,
-    opacity: 0.31,
-    strokeWidth: 1.08,
-    ring: { rx: 330, ry: 245, rotation: -19 },
-  },
-  {
-    name: "outer",
+    name: "middle-one",
     direction: -1,
-    period: 33,
-    opacity: 0.26,
+    period: 9.1,
+    opacity: 0.36,
+    strokeWidth: 1.1,
+    distance: 0.2,
+    rings: [{ aspect: 0.86, rotation: 49 }],
+  },
+  {
+    name: "middle-two",
+    direction: 1,
+    period: 12.1,
+    opacity: 0.33,
+    strokeWidth: 1.05,
+    distance: 0.29,
+    rings: [{ aspect: 0.72, rotation: -64 }],
+  },
+  {
+    name: "broad-one",
+    direction: -1,
+    period: 15.4,
+    opacity: 0.3,
     strokeWidth: 1.02,
-    ring: { rx: 405, ry: 330, rotation: 31 },
+    distance: 0.4,
+    rings: [{ aspect: 0.9, rotation: 27 }],
+  },
+  {
+    name: "broad-two",
+    direction: 1,
+    period: 19.1,
+    opacity: 0.27,
+    strokeWidth: 0.98,
+    distance: 0.54,
+    rings: [{ aspect: 0.77, rotation: -18 }],
+  },
+  {
+    name: "edge-one",
+    direction: -1,
+    period: 23.2,
+    opacity: 0.25,
+    strokeWidth: 0.95,
+    distance: 0.7,
+    rings: [{ aspect: 0.93, rotation: 62 }],
+  },
+  {
+    name: "edge-two",
+    direction: 1,
+    period: 27.8,
+    opacity: 0.23,
+    strokeWidth: 0.92,
+    distance: 0.87,
+    rings: [{ aspect: 0.84, rotation: -45 }],
+  },
+  {
+    name: "edge-three",
+    direction: -1,
+    period: 32.7,
+    opacity: 0.22,
+    strokeWidth: 0.9,
+    distance: 0.99,
+    rings: [{ aspect: 0.96, rotation: 14 }],
   },
   {
     name: "horizon",
     direction: 1,
-    period: 42,
-    opacity: 0.21,
-    strokeWidth: 0.96,
-    ring: { rx: 465, ry: 395, rotation: -47 },
+    period: 38,
+    opacity: 0.2,
+    strokeWidth: 0.88,
+    distance: 1.08,
+    rings: [{ aspect: 0.88, rotation: -28 }],
   },
 ];
 
 function initializeOrbitField() {
   const svgNamespace = "http://www.w3.org/2000/svg";
-  const orbitCenter = { cx: 500, cy: 500 };
   const svg = document.createElementNS(svgNamespace, "svg");
   svg.classList.add("orbit-field");
-  svg.setAttribute("viewBox", "0 0 1000 1000");
   svg.setAttribute("preserveAspectRatio", "none");
   svg.setAttribute("aria-hidden", "true");
 
@@ -163,16 +203,16 @@ function initializeOrbitField() {
     group.setAttribute("stroke-linecap", "round");
     group.setAttribute("opacity", String(layer.opacity));
 
-    const ellipse = document.createElementNS(svgNamespace, "ellipse");
-    ellipse.setAttribute("cx", "0");
-    ellipse.setAttribute("cy", "0");
-    ellipse.setAttribute("rx", String(layer.ring.rx));
-    ellipse.setAttribute("ry", String(layer.ring.ry));
-    ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
-    ellipse.setAttribute("vector-effect", "non-scaling-stroke");
-    ellipse.setAttribute("transform", `rotate(${layer.ring.rotation})`);
+    for (const ring of layer.rings) {
+      const ellipse = document.createElementNS(svgNamespace, "ellipse");
+      ellipse.setAttribute("cx", "0");
+      ellipse.setAttribute("cy", "0");
+      ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
+      ellipse.setAttribute("vector-effect", "non-scaling-stroke");
+      ellipse.setAttribute("opacity", String(ring.opacity));
+      group.append(ellipse);
+    }
 
-    group.append(ellipse);
     svg.append(group);
     orbitGroups.set(layer.name, group);
   }
@@ -181,7 +221,63 @@ function initializeOrbitField() {
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let animationFrame = null;
+  let layoutFrame = null;
   let startedAt = 0;
+  let orbitCenter = { cx: window.innerWidth / 2, cy: window.innerHeight / 2 };
+
+  const layoutOrbits = () => {
+    const viewportWidth = Math.max(window.innerWidth, 1);
+    const viewportHeight = Math.max(window.innerHeight, 1);
+    const avatar = document.querySelector(".avatar-wrap");
+    const avatarBounds = avatar?.getBoundingClientRect();
+    const avatarDiameter = avatarBounds
+      ? Math.max(avatarBounds.width, avatarBounds.height)
+      : Math.min(viewportWidth, viewportHeight) * 0.12;
+
+    orbitCenter = {
+      cx: avatarBounds
+        ? avatarBounds.left + avatarBounds.width / 2
+        : viewportWidth / 2,
+      cy: avatarBounds
+        ? avatarBounds.top + avatarBounds.height / 2
+        : viewportHeight / 2,
+    };
+
+    svg.setAttribute(
+      "viewBox",
+      `0 0 ${viewportWidth.toFixed(2)} ${viewportHeight.toFixed(2)}`,
+    );
+
+    const furthestHorizontal = Math.max(
+      orbitCenter.cx,
+      viewportWidth - orbitCenter.cx,
+    );
+    const furthestVertical = Math.max(
+      orbitCenter.cy,
+      viewportHeight - orbitCenter.cy,
+    );
+    const coverageRadius = Math.hypot(furthestHorizontal, furthestVertical);
+    const minimumRadius = avatarDiameter * 0.78;
+
+    for (const layer of orbitLayerConfig) {
+      const group = orbitGroups.get(layer.name);
+      const layerRadius = Math.max(
+        minimumRadius,
+        coverageRadius * layer.distance,
+      );
+      const ellipses = group.querySelectorAll("ellipse");
+
+      layer.rings.forEach((ring, ringIndex) => {
+        const ellipse = ellipses[ringIndex];
+        ellipse.setAttribute("rx", layerRadius.toFixed(2));
+        ellipse.setAttribute(
+          "ry",
+          (layerRadius * ring.aspect).toFixed(2),
+        );
+        ellipse.setAttribute("transform", `rotate(${ring.rotation})`);
+      });
+    }
+  };
 
   const updateOrbits = (elapsedSeconds) => {
     for (const layer of orbitLayerConfig) {
@@ -190,7 +286,7 @@ function initializeOrbitField() {
         .get(layer.name)
         .setAttribute(
           "transform",
-          `translate(${orbitCenter.cx} ${orbitCenter.cy}) rotate(${angle.toFixed(2)})`,
+          `translate(${orbitCenter.cx.toFixed(2)} ${orbitCenter.cy.toFixed(2)}) rotate(${angle.toFixed(2)})`,
         );
     }
   };
@@ -222,7 +318,25 @@ function initializeOrbitField() {
     }
   };
 
+  const syncLayout = () => {
+    if (layoutFrame !== null) {
+      return;
+    }
+
+    layoutFrame = window.requestAnimationFrame(() => {
+      layoutFrame = null;
+      layoutOrbits();
+      updateOrbits(
+        reduceMotion.matches ? 0 : (performance.now() - startedAt) / 1000,
+      );
+    });
+  };
+
+  layoutOrbits();
   syncMotion();
+  window.addEventListener("resize", syncLayout, { passive: true });
+  window.addEventListener("load", syncLayout, { once: true });
+  window.addEventListener("orbit-layout", syncLayout);
   if (typeof reduceMotion.addEventListener === "function") {
     reduceMotion.addEventListener("change", syncMotion);
   } else if (typeof reduceMotion.addListener === "function") {
@@ -323,6 +437,7 @@ async function initializePage() {
 
   applyContent(siteContent);
   renderButtons(siteContent);
+  window.dispatchEvent(new Event("orbit-layout"));
   document.documentElement.classList.remove("no-js");
 }
 
