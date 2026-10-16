@@ -8,10 +8,12 @@
     </g>
 
     <!-- a wider, orderly outer group -->
-    <g stroke-width="1.2" opacity="0.25">
+    <g stroke-width="1.2" opacity="0.2">
       <ellipse cx="800" cy="430" rx="650" ry="235" transform="rotate(-8 800 430)" />
       <ellipse cx="800" cy="430" rx="590" ry="285" transform="rotate(18 800 430)" />
       <ellipse cx="800" cy="430" rx="700" ry="165" transform="rotate(-24 800 430)" />
+      <ellipse cx="800" cy="430" rx="930" ry="480" transform="rotate(-18 800 430)" />
+      <ellipse cx="800" cy="430" rx="980" ry="390" transform="rotate(22 800 430)" />
     </g>
   </g>
 </svg>

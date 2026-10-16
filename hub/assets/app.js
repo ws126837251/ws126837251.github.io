@@ -108,9 +108,11 @@ const orbitGroupConfig = {
       { rx: 650, ry: 235, rotation: -8 },
       { rx: 590, ry: 285, rotation: 18 },
       { rx: 700, ry: 165, rotation: -24 },
+      { rx: 930, ry: 480, rotation: -18 },
+      { rx: 980, ry: 390, rotation: 22 },
     ],
     strokeWidth: 1.2,
-    opacity: 0.25,
+    opacity: 0.2,
   },
 };
 
