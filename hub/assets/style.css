@@ -1,8 +1,8 @@
 :root {
   --Fcolor: #17483b;
   --Bcolor: #f6f2ea;
-  --GridColor: rgba(39, 76, 65, 0.11);
-  --LineColor: rgba(39, 76, 65, 0.18);
+  --GridColor: rgba(39, 76, 65, 0.16);
+  --LineColor: rgba(39, 76, 65, 0.24);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
