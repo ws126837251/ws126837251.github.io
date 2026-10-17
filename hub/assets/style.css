@@ -33,7 +33,7 @@ body {
 .avatar-section {
   position: relative;
   z-index: 1;
-  padding-top: clamp(9rem, 28vh, 17rem);
+  padding-top: clamp(9rem, 32vh, 17rem);
 }
 
 .avatar-wrap {
