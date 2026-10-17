@@ -31,12 +31,10 @@ body {
 }
 
 .entry-cluster {
-  position: absolute;
-  top: 38.2vh;
-  left: 0;
+  position: relative;
   z-index: 1;
   width: 100%;
-  transform: translateY(-50%);
+  padding-top: 20%;
 }
 
 .avatar-section {
@@ -165,10 +163,6 @@ body {
 @media (max-width: 560px) {
   body {
     min-height: 100svh;
-  }
-
-  .entry-cluster {
-    top: 38.2svh;
   }
 
   .avatar-section {
