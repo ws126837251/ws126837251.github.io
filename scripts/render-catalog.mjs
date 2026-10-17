@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
@@ -9,6 +10,11 @@ const indexPath = path.join(hubDir, "index.html");
 const notFoundPath = path.join(hubDir, "404.html");
 const contentPath = path.join(hubDir, "site-content.json");
 const compatibilityProductsPath = path.join(hubDir, "assets", "products.js");
+const stylesheetPath = path.join(hubDir, "assets", "style.css");
+const stylesheetVersion = createHash("sha256")
+  .update(fs.readFileSync(stylesheetPath))
+  .digest("hex")
+  .slice(0, 12);
 
 const siteContent = JSON.parse(fs.readFileSync(contentPath, "utf8"));
 const { products } = siteContent;
@@ -93,14 +99,29 @@ function renderCatalog(html) {
   );
 }
 
+function renderStylesheetVersion(html, fileName) {
+  const stylesheetPattern = /href="\/assets\/style\.css(?:\?v=[^"]*)?"/g;
+  if (!stylesheetPattern.test(html)) {
+    throw new Error(`Stylesheet link is missing in ${fileName}`);
+  }
+  return html.replace(
+    stylesheetPattern,
+    `href="/assets/style.css?v=${stylesheetVersion}"`,
+  );
+}
+
 let indexHtml = renderConfiguredCopy(
   fs.readFileSync(indexPath, "utf8"),
   "hub/index.html",
 );
 indexHtml = renderCatalog(indexHtml);
+indexHtml = renderStylesheetVersion(indexHtml, "hub/index.html");
 
-const notFoundHtml = renderConfiguredCopy(
-  fs.readFileSync(notFoundPath, "utf8"),
+const notFoundHtml = renderStylesheetVersion(
+  renderConfiguredCopy(
+    fs.readFileSync(notFoundPath, "utf8"),
+    "hub/404.html",
+  ),
   "hub/404.html",
 );
 const compatibilitySource = `// Generated from ../site-content.json. Edit that file instead.\nexport const products = ${JSON.stringify(products, null, 2)};\n`;
