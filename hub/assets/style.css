@@ -82,18 +82,6 @@ body {
   object-fit: contain;
 }
 
-.avatar-label {
-  margin: 0.65rem 0 0;
-  color: var(--Fcolor);
-  font-family: Monaco, monospace;
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
-  letter-spacing: 0.12em;
-  line-height: 1;
-  pointer-events: none;
-  white-space: nowrap;
-  text-align: center;
-}
-
 .flex {
   position: relative;
   z-index: 1;
@@ -184,11 +172,6 @@ body {
 
   .avatar-wrap {
     width: clamp(4.5rem, 19vw, 5.25rem);
-  }
-
-  .avatar-label {
-    margin-top: 0.6rem;
-    font-size: 0.8rem;
   }
 
   #buttonList {
