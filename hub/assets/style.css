@@ -30,10 +30,18 @@ body {
   color: var(--Fcolor);
 }
 
+.entry-cluster {
+  position: absolute;
+  top: 61.8vh;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  transform: translateY(-50%);
+}
+
 .avatar-section {
   position: relative;
   z-index: 1;
-  padding-top: clamp(9rem, 38vh, 26rem);
 }
 
 .avatar-wrap {
@@ -157,17 +165,14 @@ body {
 @media (max-width: 560px) {
   body {
     min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    padding: 3.5rem 1.25rem 4rem;
+  }
+
+  .entry-cluster {
+    top: 61.8svh;
   }
 
   .avatar-section {
     flex: 0 0 auto;
-    padding-top: 0;
   }
 
   .avatar-wrap {
