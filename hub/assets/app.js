@@ -11,9 +11,9 @@ const defaultAnimationSettings = {
 
 const fallbackContent = {
   brand: {
-    name: "无风小卖部",
-    homeLabel: "无风小卖部首页",
-    avatarAlt: "无风小卖部头像",
+    name: "无风·Blog",
+    homeLabel: "无风·Blog 首页",
+    avatarAlt: "无风·Blog 头像",
   },
   navigation: {
     aboutLabel: "Wufeng",
