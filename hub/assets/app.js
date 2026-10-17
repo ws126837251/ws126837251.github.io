@@ -16,9 +16,6 @@ const fallbackContent = {
     avatarAlt: "无风小卖部头像",
   },
   navigation: {
-    editLabel: "GitHub",
-    editUrl:
-      "https://github.com/ws126837251/ws126837251.github.io/edit/main/hub/site-content.json",
     aboutLabel: "Wufeng",
     aboutUrl: "https://wufeng.de/",
   },
@@ -94,10 +91,7 @@ function renderButtons(siteContent) {
     for (const product of products) {
       fragment.append(createButton(product.name, product.path));
     }
-    fragment.append(
-      createButton(siteContent.navigation.editLabel, siteContent.navigation.editUrl),
-      createButton(siteContent.navigation.aboutLabel, siteContent.navigation.aboutUrl),
-    );
+    fragment.append(createButton(siteContent.navigation.aboutLabel, siteContent.navigation.aboutUrl));
   }
 
   buttonList.replaceChildren(fragment);

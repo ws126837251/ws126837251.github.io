@@ -70,7 +70,6 @@ for (const requiredValue of [
   'class="no-js"',
   siteContent.meta.title,
   siteContent.brand.name,
-  siteContent.navigation.editUrl,
 ]) {
   if (!indexHtml.includes(requiredValue)) {
     throw new Error(`Homepage is missing: ${requiredValue}`);
@@ -90,8 +89,6 @@ for (const html of [indexHtml, notFoundHtml]) {
 }
 
 for (const requiredKey of [
-  "navigation.editLabel",
-  "navigation.editUrl",
   "navigation.aboutLabel",
   "navigation.aboutUrl",
   "footer.copyright",
