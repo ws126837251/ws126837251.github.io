@@ -15,6 +15,7 @@ const requiredFiles = [
   "assets/app.js",
   "assets/products.js",
   "assets/wufeng-avatar.png",
+  "assets/wufeng-avatar-72.png",
   "og-directory.png",
   "robots.txt",
   "sitemap.xml",
@@ -64,6 +65,8 @@ for (const requiredValue of [
   'id="buttonList"',
   'class="button"',
   'class="avatar-disc"',
+  'class="avatar-image avatar-preview"',
+  'class="avatar-image avatar-full"',
   'id="weatherEffect"',
   'wufeng-avatar.png',
   "BUTTONS_FALLBACK_START",
@@ -224,6 +227,7 @@ for (const requiredBehavior of [
   "/site-content.json",
   "applyAvatarSettings",
   "initializeAvatarAnimation",
+  "initializeProgressiveAvatar",
   "initializeWeatherEffect",
 ]) {
   if (!appJs.includes(requiredBehavior)) {

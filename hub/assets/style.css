@@ -64,6 +64,7 @@ body {
 
 .avatar-disc {
   position: relative;
+  display: grid;
   width: 100%;
   aspect-ratio: 1;
   height: auto;
@@ -90,12 +91,30 @@ body {
     rotate(var(--avatar-hover-rotation, 360deg));
 }
 
-.avatar-disc img {
+.avatar-image {
+  grid-area: 1 / 1;
   display: block;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: contain;
+}
+
+.avatar-preview,
+.avatar-full {
+  transition: opacity 0.32s ease;
+}
+
+.avatar-full {
+  opacity: 0;
+}
+
+.avatar-disc.is-full-loaded .avatar-preview {
+  opacity: 0;
+}
+
+.avatar-disc.is-full-loaded .avatar-full {
+  opacity: 1;
 }
 
 .flex {
