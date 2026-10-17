@@ -64,6 +64,7 @@ for (const requiredValue of [
   'id="buttonList"',
   'class="button"',
   'class="avatar-disc"',
+  'id="weatherEffect"',
   'wufeng-avatar.png',
   "BUTTONS_FALLBACK_START",
   "BUTTONS_FALLBACK_END",
@@ -185,7 +186,7 @@ if ((css.match(/{/g) ?? []).length !== (css.match(/}/g) ?? []).length) {
 for (const requiredRule of [
   ":root",
   "--Fcolor: #17483b",
-  "--Bcolor: #f6f2ea",
+  "--Bcolor: #eef3f7",
   ".avatar-section",
   ".button",
   ".avatar-disc:hover",
@@ -195,6 +196,7 @@ for (const requiredRule of [
   "#buttonList",
   ":focus-visible",
   "prefers-reduced-motion: reduce",
+  "#weatherEffect",
 ]) {
   if (!css.includes(requiredRule)) {
     throw new Error(`CSS is missing required rule: ${requiredRule}`);
@@ -222,6 +224,7 @@ for (const requiredBehavior of [
   "/site-content.json",
   "applyAvatarSettings",
   "initializeAvatarAnimation",
+  "initializeWeatherEffect",
 ]) {
   if (!appJs.includes(requiredBehavior)) {
     throw new Error(`Homepage behavior is missing: ${requiredBehavior}`);

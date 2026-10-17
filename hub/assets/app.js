@@ -287,6 +287,89 @@ function initializeAvatarAnimation(rawSettings) {
   }
 }
 
+function initializeWeatherEffect() {
+  const canvas = document.querySelector("#weatherEffect");
+  if (!canvas) {
+    return;
+  }
+
+  const reduceMotion = window.matchMedia(
+    "(max-width: 600px), (prefers-reduced-motion: reduce)",
+  );
+  if (reduceMotion.matches) {
+    canvas.remove();
+    return;
+  }
+
+  const context = canvas.getContext("2d");
+  if (!context) {
+    canvas.remove();
+    return;
+  }
+
+  const month = new Date().getMonth() + 1;
+  const winter = month === 12 || month <= 2;
+  const summer = month >= 6 && month <= 8;
+  let width = 0;
+  let height = 0;
+  let particles = [];
+
+  const populate = () => {
+    particles = Array.from({ length: 120 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      length: Math.random() * 18 + 10,
+      speed: Math.random() * 1.2 + 0.5,
+      radius: Math.random() * 2.5 + 1,
+    }));
+  };
+  const resize = () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    populate();
+  };
+  const draw = () => {
+    context.clearRect(0, 0, width, height);
+    if (winter) {
+      context.fillStyle = "rgba(255, 255, 255, .85)";
+      context.beginPath();
+      for (const particle of particles) {
+        context.moveTo(particle.x, particle.y);
+        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        particle.y += particle.speed;
+        particle.x += Math.sin(particle.y / 70) * 0.35;
+        if (particle.y > height) {
+          particle.y = -10;
+          particle.x = Math.random() * width;
+        }
+      }
+      context.fill();
+    } else {
+      context.strokeStyle = summer
+        ? "rgba(120, 170, 210, .50)"
+        : "rgba(120, 150, 180, .50)";
+      context.lineWidth = 1.4;
+      for (const particle of particles) {
+        context.beginPath();
+        context.moveTo(particle.x, particle.y);
+        context.lineTo(particle.x + 2, particle.y + particle.length);
+        context.stroke();
+        particle.y += particle.speed * (summer ? 4 : 2.5);
+        particle.x += 0.25;
+        if (particle.y > height) {
+          particle.y = -20;
+          particle.x = Math.random() * width;
+        }
+      }
+    }
+    window.requestAnimationFrame(draw);
+  };
+
+  resize();
+  window.addEventListener("resize", resize, { passive: true });
+  draw();
+}
+
 async function initializePage() {
   let siteContent;
   try {
@@ -300,6 +383,7 @@ async function initializePage() {
   renderButtons(siteContent);
   applyAvatarSettings(siteContent.animation?.avatar);
   initializeAvatarAnimation(siteContent.animation?.avatar);
+  initializeWeatherEffect();
   document.documentElement.classList.remove("no-js");
 }
 
