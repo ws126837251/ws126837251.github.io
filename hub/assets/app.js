@@ -345,6 +345,7 @@ function initializeAvatarAnimation(rawSettings) {
   let baseAnimation = null;
   let hoverAnimation = null;
   let motionEnabled = true;
+  let pointerInside = false;
 
   const normalizeAngle = (angle) => ((angle % 360) + 360) % 360;
   const getBaseAngle = () => {
@@ -353,6 +354,10 @@ function initializeAvatarAnimation(rawSettings) {
       return 0;
     }
     return normalizeAngle((currentTime / spinDuration) * 360);
+  };
+  const getRenderedAngle = () => {
+    const angle = Number.parseFloat(getComputedStyle(avatar).rotate);
+    return Number.isFinite(angle) ? angle : 0;
   };
   const startBaseAnimation = (startAngle = 0) => {
     baseAnimation = avatar.animate(
@@ -378,22 +383,28 @@ function initializeAvatarAnimation(rawSettings) {
     }
     avatar.style.removeProperty("rotate");
   };
-  const finishHover = (endAngle) => {
-    const finishedAnimation = hoverAnimation;
-    hoverAnimation = null;
-    finishedAnimation?.cancel();
-    if (!motionEnabled) {
-      return;
-    }
+  const resumeBaseAnimation = (angle) => {
     if (!baseAnimation) {
-      startBaseAnimation(endAngle);
+      startBaseAnimation(angle);
       return;
     }
     baseAnimation.currentTime =
-      (normalizeAngle(endAngle) / 360) * spinDuration;
+      (normalizeAngle(angle) / 360) * spinDuration;
     baseAnimation.play();
   };
+  const finishHover = () => {
+    if (pointerInside) {
+      return;
+    }
+    const finishedAnimation = hoverAnimation;
+    hoverAnimation = null;
+    finishedAnimation?.cancel();
+    if (motionEnabled) {
+      resumeBaseAnimation(getRenderedAngle());
+    }
+  };
   const startHover = () => {
+    pointerInside = true;
     if (!motionEnabled || !baseAnimation || hoverAnimation) {
       return;
     }
@@ -422,9 +433,21 @@ function initializeAvatarAnimation(rawSettings) {
     );
     hoverAnimation.addEventListener(
       "finish",
-      () => finishHover(endAngle),
+      finishHover,
       { once: true },
     );
+  };
+  const endHover = () => {
+    pointerInside = false;
+    if (!motionEnabled || !baseAnimation) {
+      return;
+    }
+    const currentAngle = getRenderedAngle();
+    if (hoverAnimation) {
+      hoverAnimation.cancel();
+      hoverAnimation = null;
+    }
+    resumeBaseAnimation(currentAngle);
   };
   const syncMotion = () => {
     if (reduceMotion.matches) {
@@ -439,6 +462,7 @@ function initializeAvatarAnimation(rawSettings) {
   };
 
   avatar.addEventListener("pointerenter", startHover, { passive: true });
+  avatar.addEventListener("pointerleave", endHover, { passive: true });
   syncMotion();
   if (typeof reduceMotion.addEventListener === "function") {
     reduceMotion.addEventListener("change", syncMotion);
