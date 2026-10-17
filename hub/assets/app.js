@@ -400,7 +400,15 @@ function initializeAvatarAnimation(rawSettings) {
 
     baseAnimation.pause();
     const startAngle = getBaseAngle();
-    const endAngle = startAngle + avatarSettings.hoverRotation;
+    const normalizedStartAngle = normalizeAngle(startAngle);
+    const toUpright =
+      normalizedStartAngle < 0.01 ? 360 : 360 - normalizedStartAngle;
+    const minimumRotation = Math.max(0, avatarSettings.hoverRotation);
+    const extraTurns = Math.max(
+      0,
+      Math.ceil((minimumRotation - toUpright) / 360),
+    );
+    const endAngle = startAngle + toUpright + extraTurns * 360;
     hoverAnimation = avatar.animate(
       [
         { rotate: `${startAngle}deg` },
