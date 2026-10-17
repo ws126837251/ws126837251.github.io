@@ -34,7 +34,7 @@ body {
   position: relative;
   z-index: 1;
   width: 100%;
-  padding-top: 20%;
+  padding-top: calc(20% - 48px);
 }
 
 .avatar-section {
