@@ -14,6 +14,7 @@ const fallbackContent = {
     name: "无风小卖部",
     homeLabel: "无风小卖部首页",
     avatarAlt: "无风小卖部头像",
+    blogLabel: "无风 · blog",
   },
   navigation: {
     aboutLabel: "Wufeng",

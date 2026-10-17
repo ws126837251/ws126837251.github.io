@@ -64,6 +64,7 @@ for (const requiredValue of [
   'class="title title-hidden"',
   'class="button"',
   'class="avatar-disc"',
+  'class="avatar-label"',
   'wufeng-avatar.png',
   "BUTTONS_FALLBACK_START",
   "BUTTONS_FALLBACK_END",
@@ -96,6 +97,7 @@ for (const requiredKey of [
   "footer.linkUrl",
   "notFound.action",
   "brand.avatarAlt",
+  "brand.blogLabel",
 ]) {
   if (typeof getContentValue(requiredKey) !== "string") {
     throw new Error(`Site content is missing: ${requiredKey}`);
