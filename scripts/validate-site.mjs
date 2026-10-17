@@ -38,80 +38,10 @@ const siteContent = JSON.parse(
 );
 const { products } = siteContent;
 const animation = siteContent.animation;
-if (!animation || !animation.orbit || !animation.pointer || !animation.avatar) {
-  throw new Error("site-content.json must include complete animation settings.");
+if (!animation || !animation.avatar) {
+  throw new Error("site-content.json must include avatar animation settings.");
 }
-
-const { orbit, pointer, avatar } = animation;
-if (
-  !Number.isInteger(orbit.layerCount) ||
-  orbit.layerCount < 1 ||
-  orbit.layerCount > 32
-) {
-  throw new Error("animation.orbit.layerCount must be an integer from 1 to 32.");
-}
-if (
-  !Number.isInteger(orbit.coreCount) ||
-  orbit.coreCount < 0 ||
-  orbit.coreCount > orbit.layerCount
-) {
-  throw new Error("animation.orbit.coreCount must be between 0 and layerCount.");
-}
-if (
-  !Array.isArray(orbit.aspects) ||
-  orbit.aspects.length === 0 ||
-  orbit.aspects.some((aspect) => typeof aspect !== "number" || aspect < 0.35 || aspect > 1)
-) {
-  throw new Error("animation.orbit.aspects must contain numbers between 0.35 and 1.");
-}
-if (
-  !Array.isArray(orbit.rotations) ||
-  orbit.rotations.length === 0 ||
-  orbit.rotations.some((rotation) => typeof rotation !== "number" || rotation < -180 || rotation > 180)
-) {
-  throw new Error("animation.orbit.rotations must contain numbers between -180 and 180.");
-}
-if (
-  !Array.isArray(orbit.directions) ||
-  orbit.directions.length === 0 ||
-  orbit.directions.some((direction) => direction !== -1 && direction !== 1)
-) {
-  throw new Error("animation.orbit.directions must contain -1 and/or 1.");
-}
-if (
-  typeof orbit.strokeColor !== "string" ||
-  !/^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(orbit.strokeColor)
-) {
-  throw new Error("animation.orbit.strokeColor must be a hex color.");
-}
-for (const [name, value] of [
-  ["startGap", orbit.startGap],
-  ["spacingRatio", orbit.spacingRatio],
-  ["periodStart", orbit.periodStart],
-  ["periodStep", orbit.periodStep],
-  ["minimumRadiusFactor", orbit.minimumRadiusFactor],
-  ["strokeWidthStart", orbit.strokeWidthStart],
-  ["strokeWidthStep", orbit.strokeWidthStep],
-  ["strokeWidthMinimum", orbit.strokeWidthMinimum],
-  ["coreOpacityStart", orbit.coreOpacityStart],
-  ["coreOpacityStep", orbit.coreOpacityStep],
-  ["outerOpacityStart", orbit.outerOpacityStart],
-  ["outerOpacityStep", orbit.outerOpacityStep],
-  ["minimumOpacity", orbit.minimumOpacity],
-]) {
-  if (typeof value !== "number" || !Number.isFinite(value)) {
-    throw new Error("animation.orbit." + name + " must be a number.");
-  }
-}
-if (
-  typeof pointer.enabled !== "boolean" ||
-  typeof pointer.maxX !== "number" ||
-  typeof pointer.maxY !== "number" ||
-  typeof pointer.followStrength !== "number" ||
-  typeof pointer.shift !== "number"
-) {
-  throw new Error("animation.pointer contains an invalid value.");
-}
+const { avatar } = animation;
 if (
   typeof avatar.spinDuration !== "number" ||
   typeof avatar.hoverScale !== "number" ||
@@ -179,7 +109,6 @@ for (const retiredValue of [
   "Giffgaff 与 Lebara",
   "无风电话卡教程",
   "全球 SIM 卡中文使用指南",
-  "line-field",
   "product-grid",
   "product-search",
 ]) {
@@ -294,8 +223,6 @@ for (const requiredBehavior of [
   "renderButtons",
   "localeCompare",
   "/site-content.json",
-  "normalizeOrbitSettings",
-  "buildOrbitLayerConfig",
   "applyAvatarSettings",
   "initializeAvatarAnimation",
 ]) {

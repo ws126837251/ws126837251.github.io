@@ -17,16 +17,8 @@
 
 ## 动画设置
 
-首页动画也集中在 `hub/site-content.json` 的 `animation` 中，可以直接在 GitHub 网页编辑：
+首页头像动画也集中在 `hub/site-content.json` 的 `animation.avatar` 中，可以直接在 GitHub 网页编辑：
 
-- `animation.orbit.layerCount`：轨道总层数，建议 6–16。
-- `animation.orbit.coreCount`：中心清晰轨道层数。
-- `animation.orbit.aspects`：每层椭圆扁平程度，越小越扁；层数超过数组长度时会循环使用。
-- `animation.orbit.rotations`：每层椭圆的初始倾斜角度。
-- `animation.orbit.periodStart` / `periodStep`：旋转周期，数值越小越快。
-- `animation.orbit.directions`：方向数组，`-1` 和 `1` 分别代表两个相反方向，例如 `[-1, 1]` 为逆顺交替。
-- `animation.orbit.strokeColor`、透明度和线宽字段：调整颜色、深浅和线条粗细。
-- `animation.pointer`：鼠标反馈强度；设为 `enabled: false` 可关闭。
 - `animation.avatar.spinDuration`：头像平时顺时针转一圈的秒数，数值越小越快。
 - `animation.avatar.hoverRotation`：悬停时至少顺时针旋转的角度，结束后会自动回到正位并暂停；默认 `360`。
 - `animation.avatar.hoverDuration`：悬停回正旋转持续时间，移开鼠标后恢复自转。

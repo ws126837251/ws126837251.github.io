@@ -47,18 +47,6 @@ body {
   visibility: hidden;
 }
 
-.orbit-field {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  display: block;
-  width: 100vw;
-  height: 100vh;
-  overflow: visible;
-  pointer-events: none;
-  will-change: transform;
-}
-
 .avatar-wrap {
   position: absolute;
   top: clamp(11rem, calc(20vw + 2.5rem), 28rem);
