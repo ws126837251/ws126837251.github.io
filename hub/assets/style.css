@@ -84,10 +84,14 @@ body {
   pointer-events: auto;
   cursor: pointer;
   transition: transform var(--avatar-hover-duration, 0.8s) ease;
-  will-change: transform;
+  will-change: transform, rotate;
 }
 
 .avatar-disc:hover {
+  transform: scale(var(--avatar-hover-scale, 1.15));
+}
+
+.no-js .avatar-disc:hover {
   transform: scale(var(--avatar-hover-scale, 1.15))
     rotate(var(--avatar-hover-rotation, 360deg));
 }

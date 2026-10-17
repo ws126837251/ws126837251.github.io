@@ -1,5 +1,41 @@
 import { products as fallbackProducts } from "./products.js";
 
+const defaultAnimationSettings = {
+  orbit: {
+    layerCount: 11,
+    coreCount: 3,
+    startGap: 0.03,
+    spacingRatio: 1.32,
+    periodStart: 4.6,
+    periodStep: 3.1,
+    minimumRadiusFactor: 0.78,
+    strokeColor: "#6e8f84",
+    strokeWidthStart: 1.18,
+    strokeWidthStep: 0.03,
+    strokeWidthMinimum: 0.84,
+    coreOpacityStart: 0.5,
+    coreOpacityStep: 0.04,
+    outerOpacityStart: 0.34,
+    outerOpacityStep: 0.026,
+    minimumOpacity: 0.16,
+    directions: [-1, 1],
+    aspects: [0.62, 0.7, 0.78, 0.58, 0.68, 0.76, 0.6, 0.72, 0.8, 0.64, 0.74],
+    rotations: [15, -34, 49, -64, 27, -18, 62, -45, 14, -28, 41],
+  },
+  pointer: {
+    enabled: true,
+    maxX: 36,
+    maxY: 28,
+    followStrength: 0.16,
+    shift: 0.45,
+  },
+  avatar: {
+    hoverScale: 1.15,
+    hoverRotation: 360,
+    hoverDuration: 0.8,
+  },
+};
+
 const fallbackContent = {
   brand: {
     name: "无风小卖部",
@@ -23,6 +59,7 @@ const fallbackContent = {
     description: "这个页面不存在，返回首页继续选择品牌教程。",
     action: "返回首页",
   },
+  animation: defaultAnimationSettings,
   products: fallbackProducts,
 };
 
@@ -93,32 +130,247 @@ function renderButtons(siteContent) {
   buttonList.replaceChildren(fragment);
 }
 
-const orbitLayerCount = 11;
-const orbitStartGap = 0.03;
-const orbitSpacingRatio = 1.32;
-const orbitAspects = [0.8, 0.75, 0.86, 0.72, 0.9, 0.77, 0.93, 0.84, 0.96, 0.88, 0.92];
-const orbitRotations = [15, -34, 49, -64, 27, -18, 62, -45, 14, -28, 41];
+function clampNumber(value, fallback, minimum, maximum) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return fallback;
+  }
+  return Math.min(maximum, Math.max(minimum, number));
+}
 
-const orbitLayerConfig = Array.from({ length: orbitLayerCount }, (_, index) => ({
-  name: "layer-" + String(index + 1).padStart(2, "0"),
-  direction: index % 2 === 0 ? -1 : 1,
-  period: 4.6 + index * 3.1,
-  opacity: Number(Math.max(0.16, 0.44 - index * 0.028).toFixed(3)),
-  strokeWidth: Number(Math.max(0.84, 1.18 - index * 0.03).toFixed(2)),
-  distance:
-    index === 0
-      ? 0
-      : Number(
-          (
-            (orbitStartGap *
-              (Math.pow(orbitSpacingRatio, index) - 1)) /
-            (orbitSpacingRatio - 1)
-          ).toFixed(4),
-        ),
-  rings: [{ aspect: orbitAspects[index], rotation: orbitRotations[index] }],
-}));
+function pickArrayValue(values, index, fallback) {
+  return Array.isArray(values) && values.length > 0
+    ? values[index % values.length]
+    : fallback;
+}
 
-function initializeOrbitField() {
+function normalizeOrbitSettings(rawSettings) {
+  const raw =
+    rawSettings && typeof rawSettings === "object" ? rawSettings : {};
+  const fallback = defaultAnimationSettings.orbit;
+  const layerCount = Math.round(
+    clampNumber(raw.layerCount, fallback.layerCount, 1, 32),
+  );
+  const coreCount = Math.round(
+    clampNumber(raw.coreCount, fallback.coreCount, 0, layerCount),
+  );
+  const aspects = Array.from({ length: layerCount }, (_, index) => {
+    const fallbackAspect =
+      fallback.aspects[index % fallback.aspects.length];
+    return clampNumber(
+      pickArrayValue(raw.aspects, index, fallbackAspect),
+      fallbackAspect,
+      0.35,
+      1,
+    );
+  });
+  const rotations = Array.from({ length: layerCount }, (_, index) => {
+    const fallbackRotation =
+      fallback.rotations[index % fallback.rotations.length];
+    return clampNumber(
+      pickArrayValue(raw.rotations, index, fallbackRotation),
+      fallbackRotation,
+      -180,
+      180,
+    );
+  });
+  const directions =
+    Array.isArray(raw.directions) && raw.directions.length > 0
+      ? raw.directions.map((direction) => (Number(direction) < 0 ? -1 : 1))
+      : fallback.directions;
+
+  const strokeColor =
+    typeof raw.strokeColor === "string" &&
+    /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(
+      raw.strokeColor,
+    )
+      ? raw.strokeColor
+      : fallback.strokeColor;
+
+  return {
+    layerCount,
+    coreCount,
+    startGap: clampNumber(raw.startGap, fallback.startGap, 0.001, 0.5),
+    spacingRatio: clampNumber(
+      raw.spacingRatio,
+      fallback.spacingRatio,
+      1.01,
+      2.2,
+    ),
+    periodStart: clampNumber(
+      raw.periodStart,
+      fallback.periodStart,
+      0.5,
+      120,
+    ),
+    periodStep: clampNumber(
+      raw.periodStep,
+      fallback.periodStep,
+      0,
+      60,
+    ),
+    minimumRadiusFactor: clampNumber(
+      raw.minimumRadiusFactor,
+      fallback.minimumRadiusFactor,
+      0.5,
+      1.5,
+    ),
+    strokeColor,
+    strokeWidthStart: clampNumber(
+      raw.strokeWidthStart,
+      fallback.strokeWidthStart,
+      0.3,
+      4,
+    ),
+    strokeWidthStep: clampNumber(
+      raw.strokeWidthStep,
+      fallback.strokeWidthStep,
+      0,
+      0.5,
+    ),
+    strokeWidthMinimum: clampNumber(
+      raw.strokeWidthMinimum,
+      fallback.strokeWidthMinimum,
+      0.3,
+      4,
+    ),
+    coreOpacityStart: clampNumber(
+      raw.coreOpacityStart,
+      fallback.coreOpacityStart,
+      0,
+      1,
+    ),
+    coreOpacityStep: clampNumber(
+      raw.coreOpacityStep,
+      fallback.coreOpacityStep,
+      0,
+      0.5,
+    ),
+    outerOpacityStart: clampNumber(
+      raw.outerOpacityStart,
+      fallback.outerOpacityStart,
+      0,
+      1,
+    ),
+    outerOpacityStep: clampNumber(
+      raw.outerOpacityStep,
+      fallback.outerOpacityStep,
+      0,
+      0.5,
+    ),
+    minimumOpacity: clampNumber(
+      raw.minimumOpacity,
+      fallback.minimumOpacity,
+      0,
+      1,
+    ),
+    directions,
+    aspects,
+    rotations,
+  };
+}
+
+function normalizePointerSettings(rawSettings) {
+  const raw =
+    rawSettings && typeof rawSettings === "object" ? rawSettings : {};
+  const fallback = defaultAnimationSettings.pointer;
+  return {
+    enabled: raw.enabled !== false,
+    maxX: clampNumber(raw.maxX, fallback.maxX, 0, 200),
+    maxY: clampNumber(raw.maxY, fallback.maxY, 0, 200),
+    followStrength: clampNumber(
+      raw.followStrength,
+      fallback.followStrength,
+      0.01,
+      0.8,
+    ),
+    shift: clampNumber(raw.shift, fallback.shift, 0, 2),
+  };
+}
+
+function normalizeAvatarSettings(rawSettings) {
+  const raw =
+    rawSettings && typeof rawSettings === "object" ? rawSettings : {};
+  const fallback = defaultAnimationSettings.avatar;
+  return {
+    hoverScale: clampNumber(raw.hoverScale, fallback.hoverScale, 0.8, 2.5),
+    hoverRotation: clampNumber(
+      raw.hoverRotation,
+      fallback.hoverRotation,
+      -1080,
+      1080,
+    ),
+    hoverDuration: clampNumber(
+      raw.hoverDuration,
+      fallback.hoverDuration,
+      0.1,
+      6,
+    ),
+  };
+}
+
+function applyAvatarSettings(rawSettings) {
+  const avatarSettings = normalizeAvatarSettings(rawSettings);
+  const rootStyle = document.documentElement.style;
+  rootStyle.setProperty(
+    "--avatar-hover-scale",
+    String(avatarSettings.hoverScale),
+  );
+  rootStyle.setProperty(
+    "--avatar-hover-rotation",
+    avatarSettings.hoverRotation + "deg",
+  );
+  rootStyle.setProperty(
+    "--avatar-hover-duration",
+    avatarSettings.hoverDuration + "s",
+  );
+}
+
+function buildOrbitLayerConfig(settings) {
+  return Array.from({ length: settings.layerCount }, (_, index) => {
+    const distance =
+      index === 0
+        ? 0
+        : Number(
+            (
+              (settings.startGap *
+                (Math.pow(settings.spacingRatio, index) - 1)) /
+              (settings.spacingRatio - 1)
+            ).toFixed(4),
+          );
+    const isCoreLayer = index < settings.coreCount;
+    const opacity = Math.max(
+      settings.minimumOpacity,
+      isCoreLayer
+        ? settings.coreOpacityStart - index * settings.coreOpacityStep
+        : settings.outerOpacityStart -
+            (index - settings.coreCount) * settings.outerOpacityStep,
+    );
+
+    return {
+      name: "layer-" + String(index + 1).padStart(2, "0"),
+      direction: settings.directions[index % settings.directions.length],
+      period: settings.periodStart + index * settings.periodStep,
+      opacity: Number(opacity.toFixed(3)),
+      strokeWidth: Number(
+        Math.max(
+          settings.strokeWidthMinimum,
+          settings.strokeWidthStart - index * settings.strokeWidthStep,
+        ).toFixed(2),
+      ),
+      distance,
+      rings: [
+        {
+          aspect: settings.aspects[index],
+          rotation: settings.rotations[index],
+        },
+      ],
+    };
+  });
+}
+function initializeOrbitField(rawSettings) {
+  const orbitSettings = normalizeOrbitSettings(rawSettings);
+  const orbitLayerConfig = buildOrbitLayerConfig(orbitSettings);
   const svgNamespace = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNamespace, "svg");
   svg.classList.add("orbit-field");
@@ -131,7 +383,7 @@ function initializeOrbitField() {
     const group = document.createElementNS(svgNamespace, "g");
     group.classList.add("orbit-track", `orbit-${layer.name}`);
     group.setAttribute("fill", "none");
-    group.setAttribute("stroke", "#6e8f84");
+    group.setAttribute("stroke", orbitSettings.strokeColor);
     group.setAttribute("stroke-linecap", "round");
     group.setAttribute("opacity", String(layer.opacity));
 
@@ -141,7 +393,7 @@ function initializeOrbitField() {
       ellipse.setAttribute("cy", "0");
       ellipse.setAttribute("stroke-width", String(layer.strokeWidth));
       ellipse.setAttribute("vector-effect", "non-scaling-stroke");
-      ellipse.setAttribute("opacity", String(ring.opacity));
+      ellipse.setAttribute("opacity", "1");
       group.append(ellipse);
     }
 
@@ -189,7 +441,7 @@ function initializeOrbitField() {
       viewportHeight - orbitCenter.cy,
     );
     const coverageRadius = Math.hypot(furthestHorizontal, furthestVertical);
-    const minimumRadius = avatarDiameter * 0.78;
+    const minimumRadius = avatarDiameter * orbitSettings.minimumRadiusFactor;
 
     for (const layer of orbitLayerConfig) {
       const group = orbitGroups.get(layer.name);
@@ -274,9 +526,10 @@ function initializeOrbitField() {
   }
 }
 
-function initializePointerFeedback() {
+function initializePointerFeedback(rawSettings) {
+  const pointerSettings = normalizePointerSettings(rawSettings);
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (reduceMotion.matches) {
+  if (!pointerSettings.enabled || reduceMotion.matches) {
     return;
   }
 
@@ -294,10 +547,10 @@ function initializePointerFeedback() {
       return;
     }
 
-    currentX += (targetX - currentX) * 0.16;
-    currentY += (targetY - currentY) * 0.16;
+    currentX += (targetX - currentX) * pointerSettings.followStrength;
+    currentY += (targetY - currentY) * pointerSettings.followStrength;
     if (orbitField) {
-      orbitField.style.transform = `translate3d(${(currentX * 0.45).toFixed(2)}px, ${(currentY * 0.45).toFixed(2)}px, 0)`;
+      orbitField.style.transform = `translate3d(${(currentX * pointerSettings.shift).toFixed(2)}px, ${(currentY * pointerSettings.shift).toFixed(2)}px, 0)`;
     }
 
     if (Math.abs(targetX - currentX) > 0.05 || Math.abs(targetY - currentY) > 0.05) {
@@ -316,8 +569,8 @@ function initializePointerFeedback() {
   const move = (event) => {
     const width = Math.max(window.innerWidth, 1);
     const height = Math.max(window.innerHeight, 1);
-    targetX = ((event.clientX / width) - 0.5) * 36;
-    targetY = ((event.clientY / height) - 0.5) * 28;
+    targetX = ((event.clientX / width) - 0.5) * pointerSettings.maxX;
+    targetY = ((event.clientY / height) - 0.5) * pointerSettings.maxY;
     start();
   };
 
@@ -367,12 +620,13 @@ async function initializePage() {
 
   applyContent(siteContent);
   renderButtons(siteContent);
+  applyAvatarSettings(siteContent.animation?.avatar);
+  initializeOrbitField(siteContent.animation?.orbit);
+  initializePointerFeedback(siteContent.animation?.pointer);
   window.dispatchEvent(new Event("orbit-layout"));
   document.documentElement.classList.remove("no-js");
 }
 
-initializeOrbitField();
-initializePointerFeedback();
 initializePage().catch((error) => {
   console.error(error);
   document.documentElement.classList.remove("no-js");

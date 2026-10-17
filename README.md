@@ -27,6 +27,7 @@
 - `animation.orbit.directions`：方向数组，`-1` 和 `1` 分别代表两个相反方向，例如 `[-1, 1]` 为逆顺交替。
 - `animation.orbit.strokeColor`、透明度和线宽字段：调整颜色、深浅和线条粗细。
 - `animation.pointer`：鼠标反馈强度；设为 `enabled: false` 可关闭。
-- `animation.avatar`：头像悬停放大倍数、旋转角度和持续时间。
+- `animation.avatar.spinDuration`：头像平时顺时针转一圈的秒数，数值越小越快。
+- `animation.avatar`：头像悬停放大倍数、顺时针旋转角度和持续时间。
 
 网页编辑后提交到 `main`，Actions 会自动生成并部署。数值超出安全范围时，前端会自动限制到安全值；JSON 语法错误会让 Actions 构建标红，需要先修正逗号、引号或括号。

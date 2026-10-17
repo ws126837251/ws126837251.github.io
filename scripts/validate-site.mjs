@@ -113,6 +113,7 @@ if (
   throw new Error("animation.pointer contains an invalid value.");
 }
 if (
+  typeof avatar.spinDuration !== "number" ||
   typeof avatar.hoverScale !== "number" ||
   typeof avatar.hoverRotation !== "number" ||
   typeof avatar.hoverDuration !== "number"
@@ -296,6 +297,7 @@ for (const requiredBehavior of [
   "normalizeOrbitSettings",
   "buildOrbitLayerConfig",
   "applyAvatarSettings",
+  "initializeAvatarAnimation",
 ]) {
   if (!appJs.includes(requiredBehavior)) {
     throw new Error(`Homepage behavior is missing: ${requiredBehavior}`);

@@ -30,6 +30,7 @@ const defaultAnimationSettings = {
     shift: 0.45,
   },
   avatar: {
+    spinDuration: 18,
     hoverScale: 1.15,
     hoverRotation: 360,
     hoverDuration: 0.8,
@@ -293,6 +294,12 @@ function normalizeAvatarSettings(rawSettings) {
     rawSettings && typeof rawSettings === "object" ? rawSettings : {};
   const fallback = defaultAnimationSettings.avatar;
   return {
+    spinDuration: clampNumber(
+      raw.spinDuration,
+      fallback.spinDuration,
+      4,
+      120,
+    ),
     hoverScale: clampNumber(raw.hoverScale, fallback.hoverScale, 0.8, 2.5),
     hoverRotation: clampNumber(
       raw.hoverRotation,
@@ -324,6 +331,112 @@ function applyAvatarSettings(rawSettings) {
     "--avatar-hover-duration",
     avatarSettings.hoverDuration + "s",
   );
+}
+
+function initializeAvatarAnimation(rawSettings) {
+  const avatarSettings = normalizeAvatarSettings(rawSettings);
+  const avatar = document.querySelector(".avatar-disc");
+  if (!avatar || typeof avatar.animate !== "function") {
+    return;
+  }
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const spinDuration = avatarSettings.spinDuration * 1000;
+  let baseAnimation = null;
+  let hoverAnimation = null;
+  let motionEnabled = true;
+
+  const normalizeAngle = (angle) => ((angle % 360) + 360) % 360;
+  const getBaseAngle = () => {
+    const currentTime = Number(baseAnimation?.currentTime ?? 0);
+    if (!Number.isFinite(currentTime)) {
+      return 0;
+    }
+    return normalizeAngle((currentTime / spinDuration) * 360);
+  };
+  const startBaseAnimation = (startAngle = 0) => {
+    baseAnimation = avatar.animate(
+      [{ rotate: "0deg" }, { rotate: "360deg" }],
+      {
+        duration: spinDuration,
+        iterations: Infinity,
+        easing: "linear",
+        fill: "both",
+      },
+    );
+    baseAnimation.currentTime =
+      (normalizeAngle(startAngle) / 360) * spinDuration;
+  };
+  const stopAnimations = () => {
+    if (hoverAnimation) {
+      hoverAnimation.cancel();
+      hoverAnimation = null;
+    }
+    if (baseAnimation) {
+      baseAnimation.cancel();
+      baseAnimation = null;
+    }
+    avatar.style.removeProperty("rotate");
+  };
+  const finishHover = (endAngle) => {
+    const finishedAnimation = hoverAnimation;
+    hoverAnimation = null;
+    finishedAnimation?.cancel();
+    if (!motionEnabled) {
+      return;
+    }
+    if (!baseAnimation) {
+      startBaseAnimation(endAngle);
+      return;
+    }
+    baseAnimation.currentTime =
+      (normalizeAngle(endAngle) / 360) * spinDuration;
+    baseAnimation.play();
+  };
+  const startHover = () => {
+    if (!motionEnabled || !baseAnimation || hoverAnimation) {
+      return;
+    }
+
+    baseAnimation.pause();
+    const startAngle = getBaseAngle();
+    const endAngle = startAngle + avatarSettings.hoverRotation;
+    hoverAnimation = avatar.animate(
+      [
+        { rotate: `${startAngle}deg` },
+        { rotate: `${endAngle}deg` },
+      ],
+      {
+        duration: avatarSettings.hoverDuration * 1000,
+        easing: "ease-out",
+        fill: "forwards",
+      },
+    );
+    hoverAnimation.addEventListener(
+      "finish",
+      () => finishHover(endAngle),
+      { once: true },
+    );
+  };
+  const syncMotion = () => {
+    if (reduceMotion.matches) {
+      motionEnabled = false;
+      stopAnimations();
+      return;
+    }
+    motionEnabled = true;
+    if (!baseAnimation) {
+      startBaseAnimation();
+    }
+  };
+
+  avatar.addEventListener("pointerenter", startHover, { passive: true });
+  syncMotion();
+  if (typeof reduceMotion.addEventListener === "function") {
+    reduceMotion.addEventListener("change", syncMotion);
+  } else if (typeof reduceMotion.addListener === "function") {
+    reduceMotion.addListener(syncMotion);
+  }
 }
 
 function buildOrbitLayerConfig(settings) {
@@ -621,6 +734,7 @@ async function initializePage() {
   applyContent(siteContent);
   renderButtons(siteContent);
   applyAvatarSettings(siteContent.animation?.avatar);
+  initializeAvatarAnimation(siteContent.animation?.avatar);
   initializeOrbitField(siteContent.animation?.orbit);
   initializePointerFeedback(siteContent.animation?.pointer);
   window.dispatchEvent(new Event("orbit-layout"));
