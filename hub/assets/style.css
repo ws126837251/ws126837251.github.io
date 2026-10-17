@@ -32,7 +32,7 @@ body {
 
 .entry-cluster {
   position: absolute;
-  top: 61.8vh;
+  top: 38.2vh;
   left: 0;
   z-index: 1;
   width: 100%;
@@ -168,7 +168,7 @@ body {
   }
 
   .entry-cluster {
-    top: 61.8svh;
+    top: 38.2svh;
   }
 
   .avatar-section {
