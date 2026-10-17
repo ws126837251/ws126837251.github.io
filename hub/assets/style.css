@@ -15,13 +15,9 @@ html {
 
 body {
   position: relative;
-  display: grid;
-  place-items: center;
   width: 100%;
   min-height: 100vh;
-  box-sizing: border-box;
   margin: 0;
-  padding: clamp(4.5rem, 9vh, 7rem) 1.5rem;
   overflow-x: hidden;
   background-color: var(--Bcolor);
   background-image:
@@ -34,24 +30,12 @@ body {
   color: var(--Fcolor);
 }
 
-.hero {
+.title {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(2.5rem, 4vw, 4rem);
-  width: min(100%, 52rem);
-}
-
-.title {
-  margin: 0;
-  font-family: Monaco, monospace;
-  font-size: clamp(2rem, 4vw, 4.5rem);
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  line-height: 1;
+  margin-top: 20%;
+  font-size: 56px;
+  font-family: Monaco;
 }
 
 .title a {
@@ -59,12 +43,19 @@ body {
   text-decoration: none;
 }
 
+.title-hidden {
+  visibility: hidden;
+}
+
 .avatar-wrap {
-  position: relative;
-  z-index: 1;
-  width: clamp(10rem, 15vw, 15rem);
+  position: absolute;
+  top: clamp(11rem, calc(20vw + 2.5rem), 28rem);
+  left: 50%;
+  z-index: 3;
+  width: clamp(7rem, 9vw, 10rem);
   aspect-ratio: 1;
   pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 
 .avatar-disc {
@@ -108,7 +99,7 @@ body {
   margin: 0;
   color: var(--Fcolor);
   font-family: Monaco, monospace;
-  font-size: clamp(0.9rem, 1.35vw, 1.1rem);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
   letter-spacing: 0.12em;
   line-height: 1;
   pointer-events: none;
@@ -118,26 +109,24 @@ body {
 
 .flex {
   position: relative;
+  z-index: 1;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: clamp(0.75rem, 1.2vw, 1.25rem);
-  width: 100%;
 }
 
 .flex a {
-  margin: 0;
+  margin: 16px;
 }
 
 .button {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  padding: 0.55em 1em;
+  padding: 0.4em 0.8em;
   color: var(--Fcolor);
   border: 2px solid var(--Fcolor);
   border-radius: 0.3em;
-  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  font-size: 20px;
   text-align: center;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
@@ -194,15 +183,26 @@ body {
 @media (max-width: 560px) {
   body {
     min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
     padding: 3.5rem 1.25rem 4rem;
   }
 
-  .hero {
-    gap: 2.8rem;
+  body > .flex:first-of-type {
+    display: none;
   }
 
   .avatar-wrap {
-    width: clamp(6.5rem, 27vw, 8.5rem);
+    position: relative;
+    top: auto;
+    left: auto;
+    width: clamp(4.5rem, 19vw, 5.25rem);
+    flex: 0 0 auto;
+    margin: 0 0 2.5rem;
+    transform: none;
   }
 
   .avatar-label {
@@ -211,6 +211,7 @@ body {
   }
 
   #buttonList {
+    flex: 0 0 auto;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: stretch;
