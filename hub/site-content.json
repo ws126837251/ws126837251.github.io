@@ -11,9 +11,7 @@
   },
   "navigation": {
     "aboutLabel": "无风的小店",
-    "aboutUrl": "https://wufeng.de/",
-    "cardLabel": "卡圈情报站",
-    "cardUrl": "/card/"
+    "aboutUrl": "https://wufeng.de/"
   },
   "footer": {
     "copyright": "Copyright ©",

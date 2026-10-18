@@ -18,8 +18,6 @@ const fallbackContent = {
   navigation: {
     aboutLabel: "无风的小店",
     aboutUrl: "https://wufeng.de/",
-    cardLabel: "卡圈情报站",
-    cardUrl: "/card/",
   },
   footer: {
     copyright: "Copyright ©",
@@ -94,7 +92,6 @@ function renderButtons(siteContent) {
     for (const product of products) {
       fragment.append(createButton(product.name, product.path));
     }
-    fragment.append(createButton(siteContent.navigation.cardLabel, siteContent.navigation.cardUrl));
   }
 
   buttonList.replaceChildren(fragment);
