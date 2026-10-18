@@ -9,6 +9,7 @@ const hubDir = path.join(rootDir, "hub");
 const requiredFiles = [
   "index.html",
   "404.html",
+  "card/index.html",
   "CNAME",
   "site-content.json",
   "assets/style.css",
@@ -93,6 +94,8 @@ for (const html of [indexHtml, notFoundHtml]) {
 for (const requiredKey of [
   "navigation.aboutLabel",
   "navigation.aboutUrl",
+  "navigation.cardLabel",
+  "navigation.cardUrl",
   "footer.copyright",
   "footer.linkLabel",
   "footer.linkUrl",
@@ -178,6 +181,10 @@ for (const product of products) {
   if (!indexHtml.includes(`href="${product.path}"`)) {
     throw new Error(`Static homepage button is missing: ${product.path}`);
   }
+}
+
+if (!indexHtml.includes(`href="${siteContent.navigation.cardUrl}"`)) {
+  throw new Error("Static homepage button is missing the card hub path.");
 }
 
 const css = fs.readFileSync(path.join(hubDir, "assets", "style.css"), "utf8");
