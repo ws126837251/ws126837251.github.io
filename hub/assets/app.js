@@ -2,7 +2,7 @@ import { products as fallbackProducts } from "./products.js";
 
 const defaultAnimationSettings = {
   avatar: {
-    spinDuration: 18,
+    spinDuration: 10,
     hoverScale: 1.15,
     hoverRotation: 360,
     hoverDuration: 0.8,
