@@ -256,10 +256,11 @@ function initializeAvatarAnimation(rawSettings) {
       return;
     }
     const finishedAnimation = hoverAnimation;
+    const finishedAngle = getRenderedAngle();
     hoverAnimation = null;
     finishedAnimation?.cancel();
     if (motionEnabled) {
-      resumeBaseAnimation(getRenderedAngle());
+      resumeBaseAnimation(finishedAngle);
     }
   };
   const startHover = () => {
@@ -301,12 +302,13 @@ function initializeAvatarAnimation(rawSettings) {
     if (!motionEnabled || !baseAnimation) {
       return;
     }
-    const currentAngle = getRenderedAngle();
     if (hoverAnimation) {
-      hoverAnimation.cancel();
-      hoverAnimation = null;
+      if (hoverAnimation.playState === "finished") {
+        finishHover();
+      }
+      return;
     }
-    resumeBaseAnimation(currentAngle);
+    resumeBaseAnimation(getRenderedAngle());
   };
   const syncMotion = () => {
     if (reduceMotion.matches) {
