@@ -88,8 +88,8 @@ function renderCatalog(html) {
   }
 
   const buttons = [
-    ...sortedProducts.map((product) => renderButton(product.name, product.path)),
     renderButton(siteContent.navigation.aboutLabel, siteContent.navigation.aboutUrl),
+    ...sortedProducts.map((product) => renderButton(product.name, product.path)),
   ].join("\n");
 
   return (

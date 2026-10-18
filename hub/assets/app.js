@@ -16,7 +16,7 @@ const fallbackContent = {
     avatarAlt: "无风·Blog 头像",
   },
   navigation: {
-    aboutLabel: "Wufeng",
+    aboutLabel: "无风的小店",
     aboutUrl: "https://wufeng.de/",
   },
   footer: {
@@ -88,10 +88,10 @@ function renderButtons(siteContent) {
           }),
         )
       : [];
+    fragment.append(createButton(siteContent.navigation.aboutLabel, siteContent.navigation.aboutUrl));
     for (const product of products) {
       fragment.append(createButton(product.name, product.path));
     }
-    fragment.append(createButton(siteContent.navigation.aboutLabel, siteContent.navigation.aboutUrl));
   }
 
   buttonList.replaceChildren(fragment);
