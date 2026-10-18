@@ -2,8 +2,8 @@
   --Fcolor: #17483b;
   --Bcolor: #eef3f7;
   --GridColor: rgba(39, 76, 65, 0.16);
-  --AvatarFrame: #f0ebe2;
-  --AvatarFrameBorder: rgba(39, 76, 65, 0.14);
+  --AvatarFrame: #d9e8f2;
+  --AvatarFrameBorder: rgba(62, 107, 137, 0.28);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -75,7 +75,7 @@ body {
   border: 1px solid var(--AvatarFrameBorder);
   border-radius: 50%;
   background: var(--AvatarFrame);
-  box-shadow: 0 2px 7px rgba(23, 72, 59, 0.06);
+  box-shadow: 0 2px 7px rgba(62, 107, 137, 0.12);
   pointer-events: auto;
   cursor: pointer;
   transition: transform var(--avatar-hover-duration, 0.8s) ease;
