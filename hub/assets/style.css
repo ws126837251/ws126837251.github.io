@@ -191,7 +191,7 @@ body {
   }
 
   .avatar-wrap {
-    width: clamp(4.5rem, 19vw, 5.25rem);
+    width: clamp(6.5rem, 28vw, 7.5rem);
   }
 
   #buttonList {
