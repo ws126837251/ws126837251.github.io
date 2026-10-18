@@ -98,23 +98,6 @@ body {
   object-fit: contain;
 }
 
-.avatar-preview,
-.avatar-full {
-  transition: opacity 0.32s ease;
-}
-
-.avatar-full {
-  opacity: 0;
-}
-
-.avatar-disc.is-full-loaded .avatar-preview {
-  opacity: 0;
-}
-
-.avatar-disc.is-full-loaded .avatar-full {
-  opacity: 1;
-}
-
 .flex {
   position: relative;
   z-index: 1;

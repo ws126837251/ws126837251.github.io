@@ -149,49 +149,6 @@ function applyAvatarSettings(rawSettings) {
   );
 }
 
-function initializeProgressiveAvatar() {
-  const avatar = document.querySelector(".avatar-disc");
-  const fullImage = avatar?.querySelector(".avatar-full");
-  const source = fullImage?.dataset.src;
-  if (!avatar || !fullImage || !source) {
-    return;
-  }
-
-  const revealFullImage = () => {
-    fullImage.addEventListener(
-      "load",
-      () => {
-        window.requestAnimationFrame(() => {
-          avatar.classList.add("is-full-loaded");
-        });
-      },
-      { once: true },
-    );
-    fullImage.src = source;
-    if (fullImage.complete && fullImage.naturalWidth > 0) {
-      window.requestAnimationFrame(() => {
-        avatar.classList.add("is-full-loaded");
-      });
-    }
-  };
-
-  const preload = new Image();
-  preload.decoding = "async";
-  preload.fetchPriority = "high";
-  preload.addEventListener(
-    "load",
-    () => {
-      const decoded =
-        typeof preload.decode === "function"
-          ? preload.decode()
-          : Promise.resolve();
-      decoded.then(revealFullImage, revealFullImage);
-    },
-    { once: true },
-  );
-  preload.src = source;
-}
-
 function initializeAvatarAnimation(rawSettings) {
   const avatarSettings = normalizeAvatarSettings(rawSettings);
   const avatar = document.querySelector(".avatar-disc");
@@ -416,7 +373,6 @@ function initializeWeatherEffect() {
 }
 
 async function initializePage() {
-  initializeProgressiveAvatar();
   let siteContent;
   try {
     siteContent = await loadSiteContent();
