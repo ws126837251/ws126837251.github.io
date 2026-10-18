@@ -1,13 +1,13 @@
 {
   "meta": {
-    "title": "无风·Blog",
-    "description": "无风·Blog：全球 SIM 卡使用指南。",
+    "title": "WuFeng·Blog",
+    "description": "WuFeng·Blog：全球 SIM 卡使用指南。",
     "socialDescription": "全球 SIM 卡使用指南。"
   },
   "brand": {
-    "name": "无风·Blog",
-    "homeLabel": "无风·Blog 首页",
-    "avatarAlt": "无风·Blog 头像"
+    "name": "WuFeng·Blog",
+    "homeLabel": "WuFeng·Blog 首页",
+    "avatarAlt": "WuFeng·Blog 头像"
   },
   "navigation": {
     "aboutLabel": "无风的小店",
@@ -21,7 +21,7 @@
     "linkUrl": "https://wufeng.de/"
   },
   "notFound": {
-    "metaTitle": "页面未找到｜无风·Blog",
+    "metaTitle": "页面未找到｜WuFeng·Blog",
     "title": "页面未找到",
     "description": "这个页面不存在，返回首页继续选择品牌教程。",
     "action": "返回首页"
