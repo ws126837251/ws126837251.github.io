@@ -24,7 +24,7 @@ const fallbackContent = {
   footer: {
     copyright: "Copyright ©",
     linkLabel: "Wufeng",
-    linkUrl: "https://wufeng.de/",
+    linkUrl: "https://github.com/ws126837251",
   },
   notFound: {
     title: "页面未找到",
