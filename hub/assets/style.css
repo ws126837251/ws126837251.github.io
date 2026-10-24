@@ -53,7 +53,7 @@
   --badge-text: #204b6e;
 
   /* Rain Canvas Particle */
-  --rain-color: rgba(135, 176, 206, 0.42);
+  --rain-color: rgba(105, 151, 187, 0.58);
 }
 
 [data-theme="dark"] {
@@ -85,7 +85,7 @@
   --badge-border: rgba(94, 168, 224, 0.28);
   --badge-text: #b5d8f2;
 
-  --rain-color: rgba(110, 163, 200, 0.25);
+  --rain-color: rgba(110, 163, 200, 0.42);
 }
 
 /* ==========================================================================
