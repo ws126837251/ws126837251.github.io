@@ -1,39 +1,113 @@
 <!DOCTYPE html>
 <html lang="zh-CN" class="no-js">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="/assets/style.css?v=080a0dc5a3ad">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-content="notFound.metaTitle">页面未找到｜WuFeng·Blog</title>
+  <meta name="description" data-content-attr="content" data-content="notFound.description" content="这个页面不存在，返回首页继续选择品牌教程。">
+
+  <link rel="icon" href="/og-directory.png" type="image/png">
+  <meta name="robots" content="noindex">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/assets/wufeng-avatar-transparent.png" as="image" fetchpriority="high">
+  <script>
+    try {
+      const saved = localStorage.getItem("wf-theme");
+      const dark = saved === "dark" || (saved !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    } catch {
+      document.documentElement.dataset.theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/style.css?v=aa90bcd8ca98">
 </head>
+<body class="not-found" data-page="not-found">
 
-<body data-page="not-found">
-  <div class="flex">
-    <p class="title title-hidden" aria-hidden="true">
-      <a href="/" data-content-attr="aria-label" data-content="brand.homeLabel" aria-label="WuFeng·Blog 首页">
-        <span data-content="notFound.title">页面未找到</span>
-      </a>
-    </p>
+  <!-- Ambient Mesh Gradient Floating Orbs -->
+  <div class="bg-mesh-container" aria-hidden="true">
+    <div class="mesh-orb orb-1"></div>
+    <div class="mesh-orb orb-2"></div>
+    <div class="mesh-orb orb-3"></div>
+    <div class="mesh-orb orb-4"></div>
   </div>
 
-  <div class="avatar-wrap">
-    <div class="avatar-disc">
-      <img src="/assets/wufeng-avatar.png" data-content-attr="alt" data-content="brand.avatarAlt" alt="WuFeng·Blog 头像" decoding="async">
-    </div>
-  </div>
+  <!-- Ambient Transparent Raindrop Canvas -->
+  <canvas id="rainCanvas" aria-hidden="true"></canvas>
 
-  <div class="flex" id="buttonList">
-    <a href="/" class="button" data-content="notFound.action">返回首页</a>
-  </div>
+  <!-- Top Controls: Theme Switcher -->
+  <header class="top-bar">
+    <button class="theme-toggle-btn" id="themeToggle" type="button" aria-pressed="false" aria-label="切换浅色与深色模式" title="切换深浅主题">
+      <!-- Sun icon (shown in dark mode) -->
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2"></path>
+        <path d="M12 20v2"></path>
+        <path d="m4.93 4.93 1.41 1.41"></path>
+        <path d="m17.66 17.66 1.41 1.41"></path>
+        <path d="M2 12h2"></path>
+        <path d="M20 12h2"></path>
+        <path d="m6.34 17.66-1.41 1.41"></path>
+        <path d="m19.07 4.93-1.41 1.41"></path>
+      </svg>
+      <!-- Moon icon (shown in light mode) -->
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+      </svg>
+    </button>
+  </header>
 
-  <div class="footer">
+  <!-- Main Content Container -->
+  <main class="main-container">
+
+    <!-- Brand header -->
+    <section class="brand-header">
+      <button
+        type="button"
+        class="avatar-wrapper"
+        id="avatarDisc"
+        aria-label="WuFeng 个人头像，悬停旋转一周归正"
+        title="悬停或轻触即可平滑加速转动一周回正"
+      >
+        <img
+          class="avatar-img"
+          id="avatarImage"
+          src="/assets/wufeng-avatar-transparent.png"
+          data-content-attr="alt" data-content="brand.avatarAlt" alt="WuFeng·Blog 头像"
+          width="108"
+          height="108"
+          loading="eager"
+          fetchpriority="high"
+        >
+        <!-- Fallback SVG user silhouette if image fails to load -->
+        <span class="avatar-fallback" id="avatarFallback" aria-hidden="true">
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="8" r="5"></circle>
+            <path d="M20 21a8 8 0 0 0-16 0"></path>
+          </svg>
+        </span>
+      </button>
+
+      <h1 class="site-title" data-content="notFound.title">页面未找到</h1>
+      <p class="site-subtitle" data-content="notFound.description">这个页面不存在，返回首页继续选择品牌教程。</p>
+    </section>
+
+    <nav class="links-stack" id="buttonList" aria-label="返回首页">
+      <a class="nav-card" href="/" data-content="notFound.action">返回首页</a>
+    </nav>
+  </main>
+
+  <!-- Clean Footer -->
+  <footer class="page-footer">
     <span data-content="footer.copyright">Copyright ©</span>
-    <a data-content-attr="href" data-content="footer.linkUrl" href="https://github.com/ws126837251">
+    <a data-content-attr="href" data-content="footer.linkUrl" href="https://github.com/ws126837251" target="_blank" rel="noopener noreferrer" class="footer-link">
       <span data-content="footer.linkLabel">Wufeng</span>
+      <svg aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/>
+      </svg>
     </a>
-  </div>
+  </footer>
 
-  <script type="module" src="/assets/app.js"></script>
+  <script type="application/json" id="avatarSettings">{"spinDuration":18,"hoverScale":1,"hoverRotation":360,"hoverDuration":0.95}</script>
+  <script type="module" src="/assets/app.js?v=56a2adbe526b"></script>
 </body>
 </html>

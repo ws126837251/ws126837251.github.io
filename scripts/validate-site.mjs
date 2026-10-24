@@ -14,6 +14,8 @@ const requiredFiles = [
   "assets/style.css",
   "assets/app.js",
   "assets/products.js",
+  "assets/fonts/jakarta-latin.woff2",
+  "assets/fonts/noto-sc-ui.woff2",
   "assets/wufeng-avatar-transparent.png",
   "og-directory.png",
   "robots.txt",
@@ -60,12 +62,14 @@ for (const requiredValue of [
   "/assets/app.js",
   "/og-directory.png",
   "https://blog.wufeng.de/",
-  'class="flex avatar-section"',
+  'class="brand-header"',
+  'class="main-container"',
+  'id="themeToggle"',
   'id="buttonList"',
-  'class="button"',
-  'class="avatar-disc"',
-  'class="avatar-image"',
-  'id="weatherEffect"',
+  'class="nav-card"',
+  'class="avatar-wrapper"',
+  'class="avatar-img"',
+  'id="rainCanvas"',
   'wufeng-avatar-transparent.png',
   "BUTTONS_FALLBACK_START",
   "BUTTONS_FALLBACK_END",
@@ -93,8 +97,13 @@ for (const html of [indexHtml, notFoundHtml]) {
 for (const requiredKey of [
   "navigation.aboutLabel",
   "navigation.aboutUrl",
+  "navigation.aboutBadge",
+  "navigation.aboutDescription",
   "navigation.cardLabel",
   "navigation.cardUrl",
+  "navigation.cardBadge",
+  "navigation.cardDescription",
+  "brand.subtitle",
   "footer.copyright",
   "footer.linkLabel",
   "footer.linkUrl",
@@ -118,6 +127,16 @@ for (const retiredValue of [
   }
 }
 
+for (const html of [indexHtml, notFoundHtml]) {
+  const settings = html.match(/<script type="application\/json" id="avatarSettings">([\s\S]*?)<\/script>/)?.[1];
+  if (!settings || JSON.stringify(JSON.parse(settings)) !== JSON.stringify(avatar)) {
+    throw new Error("Generated avatar configuration does not match site-content.json.");
+  }
+}
+const cardCount = [...indexHtml.matchAll(/class="nav-card"/g)].length;
+if (cardCount !== products.length + 2) {
+  throw new Error("The static navigation must contain every configured entry.");
+}
 JSON.parse(fs.readFileSync(path.join(hubDir, "site.webmanifest"), "utf8"));
 
 if (!Array.isArray(products) || products.length < 2) {
@@ -192,18 +211,15 @@ if ((css.match(/{/g) ?? []).length !== (css.match(/}/g) ?? []).length) {
 }
 for (const requiredRule of [
   ":root",
-  "--Fcolor: #17483b",
-  "--Bcolor: #eef3f7",
-  ".avatar-section",
-  ".button",
-  ".avatar-disc:hover",
-  "--avatar-hover-scale",
-  "--avatar-hover-duration",
-  "var(--avatar-hover-rotation",
-  "#buttonList",
+  "--bg-base: #edf4f8",
+  "--bg-base: #0b141d",
+  ".brand-header",
+  ".nav-card",
+  ".avatar-wrapper:focus-visible",
+  ".links-stack",
   ":focus-visible",
   "prefers-reduced-motion: reduce",
-  "#weatherEffect",
+  "#rainCanvas",
 ]) {
   if (!css.includes(requiredRule)) {
     throw new Error(`CSS is missing required rule: ${requiredRule}`);
@@ -223,13 +239,10 @@ for (const product of products) {
 
 const appJs = fs.readFileSync(path.join(hubDir, "assets", "app.js"), "utf8");
 for (const requiredBehavior of [
-  "loadSiteContent",
-  "applyContent",
-  "createButton",
-  "renderButtons",
-  "localeCompare",
-  "/site-content.json",
-  "applyAvatarSettings",
+  "initializeTheme",
+  "startMotionLoop",
+  "loadAvatarSettings",
+  "visibilitychange",
   "initializeAvatarAnimation",
   "initializeWeatherEffect",
 ]) {

@@ -1,398 +1,225 @@
-import { products as fallbackProducts } from "./products.js";
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+document.documentElement.classList.remove("no-js");
 
-const defaultAnimationSettings = {
-  avatar: {
-    spinDuration: 3,
-    hoverScale: 1.15,
-    hoverRotation: 360,
-    hoverDuration: 0.8,
-  },
-};
-
-const fallbackContent = {
-  brand: {
-    name: "无风·Blog",
-    homeLabel: "无风·Blog 首页",
-    avatarAlt: "无风·Blog 头像",
-  },
-  navigation: {
-    aboutLabel: "无风的小店",
-    aboutUrl: "https://wufeng.de/",
-    cardLabel: "卡圈情报站",
-    cardUrl: "/card/",
-  },
-  footer: {
-    copyright: "Copyright ©",
-    linkLabel: "Wufeng",
-    linkUrl: "https://github.com/ws126837251",
-  },
-  notFound: {
-    title: "页面未找到",
-    description: "这个页面不存在，返回首页继续选择品牌教程。",
-    action: "返回首页",
-  },
-  animation: defaultAnimationSettings,
-  products: fallbackProducts,
-};
-
-function getContentValue(source, key) {
-  return key.split(".").reduce((current, part) => current?.[part], source);
-}
-
-async function loadSiteContent() {
-  const response = await fetch("/site-content.json", { cache: "no-cache" });
-  if (!response.ok) {
-    throw new Error(`Unable to load site content: ${response.status}`);
-  }
-  return response.json();
-}
-
-function applyContent(siteContent) {
-  for (const element of document.querySelectorAll("[data-content]")) {
-    const value = getContentValue(siteContent, element.dataset.content);
-    if (typeof value !== "string" && typeof value !== "number") {
-      continue;
-    }
-
-    if (element.dataset.contentAttr) {
-      element.setAttribute(element.dataset.contentAttr, String(value));
-    } else {
-      element.textContent = String(value);
-    }
-  }
-}
-
-function createButton(label, href) {
-  const link = document.createElement("a");
-  link.className = "button";
-  link.href = href;
-  link.target = "_blank";
-  link.rel = "noopener";
-  link.textContent = label;
-  return link;
-}
-
-function renderButtons(siteContent) {
-  const buttonList = document.querySelector("#buttonList");
-  if (!buttonList) {
-    return;
+function initializeTheme() {
+  const toggle = document.getElementById("themeToggle");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+  let preference = null;
+  try {
+    const saved = localStorage.getItem("wf-theme");
+    if (saved === "light" || saved === "dark") preference = saved;
+  } catch {
+    // Theme switching remains usable when browser storage is unavailable.
   }
 
-  const fragment = document.createDocumentFragment();
-  if (document.body.dataset.page === "not-found") {
-    fragment.append(createButton(siteContent.notFound.action, "/"));
-  } else {
-    const products = Array.isArray(siteContent.products)
-      ? [...siteContent.products].sort((first, second) =>
-          first.name.localeCompare(second.name, "zh-CN", {
-            numeric: true,
-            sensitivity: "base",
-          }),
-        )
-      : [];
-    fragment.append(createButton(siteContent.navigation.aboutLabel, siteContent.navigation.aboutUrl));
-    for (const product of products) {
-      fragment.append(createButton(product.name, product.path));
-    }
-    fragment.append(createButton(siteContent.navigation.cardLabel, siteContent.navigation.cardUrl));
+  function applyTheme(dark) {
+    document.documentElement.dataset.theme = dark ? "dark" : "light";
+    const label = dark ? "切换到浅色模式" : "切换到深色模式";
+    toggle?.setAttribute("aria-label", label);
+    toggle?.setAttribute("title", label);
+    toggle?.setAttribute("aria-pressed", String(dark));
+    document.dispatchEvent(new Event("themechange"));
   }
 
-  buttonList.replaceChildren(fragment);
+  applyTheme(preference ? preference === "dark" : prefersDark.matches);
+  toggle?.addEventListener("click", () => {
+    preference = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    try {
+      localStorage.setItem("wf-theme", preference);
+    } catch {
+      // Keep the selected theme for this visit even without persistent storage.
+    }
+    applyTheme(preference === "dark");
+  });
+  prefersDark.addEventListener("change", (event) => {
+    if (!preference) applyTheme(event.matches);
+  });
 }
 
-function clampNumber(value, fallback, minimum, maximum) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) {
-    return fallback;
-  }
-  return Math.min(maximum, Math.max(minimum, number));
-}
+// Pause work in background tabs and stop it entirely for reduced motion.
+function startMotionLoop(render, reset) {
+  let frameId = null;
+  let previousTime = null;
 
-function normalizeAvatarSettings(rawSettings) {
-  const raw =
-    rawSettings && typeof rawSettings === "object" ? rawSettings : {};
-  const fallback = defaultAnimationSettings.avatar;
-  return {
-    spinDuration: clampNumber(
-      raw.spinDuration,
-      fallback.spinDuration,
-      4,
-      120,
-    ),
-    hoverScale: clampNumber(raw.hoverScale, fallback.hoverScale, 0.8, 2.5),
-    hoverRotation: clampNumber(
-      raw.hoverRotation,
-      fallback.hoverRotation,
-      -1080,
-      1080,
-    ),
-    hoverDuration: clampNumber(
-      raw.hoverDuration,
-      fallback.hoverDuration,
-      0.1,
-      6,
-    ),
-  };
-}
-
-function applyAvatarSettings(rawSettings) {
-  const avatarSettings = normalizeAvatarSettings(rawSettings);
-  const rootStyle = document.documentElement.style;
-  rootStyle.setProperty(
-    "--avatar-hover-scale",
-    String(avatarSettings.hoverScale),
-  );
-  rootStyle.setProperty(
-    "--avatar-hover-rotation",
-    avatarSettings.hoverRotation + "deg",
-  );
-  rootStyle.setProperty(
-    "--avatar-hover-duration",
-    avatarSettings.hoverDuration + "s",
-  );
-}
-
-function initializeAvatarAnimation(rawSettings) {
-  const avatarSettings = normalizeAvatarSettings(rawSettings);
-  const avatar = document.querySelector(".avatar-disc");
-  if (!avatar || typeof avatar.animate !== "function") {
-    return;
+  function frame(now) {
+    const delta = previousTime === null ? 0 : Math.min(now - previousTime, 50) / 1000;
+    previousTime = now;
+    render(delta);
+    frameId = requestAnimationFrame(frame);
   }
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const spinDuration = avatarSettings.spinDuration * 1000;
-  let baseAnimation = null;
-  let hoverAnimation = null;
-  let motionEnabled = true;
-  let pointerInside = false;
-
-  const normalizeAngle = (angle) => ((angle % 360) + 360) % 360;
-  const getBaseAngle = () => {
-    const currentTime = Number(baseAnimation?.currentTime ?? 0);
-    if (!Number.isFinite(currentTime)) {
-      return 0;
-    }
-    return normalizeAngle((currentTime / spinDuration) * 360);
-  };
-  const getRenderedAngle = () => {
-    const angle = Number.parseFloat(getComputedStyle(avatar).rotate);
-    return Number.isFinite(angle) ? angle : 0;
-  };
-  const startBaseAnimation = (startAngle = 0) => {
-    baseAnimation = avatar.animate(
-      [{ rotate: "0deg" }, { rotate: "360deg" }],
-      {
-        duration: spinDuration,
-        iterations: Infinity,
-        easing: "linear",
-        fill: "both",
-      },
-    );
-    baseAnimation.currentTime =
-      (normalizeAngle(startAngle) / 360) * spinDuration;
-  };
-  const stopAnimations = () => {
-    if (hoverAnimation) {
-      hoverAnimation.cancel();
-      hoverAnimation = null;
-    }
-    if (baseAnimation) {
-      baseAnimation.cancel();
-      baseAnimation = null;
-    }
-    avatar.style.removeProperty("rotate");
-  };
-  const resumeBaseAnimation = (angle) => {
-    if (!baseAnimation) {
-      startBaseAnimation(angle);
-      return;
-    }
-    baseAnimation.currentTime =
-      (normalizeAngle(angle) / 360) * spinDuration;
-    baseAnimation.play();
-  };
-  const finishHover = () => {
-    if (pointerInside) {
-      return;
-    }
-    const finishedAnimation = hoverAnimation;
-    const finishedAngle = getRenderedAngle();
-    hoverAnimation = null;
-    finishedAnimation?.cancel();
-    if (motionEnabled) {
-      resumeBaseAnimation(finishedAngle);
-    }
-  };
-  const startHover = () => {
-    pointerInside = true;
-    if (!motionEnabled || !baseAnimation || hoverAnimation) {
-      return;
-    }
-
-    baseAnimation.pause();
-    const startAngle = getBaseAngle();
-    const normalizedStartAngle = normalizeAngle(startAngle);
-    const toUpright =
-      normalizedStartAngle < 0.01 ? 360 : 360 - normalizedStartAngle;
-    const minimumRotation = Math.max(0, avatarSettings.hoverRotation);
-    const extraTurns = Math.max(
-      0,
-      Math.ceil((minimumRotation - toUpright) / 360),
-    );
-    const endAngle = startAngle + toUpright + extraTurns * 360;
-    hoverAnimation = avatar.animate(
-      [
-        { rotate: `${startAngle}deg` },
-        { rotate: `${endAngle}deg` },
-      ],
-      {
-        duration: avatarSettings.hoverDuration * 1000,
-        easing: "ease-out",
-        fill: "forwards",
-      },
-    );
-    hoverAnimation.addEventListener(
-      "finish",
-      finishHover,
-      { once: true },
-    );
-  };
-  const endHover = () => {
-    pointerInside = false;
-    if (!motionEnabled || !baseAnimation) {
-      return;
-    }
-    if (hoverAnimation) {
-      if (hoverAnimation.playState === "finished") {
-        finishHover();
-      }
-      return;
-    }
-    resumeBaseAnimation(getRenderedAngle());
-  };
-  const syncMotion = () => {
+  function sync() {
+    if (frameId !== null) cancelAnimationFrame(frameId);
+    frameId = null;
+    previousTime = null;
     if (reduceMotion.matches) {
-      motionEnabled = false;
-      stopAnimations();
-      return;
+      reset();
+    } else if (!document.hidden) {
+      frameId = requestAnimationFrame(frame);
     }
-    motionEnabled = true;
-    if (!baseAnimation) {
-      startBaseAnimation();
-    }
-  };
-
-  avatar.addEventListener("pointerenter", startHover, { passive: true });
-  avatar.addEventListener("pointerleave", endHover, { passive: true });
-  syncMotion();
-  if (typeof reduceMotion.addEventListener === "function") {
-    reduceMotion.addEventListener("change", syncMotion);
-  } else if (typeof reduceMotion.addListener === "function") {
-    reduceMotion.addListener(syncMotion);
   }
+
+  reduceMotion.addEventListener("change", sync);
+  document.addEventListener("visibilitychange", sync);
+  sync();
+}
+
+function loadAvatarSettings() {
+  let raw = {};
+  try {
+    raw = JSON.parse(document.getElementById("avatarSettings")?.textContent || "{}");
+  } catch {
+    // Static navigation and the reference animation work without configuration.
+  }
+  const bounded = (value, fallback, min, max) =>
+    Number.isFinite(Number(value)) ? Math.min(max, Math.max(min, Number(value))) : fallback;
+  return {
+    spinDuration: bounded(raw.spinDuration, 18, 1, 120),
+    hoverDuration: bounded(raw.hoverDuration, 0.95, 0.1, 6),
+    hoverRotation: bounded(raw.hoverRotation, 360, 360, 1080),
+    hoverScale: bounded(raw.hoverScale, 1, 0.8, 2.5),
+  };
+}
+
+function initializeAvatarAnimation() {
+  const avatar = document.getElementById("avatarDisc");
+  const image = document.getElementById("avatarImage");
+  const fallback = document.getElementById("avatarFallback");
+  if (!avatar || !image) return;
+
+  const settings = loadAvatarSettings();
+  avatar.style.setProperty("--avatar-hover-scale", settings.hoverScale);
+  function showFallback() {
+    image.style.display = "none";
+    if (fallback) fallback.style.display = "flex";
+  }
+  image.addEventListener("error", showFallback);
+  if (image.complete && image.naturalWidth === 0) showFallback();
+
+  let angle = 0;
+  let spinning = false;
+  let settled = false;
+  let hovering = false;
+  let keyboardFocused = false;
+  let spinElapsed = 0;
+  let spinStart = 0;
+  let spinTarget = 0;
+
+  function beginSpin() {
+    if (reduceMotion.matches || spinning) return;
+    spinStart = angle;
+    const normalized = ((angle % 360) + 360) % 360;
+    spinTarget = angle + ((360 - normalized) % 360) +
+      Math.ceil(settings.hoverRotation / 360) * 360;
+    spinElapsed = 0;
+    settled = false;
+    spinning = true;
+  }
+
+  function release() {
+    if (!hovering && !keyboardFocused) settled = false;
+  }
+
+  avatar.addEventListener("pointerenter", (event) => {
+    if (event.pointerType === "touch") return;
+    hovering = true;
+    beginSpin();
+  });
+  avatar.addEventListener("pointerleave", () => {
+    hovering = false;
+    release();
+  });
+  avatar.addEventListener("focus", () => {
+    keyboardFocused = avatar.matches(":focus-visible");
+    if (keyboardFocused) beginSpin();
+  });
+  avatar.addEventListener("blur", () => {
+    keyboardFocused = false;
+    release();
+  });
+  // Native button activation covers mouse, touch, Enter, and Space.
+  avatar.addEventListener("click", beginSpin);
+
+  startMotionLoop((delta) => {
+    if (spinning) {
+      spinElapsed += delta;
+      const progress = Math.min(spinElapsed / settings.hoverDuration, 1);
+      const c1 = 1.35;
+      const eased = 1 + (c1 + 1) * Math.pow(progress - 1, 3) +
+        c1 * Math.pow(progress - 1, 2);
+      angle = spinStart + (spinTarget - spinStart) * eased;
+      if (progress >= 1) {
+        spinning = false;
+        settled = hovering || keyboardFocused;
+        angle = 0;
+      }
+    } else if (!settled) {
+      angle = (angle + (360 / settings.spinDuration) * delta) % 360;
+    }
+    avatar.style.transform = "rotate(" + angle.toFixed(2) + "deg)";
+  }, () => {
+    angle = 0;
+    spinning = false;
+    settled = false;
+    avatar.style.transform = "rotate(0deg)";
+  });
 }
 
 function initializeWeatherEffect() {
-  const canvas = document.querySelector("#weatherEffect");
-  if (!canvas) {
-    return;
-  }
-
-  const reduceMotion = window.matchMedia(
-    "(max-width: 600px), (prefers-reduced-motion: reduce)",
-  );
-  if (reduceMotion.matches) {
-    canvas.remove();
-    return;
-  }
-
-  const context = canvas.getContext("2d");
-  if (!context) {
-    canvas.remove();
-    return;
-  }
-
-  const month = new Date().getMonth() + 1;
-  const winter = month === 12 || month <= 2;
-  const summer = month >= 6 && month <= 8;
+  const canvas = document.getElementById("rainCanvas");
+  const context = canvas?.getContext("2d");
+  if (!context) return;
   let width = 0;
   let height = 0;
-  let particles = [];
+  let drops = [];
+  let rainColor = "";
 
-  const populate = () => {
-    particles = Array.from({ length: 120 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      length: Math.random() * 18 + 10,
-      speed: Math.random() * 1.2 + 0.5,
-      radius: Math.random() * 2.5 + 1,
-    }));
-  };
-  const resize = () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-    populate();
-  };
-  const draw = () => {
-    context.clearRect(0, 0, width, height);
-    if (winter) {
-      context.fillStyle = "rgba(255, 255, 255, .85)";
-      context.beginPath();
-      for (const particle of particles) {
-        context.moveTo(particle.x, particle.y);
-        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        particle.y += particle.speed;
-        particle.x += Math.sin(particle.y / 70) * 0.35;
-        if (particle.y > height) {
-          particle.y = -10;
-          particle.x = Math.random() * width;
-        }
-      }
-      context.fill();
-    } else {
-      context.strokeStyle = summer
-        ? "rgba(120, 170, 210, .50)"
-        : "rgba(120, 150, 180, .50)";
-      context.lineWidth = 1.4;
-      for (const particle of particles) {
-        context.beginPath();
-        context.moveTo(particle.x, particle.y);
-        context.lineTo(particle.x + 2, particle.y + particle.length);
-        context.stroke();
-        particle.y += particle.speed * (summer ? 4 : 2.5);
-        particle.x += 0.25;
-        if (particle.y > height) {
-          particle.y = -20;
-          particle.x = Math.random() * width;
-        }
-      }
-    }
-    window.requestAnimationFrame(draw);
-  };
-
-  resize();
-  window.addEventListener("resize", resize, { passive: true });
-  draw();
-}
-
-async function initializePage() {
-  let siteContent;
-  try {
-    siteContent = await loadSiteContent();
-  } catch (error) {
-    console.error(error);
-    siteContent = fallbackContent;
+  function syncColor() {
+    rainColor = getComputedStyle(document.documentElement)
+      .getPropertyValue("--rain-color").trim();
   }
 
-  applyContent(siteContent);
-  renderButtons(siteContent);
-  applyAvatarSettings(siteContent.animation?.avatar);
-  initializeAvatarAnimation(siteContent.animation?.avatar);
-  initializeWeatherEffect();
-  document.documentElement.classList.remove("no-js");
+  function resize() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * ratio);
+    canvas.height = Math.round(height * ratio);
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    drops = Array.from({ length: 26 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      length: 12 + Math.random() * 18,
+      speed: 1.5 + Math.random() * 2.2,
+      slant: -1.2,
+    }));
+  }
+
+  syncColor();
+  resize();
+  document.addEventListener("themechange", syncColor);
+  window.addEventListener("resize", resize, { passive: true });
+  startMotionLoop((delta) => {
+    context.clearRect(0, 0, width, height);
+    context.strokeStyle = rainColor;
+    context.lineWidth = 1.1;
+    context.lineCap = "round";
+    const frameScale = delta * 60;
+    for (const drop of drops) {
+      context.beginPath();
+      context.moveTo(drop.x, drop.y);
+      context.lineTo(drop.x + drop.slant * (drop.length / 5), drop.y + drop.length);
+      context.stroke();
+      drop.y += drop.speed * frameScale;
+      drop.x += drop.slant * (drop.speed / 4) * frameScale;
+      if (drop.y > height || drop.x < -30) {
+        drop.y = -25;
+        drop.x = Math.random() * width;
+      }
+    }
+  }, () => context.clearRect(0, 0, width, height));
 }
 
-initializePage().catch((error) => {
-  console.error(error);
-  document.documentElement.classList.remove("no-js");
-});
+initializeTheme();
+initializeAvatarAnimation();
+initializeWeatherEffect();

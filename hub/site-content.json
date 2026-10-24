@@ -1,19 +1,24 @@
 {
   "meta": {
-    "title": "WuFeng·Blog",
-    "description": "WuFeng·Blog：全球 SIM 卡使用指南。",
-    "socialDescription": "全球 SIM 卡使用指南。"
+    "title": "WuFeng·Blog · 全球 SIM 卡使用指南",
+    "description": "WuFeng·Blog - 全球 SIM 卡使用指南。精选全球 SIM 卡、英国 Giffgaff 保号、Lebara 漫游及跨境通信与 eSIM 技巧。",
+    "socialDescription": "全球 SIM 卡使用指南 · 跨境通信与技巧"
   },
   "brand": {
     "name": "WuFeng·Blog",
     "homeLabel": "WuFeng·Blog 首页",
-    "avatarAlt": "WuFeng·Blog 头像"
+    "avatarAlt": "WuFeng·Blog 头像",
+    "subtitle": "全球 SIM 卡使用指南 · 跨境通信与技巧"
   },
   "navigation": {
     "aboutLabel": "无风的小店",
     "aboutUrl": "https://wufeng.de/",
     "cardLabel": "卡圈情报站",
-    "cardUrl": "/card/"
+    "cardUrl": "/card/",
+    "aboutBadge": "精选推荐",
+    "aboutDescription": "全球旅游卡代购 · 实体 SIM 卡 / 充值卡与号卡选购",
+    "cardBadge": "资讯技巧",
+    "cardDescription": "分享全球通信、eSIM、漫游及海外号卡维护经验"
   },
   "footer": {
     "copyright": "Copyright ©",
@@ -28,10 +33,10 @@
   },
   "animation": {
     "avatar": {
-      "spinDuration": 3,
-      "hoverScale": 1.15,
+      "spinDuration": 18,
+      "hoverScale": 1,
       "hoverRotation": 360,
-      "hoverDuration": 0.8
+      "hoverDuration": 0.95
     }
   },
   "products": [
@@ -50,7 +55,7 @@
       "state": "available",
       "status": "19 篇指南",
       "articleCount": 19,
-      "summary": "激活、资费、号码、短信、保号及常见问题。",
+      "summary": "超高性价比英国电话卡 · 免费领卡、激活与 0 月租漫游",
       "topics": [
         "激活",
         "套餐",
@@ -58,7 +63,9 @@
         "保号"
       ],
       "accent": "#b9ef4a",
-      "accentSoft": "#eef8d5"
+      "accentSoft": "#eef8d5",
+      "badge": "英国保号",
+      "icon": "sim"
     },
     {
       "slug": "lebara",
@@ -75,7 +82,7 @@
       "state": "available",
       "status": "16 篇指南",
       "articleCount": 16,
-      "summary": "激活、套餐、充值、网络设置及常见问题。",
+      "summary": "欧洲及英国通用预付费卡 · 欧盟多国免漫游与特惠套餐",
       "topics": [
         "激活",
         "充值",
@@ -83,7 +90,9 @@
         "网络"
       ],
       "accent": "#ff4b8c",
-      "accentSoft": "#ffe3ed"
+      "accentSoft": "#ffe3ed",
+      "badge": "欧洲漫游",
+      "icon": "globe"
     }
   ]
 }

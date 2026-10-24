@@ -16,10 +16,10 @@
 | 要修改的内容 | 修改文件 | 说明 |
 | --- | --- | --- |
 | 网站名称、首页说明、页脚文字 | `hub/site-content.json` | 改引号里的值，不要删除字段名、逗号或括号 |
-| 首页按钮、品牌名称、链接、简介、文章数量 | `hub/site-content.json` | 品牌入口放在 `products`；“卡圈情报站”是 `navigation.cardLabel/cardUrl` |
+| 首页按钮、品牌名称、链接、简介、文章数量 | `hub/site-content.json` | 品牌入口放在 `products`；公共入口放在 `navigation` |
 | 首页头像动画 | `hub/site-content.json` | 修改 `animation.avatar` 中的参数 |
-| 背景、方格、布局、按钮外观 | `hub/assets/style.css` | 只改样式，不要把内容硬编码到 CSS |
-| 搜索、筛选、按钮渲染、动态效果 | `hub/assets/app.js` | 修改交互逻辑 |
+| 渐变背景、布局、卡片外观 | `hub/assets/style.css` | 只改样式，不要把内容硬编码到 CSS |
+| 深浅主题、头像旋转、雨线动画 | `hub/assets/app.js` | 修改交互逻辑 |
 | 页面骨架和无脚本兜底 | `hub/index.html`、`hub/404.html` | 只有确实需要改 HTML 结构时才修改 |
 | 搜索引擎入口 | `hub/sitemap.xml`、`hub/robots.txt` | 新增或更换站点路径时同步更新 |
 | 部署流程 | `.github/workflows/tutorials-pages.yml` | 一般不需要改；改后要检查 YAML 和 Pages 权限 |
@@ -32,6 +32,10 @@ node scripts/validate-site.mjs
 ```
 
 新增品牌时，在 `site-content.json` 的 `products` 数组增加完整配置（`slug`、`name`、`path`、`issuesRepo`、地区、简介、主题和数量），然后在 `hub/sitemap.xml` 增加对应的完整网址。不要为了新增一个教程站去复制一份首页程序。
+
+首页沿用提供的参考 HTML：浅蓝/深蓝渐变、透明头像、竖排卡片与雨线。内容和头像参数在构建时写入 HTML，首屏无需等待 JSON 请求；更改配置后仍运行上面的生成命令。头像 `spinDuration` 为每圈秒数，`hoverDuration` 为回正时间，`hoverRotation` 为额外旋转角度，`hoverScale` 为悬停缩放。主题自动跟随系统，手动选择后记住偏好；减少动态效果时停用动画。
+
+字体在 `hub/assets/fonts/` 本地加载，保留参考版的 Plus Jakarta Sans 和 Noto Sans SC。中文字体是当前首页及 404 文案的子集，后续新增字符会使用系统字体兜底；需要同字体时应更新子集。许可证也在该目录。
 
 ## 二、三个教程站怎么改
 
@@ -77,8 +81,8 @@ Giffgaff、Lebara 和卡圈情报站都使用 Gmeek 模板。每个仓库的配�
 
 ### 改首页按钮
 
-- 教程中心的品牌按钮：修改 `products` 中对应产品的 `name`、`path` 和 `summary`。
-- 教程中心的公共按钮：修改 `navigation.aboutLabel/aboutUrl` 或 `navigation.cardLabel/cardUrl`。
+- 教程中心的品牌卡片：修改 `products` 中对应产品的 `name`、`path`、`summary`、`badge`；`icon` 可用 `sim`、`globe`、`shop`、`signal`。
+- 教程中心的公共卡片：修改 `navigation` 下的 `aboutLabel/aboutUrl/aboutBadge/aboutDescription` 或 `cardLabel/cardUrl/cardBadge/cardDescription`。
 - 教程站顶部的首页图标和“教程中心”按钮：修改对应 `config.json` 的 `indexScript` 或 `script`。
 
 ### 改分类
