@@ -186,11 +186,11 @@ function initializeWeatherEffect() {
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    drops = Array.from({ length: 26 }, () => ({
+    drops = Array.from({ length: 44 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       length: 12 + Math.random() * 18,
-      speed: 1.5 + Math.random() * 2.2,
+      speed: 2.4 + Math.random() * 3.5,
       slant: -1.2,
     }));
   }
