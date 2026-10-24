@@ -33,7 +33,7 @@
   },
   "animation": {
     "avatar": {
-      "spinDuration": 18,
+      "spinDuration": 3,
       "hoverScale": 1,
       "hoverRotation": 360,
       "hoverDuration": 0.95

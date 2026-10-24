@@ -74,7 +74,7 @@ function loadAvatarSettings() {
   const bounded = (value, fallback, min, max) =>
     Number.isFinite(Number(value)) ? Math.min(max, Math.max(min, Number(value))) : fallback;
   return {
-    spinDuration: bounded(raw.spinDuration, 18, 1, 120),
+    spinDuration: bounded(raw.spinDuration, 3, 1, 120),
     hoverDuration: bounded(raw.hoverDuration, 0.95, 0.1, 6),
     hoverRotation: bounded(raw.hoverRotation, 360, 360, 1080),
     hoverScale: bounded(raw.hoverScale, 1, 0.8, 2.5),
