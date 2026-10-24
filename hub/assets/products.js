@@ -15,7 +15,7 @@ export const products = [
     "state": "available",
     "status": "19 篇指南",
     "articleCount": 19,
-    "summary": "超高性价比英国电话卡 · 免费领卡、激活与 0 月租漫游",
+    "summary": "英国号卡使用指南 · 激活资费与保号技巧",
     "topics": [
       "激活",
       "套餐",
@@ -24,7 +24,7 @@ export const products = [
     ],
     "accent": "#b9ef4a",
     "accentSoft": "#eef8d5",
-    "badge": "英国保号",
+    "badge": "激活教程",
     "icon": "sim"
   },
   {
@@ -42,7 +42,7 @@ export const products = [
     "state": "available",
     "status": "16 篇指南",
     "articleCount": 16,
-    "summary": "欧洲及英国通用预付费卡 · 欧盟多国免漫游与特惠套餐",
+    "summary": "欧洲号卡使用指南 · 激活充值与漫游技巧",
     "topics": [
       "激活",
       "充值",
@@ -51,7 +51,7 @@ export const products = [
     ],
     "accent": "#ff4b8c",
     "accentSoft": "#ffe3ed",
-    "badge": "欧洲漫游",
+    "badge": "激活教程",
     "icon": "globe"
   }
 ];
